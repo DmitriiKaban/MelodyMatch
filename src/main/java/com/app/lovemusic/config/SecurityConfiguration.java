@@ -34,11 +34,14 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/login/**", "/grantcode", "/google/**").permitAll()
+                        .requestMatchers("/auth/**", "/login/**", "/grantcode", "/google/**", "/html-callback", "/html/**", "/js/js-callback", "/js/").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)  // stateless session, suitable for JWT
+                )
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/google/login")
                 )
                 .authenticationProvider(authenticationProvider)  // custom authentication provider
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);  // JWT filter before UsernamePasswordAuthenticationFilter
