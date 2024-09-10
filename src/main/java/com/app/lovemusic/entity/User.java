@@ -29,7 +29,7 @@ public class User implements UserDetails {
     @Column(unique = true, length = 50, nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String password;
 
     @CreationTimestamp
@@ -39,6 +39,10 @@ public class User implements UserDetails {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Date updatedAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "auth_provider")
+    private AuthenticationProviders authProvider;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
