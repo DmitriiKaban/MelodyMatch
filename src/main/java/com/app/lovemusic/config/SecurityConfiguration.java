@@ -1,6 +1,5 @@
 package com.app.lovemusic.config;
 
-import com.app.lovemusic.security.CustomOAuth2User;
 import com.app.lovemusic.security.CustomOAuth2UserService;
 import com.app.lovemusic.security.OAuth2LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
@@ -13,11 +12,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -36,7 +30,7 @@ public class SecurityConfiguration {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/login/**", "/google/**", "/oauth/**").permitAll()
+                        .requestMatchers("/auth/**", "/login/**", "/google/**", "/oauth/**", "/github/**", "/facebook/**", "/oauth2/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
