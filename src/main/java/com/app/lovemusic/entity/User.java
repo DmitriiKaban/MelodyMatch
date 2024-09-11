@@ -6,11 +6,13 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.stream.Collectors;
 
 @Table(name = "users")
 @Entity
@@ -29,8 +31,11 @@ public class User implements UserDetails {
     @Column(unique = true, length = 50, nullable = false)
     private String email;
 
-    @Column(nullable = true)
+    @Column()
     private String password;
+
+    @Column
+    private String userRole;
 
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
@@ -46,7 +51,15 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        HashSet<String> roles = new HashSet<>();
+
+        if (userRole != null && !userRole.trim().isEmpty()) {
+            roles.add(userRole);
+        }
+
+        return roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toSet());
     }
 
     @Override

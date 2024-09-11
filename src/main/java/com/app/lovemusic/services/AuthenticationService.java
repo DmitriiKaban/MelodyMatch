@@ -39,6 +39,8 @@ public class AuthenticationService {
             throw new UserAlreadyExistsException("User with email " + input.getEmail() + " already exists");
         }
 
+        user.setUserRole("ROLE_USER");
+
         return userRepository.save(user);
     }
 

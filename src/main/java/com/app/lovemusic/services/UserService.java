@@ -37,6 +37,8 @@ public class UserService {
         user.setAuthProvider(provider);
         user.setCreatedAt(new Date());
 
+        user.setUserRole("ROLE_USER");
+
         userRepository.save(user);
     }
 

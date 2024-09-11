@@ -30,11 +30,12 @@ public class SecurityConfiguration {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/users/**").hasRole("ADMIN")
                         .requestMatchers("/auth/**", "/login/**", "/google/**", "/oauth/**", "/github/**", "/facebook/**", "/oauth2/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)  // stateless session, suitable for JWT
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
@@ -47,6 +48,4 @@ public class SecurityConfiguration {
 
         return http.build();
     }
-
-
 }
