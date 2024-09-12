@@ -10,6 +10,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+
 @Service
 public class AuthenticationService {
     private final UserRepository userRepository;
@@ -35,11 +37,15 @@ public class AuthenticationService {
         user.setPassword(passwordEncoder.encode(input.getPassword()));
         user.setFullName(input.getFullName());
 
+        if (!Set.of("organizer", "musician").contains(input.getRole().toLowerCase())) {
+            throw new IllegalArgumentException("Invalid role");
+        }
+
+        user.setUserRole(input.getRole().toUpperCase());
+
         if (userRepository.findByEmail(input.getEmail()).isPresent()) {
             throw new UserAlreadyExistsException("User with email " + input.getEmail() + " already exists");
         }
-
-        user.setUserRole("ROLE_USER");
 
         return userRepository.save(user);
     }
