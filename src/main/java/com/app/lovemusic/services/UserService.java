@@ -51,4 +51,9 @@ public class UserService {
         userRepository.save(user);
 
     }
+
+    public void updateUserRole(User currentUser, String role) {
+        currentUser.setUserRole("ROLE_" + role.toUpperCase());
+        userRepository.save(currentUser);
+    }
 }

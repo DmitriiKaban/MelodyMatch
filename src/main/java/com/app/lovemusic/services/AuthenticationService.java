@@ -41,7 +41,7 @@ public class AuthenticationService {
             throw new IllegalArgumentException("Invalid role");
         }
 
-        user.setUserRole(input.getRole().toUpperCase());
+        user.setUserRole("ROLE_" + input.getRole().toUpperCase());
 
         if (userRepository.findByEmail(input.getEmail()).isPresent()) {
             throw new UserAlreadyExistsException("User with email " + input.getEmail() + " already exists");

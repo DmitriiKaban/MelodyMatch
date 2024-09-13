@@ -37,7 +37,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         String name = oAuth2User.getName();
 
         OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
-        String registrationId = oauthToken.getAuthorizedClientRegistrationId();  // google, github, or facebook
+        String registrationId = oauthToken.getAuthorizedClientRegistrationId();
 
         AuthenticationProviders provider = AuthenticationProviders.GOOGLE;
         if ("github".equals(registrationId)) {
