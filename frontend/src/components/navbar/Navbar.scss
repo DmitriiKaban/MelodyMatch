@@ -1,0 +1,106 @@
+@import "../../global";
+
+.navbar {
+  display: flex;
+  justify-content: center;
+  background-color: transparent;
+  transition: 0.5s all ease;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  &.active {
+    background-color: $primary-color;
+  }
+
+  .container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 60px;
+
+    .link:hover,
+    .link:active {
+      color: $secondary-color;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+
+      .link {
+        display: flex;
+        align-items: center;
+      }
+
+      .text1 {
+        font-family: $font-family-primary;
+        font-size: $font-size-medium;
+        color: $secondary-color;
+      }
+
+      .text2 {
+        font-family: $font-family-primary;
+        font-size: $font-size-medium;
+        color: $background-color;
+      }
+
+      img {
+        margin-right: 20px;
+      }
+    }
+
+    .links {
+      display: flex;
+      align-items: center;
+      color: $background-color;
+      gap: 80px;
+      font-family: $font-family-secondary;
+
+      .user {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+        cursor: pointer;
+        position: relative;
+
+        img {
+          border-radius: 50%;
+          width: 57px;
+          height: 57px;
+          object-fit: cover;
+        }
+
+        .options {
+          font-family: $font-family-secondary;
+          font-size: 15px;
+          position: absolute;
+          top: 50px;
+          right: 0;
+          padding: 20px;
+          padding-right: 80px;
+          background-color: #f4f4f6;
+          color: $text-color-pages;
+          border-radius: 10px;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+      }
+
+      button {
+        padding: 10px 20px;
+        background-color: transparent;
+        border-radius: 10px;
+        border: 1px solid white;
+        font-family: $font-family-secondary;
+        cursor: pointer;
+
+        &:hover {
+          background-color: white;
+          color: black;
+        }
+      }
+    }
+  }
+}

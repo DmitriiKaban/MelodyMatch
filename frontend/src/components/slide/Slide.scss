@@ -1,0 +1,27 @@
+.slide {
+  display: flex;
+  justify-content: center;
+  padding: 80px;
+
+  .container {
+    width: 1400px;
+    margin: 0 auto;
+  }
+
+  .carousel-prev,
+  .carousel-next {
+    color: white;
+    width: 50px;
+    position: absolute;
+    height: 50px;
+    background-color: #130160;
+    border-radius: 50%;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+
+    &::before {
+      filter: contrast(0) brightness(2);
+    }
+  }
+}

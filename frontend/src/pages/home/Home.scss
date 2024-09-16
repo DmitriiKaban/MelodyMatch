@@ -1,0 +1,81 @@
+@import "../../global";
+
+.features {
+  background: url("/img/background.png") no-repeat;
+  background-size: cover;
+  height: 960px;
+  font-family: $font-family-primary;
+
+  .container {
+    background: url("../../assets/ellipse.png") no-repeat;
+    background-size: cover;
+    padding-left: 80px;
+    padding-bottom: 30px;
+
+    .top {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 50px;
+
+      img {
+        height: 100px;
+      }
+
+      .discover {
+        font-weight: 500;
+        font-size: 40px;
+        text-align: center;
+        margin-right: 150px;
+        margin-left: 100px;
+      }
+    }
+
+    .item {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      img {
+        margin-left: -20px;
+      }
+
+      h1 {
+        font-size: 20px;
+      }
+
+      .title {
+        gap: 10px;
+        display: flex;
+        align-items: center;
+      }
+
+      button {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 190px;
+        height: 60px;
+        color: white;
+        border: none;
+        border-radius: 30px;
+        background-color: #130160;
+        font-size: 15px;
+        font-family: $font-family-primary;
+        margin-left: 20%;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .next {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    margin-top: 150px;
+    align-items: center;
+    font-weight: 400;
+    font-size: 40px;
+  }
+}
