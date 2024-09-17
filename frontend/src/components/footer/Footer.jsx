@@ -7,7 +7,7 @@ const Footer = () => {
   const { pathname } = useLocation();
 
   return (
-    <div className={pathname !== "/" ? "footer active" : "footer"}>
+    <div className={pathname !== "/"  ? "footer active" : "footer"}>
       <div className="container">
         <div className="top">
           <div className="left">
