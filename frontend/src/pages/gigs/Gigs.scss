@@ -1,0 +1,129 @@
+@import "../../global";
+
+.gigs {
+  display: flex;
+  justify-content: center;
+
+  .container {
+    width: 100%;
+    padding: 80px;
+    display: flex;
+    flex-direction: column;
+
+    h1 {
+      color: $text-color;
+      font-size: $font-size-large;
+      font-family: $font-family-primary;
+    }
+
+    .breadcrumbs {
+      color: $text-color-pages;
+      font-size: $font-size-small;
+      font-family: $font-family-secondary;
+    }
+
+    p {
+      color: $text-color-pages;
+      font-size: $font-size-medium;
+      font-family: $font-family-primary;
+      margin-top: 0;
+    }
+
+    .menu {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: $font-family-secondary;
+
+      .left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        span {
+          color: $text-color;
+
+          font-size: $font-size-small;
+        }
+
+        input {
+          border: 1px solid $text-color-pages;
+          border-radius: 10px;
+          outline: none;
+          width: 150px;
+          height: 30px;
+
+          &::placeholder {
+            padding-left: 10px;
+            font-size: 12px;
+          }
+        }
+
+        button {
+          background-color: $secondary-color;
+          border-radius: 10px;
+          color: $text-color;
+          width: 65px;
+          height: 30px;
+          border: none;
+          color: white;
+          cursor: pointer;
+          font-size: 12px;
+          font-weight: 600;
+        }
+      }
+
+      .right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: $font-size-small;
+        position: relative;
+
+        .sortBy {
+          color: $text-color-pages;
+          font-weight: 300;
+        }
+
+        .sortType {
+          color: $text-color;
+          font-weight: 600;
+        }
+
+        img {
+          width: 15px;
+          cursor: pointer;
+        }
+
+        .rightMenu {
+          font-size: 15px;
+          position: absolute;
+          top: 30px;
+          right: 0;
+          padding: 20px;
+          background-color: #f4f4f6;
+          color: $text-color-pages;
+          border-radius: 10px;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+
+          span {
+            cursor: pointer;
+
+            &:hover {
+              color: black;
+              font-weight: 600;
+            }
+          }
+        }
+      }
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      justify-items: center;
+    }
+  }
+}

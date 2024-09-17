@@ -42,7 +42,7 @@ const Navbar = () => {
           </Link>
         </div>
         <div className="links">
-          <Link to="/genres" className="link">
+          <Link to="/gigs?genre=all" className="link">
             Explore
           </Link>
           {!currentUser?.isMusician && (

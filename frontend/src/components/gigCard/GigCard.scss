@@ -1,0 +1,84 @@
+@import "../../global";
+
+.gigCard {
+  width: 260px;
+  box-shadow: $card-shadow;
+
+  margin-top: 50px;
+  font-family: $font-family-secondary;
+
+  img {
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .info {
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    font-family: $font-family-secondary;
+
+    .user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      img {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+      }
+
+      span {
+        font-size: $font-size-medium;
+        font-weight: 600;
+      }
+    }
+
+    .desc {
+      color: $text-color-pages;
+      font-size: $font-size-small;
+      margin: 0;
+    }
+
+    .star {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+
+      img {
+        width: 16px;
+        height: 16px;
+      }
+
+      span {
+        font-size: $font-size-small;
+        color: $text-color-pages;
+      }
+    }
+  }
+
+  hr {
+    height: 0;
+    border: 0.5px solid $text-color-pages;
+  }
+
+  .details {
+    margin-right: 20px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    gap: 10px;
+
+    span {
+      color: $text-color-pages;
+      font-size: $font-size-small;
+    }
+    h2 {
+      color: $secondary-color;
+      font-size: $font-size-medium;
+    }
+  }
+}

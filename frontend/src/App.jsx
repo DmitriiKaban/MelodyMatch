@@ -1,6 +1,5 @@
 import { Navbar, Footer } from "./components";
-
-import Home from "./pages/home/Home";
+import { Home, Gig, Gigs } from "./pages";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import "./app.scss";
 
@@ -24,6 +23,14 @@ function App() {
           path: "/",
           element: <Home />,
         },
+        {
+          path: "/gigs",
+          element: <Gigs />,
+        },
+        {
+          path: "/gig/:id",
+          element: <Gig />,
+        },
       ],
     },
   ]);
@@ -31,7 +38,6 @@ function App() {
   return (
     <div>
       <RouterProvider router={router} />
-      {/* <Navbar /> */}
     </div>
   );
 }
