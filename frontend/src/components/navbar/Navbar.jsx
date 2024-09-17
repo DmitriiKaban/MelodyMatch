@@ -29,8 +29,6 @@ const Navbar = () => {
     isMusician: true,
   };
 
-  // currentUser = !currentUser;
-
   return (
     <div className={active || pathname !== "/" ? "navbar active" : "navbar"}>
       <div className="container">
@@ -50,22 +48,30 @@ const Navbar = () => {
               Become a Musician
             </Link>
           )}
-          {!currentUser?.isMusician && (
-            <Link to="/auth/signin" className="link">
-              Sign In
+          {currentUser  && (
+            <Link to="/orders" className="link">
+              Orders
             </Link>
           )}
-          {!currentUser && <button>Join Us</button>}
-          {currentUser?.isMusician && (
+          {!currentUser && (
             <>
-              <span>Gigs</span>
-              <span>Orders</span>
+              <Link to="/auth/signin" className="link">
+                Sign In
+              </Link>
+              <Link to="/auth/signup" className="link">
+                <button>Join Us</button>
+              </Link>
             </>
+          )}
+          {currentUser && (
+            <Link to="/myGigs" className="link">
+              <span>{currentUser.isMusician ? "Gigs" : "Events"}</span>
+            </Link>
           )}
           {currentUser && (
             <div className="user" onClick={() => setOpen(!open)}>
               <img src={userMusician} alt="" />
-              <span>{currentUser?.username}</span>
+              <span>{currentUser.username}</span>
 
               {open && (
                 <div className="options">

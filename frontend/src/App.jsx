@@ -1,5 +1,5 @@
 import { Navbar, Footer } from "./components";
-import { Home, Gig, Gigs } from "./pages";
+import { Home, Gig, Gigs, MyGigs, Orders } from "./pages";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import "./app.scss";
 
@@ -30,6 +30,14 @@ function App() {
         {
           path: "/gig/:id",
           element: <Gig />,
+        },
+        {
+          path: "/myGigs",
+          element: <MyGigs />,
+        },
+        {
+          path: "/orders",
+          element: <Orders />,
         },
       ],
     },

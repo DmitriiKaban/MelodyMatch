@@ -1,8 +1,18 @@
 import "./Featured.scss";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import search from "/img/icons/search.png";
 import featured from "/img/Featured.png";
 
 const Featured = () => {
+
+  const [input, setInput] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = () => {
+    navigate(`/gigs?search=${input}`);
+  };
+
   return (
     <div className="featured">
       <div className="container">
@@ -14,9 +24,9 @@ const Featured = () => {
           <div className="search">
             <div className="searchInput">
               <img src={search} alt="" />
-              <input type="text" placeholder=" Try 'Disco'" />
+              <input type="text" placeholder=" Try 'Disco'" onChange={(e) => setInput(e.target.value)}/>
             </div>
-            <button>Search</button>
+            <button onClick={handleSubmit}>Search</button>
           </div>
           <div className="popular">
             <span>Popular:</span>
