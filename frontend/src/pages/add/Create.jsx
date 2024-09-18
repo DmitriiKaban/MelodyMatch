@@ -1,0 +1,178 @@
+import { useRef } from "react";
+import "./Add.scss";
+import { Banner } from "../../components";
+
+const currentUser = {
+  id: 1,
+  username: "Matei Basarab",
+  isMusician: true,
+};
+
+const Add = () => {
+  const formRef = useRef(null);
+  const userIsMusician = currentUser.isMusician;
+
+  const scrollToForm = () => {
+    if (formRef.current) {
+      formRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  return (
+    <>
+      <div className="banner">
+        <Banner
+          title={`Hop on creating your ${
+            userIsMusician ? "Musician" : "Organizer"
+          } account!`}
+          subtitle1="This is your General Information."
+          subtitle2="Complete the form below:"
+          scrollToForm={scrollToForm}
+        />
+      </div>
+      <div className="add" ref={formRef}>
+        <div className="container">
+          <h1>{userIsMusician ? "Add New Gig" : "Add New Event"}</h1>
+          <div className="sections">
+            <div className="info">
+              <div className="item">
+                <label htmlFor="">
+                  {userIsMusician ? "Name" : "Organization Name"}
+                </label>
+                <img src="/img/icons/Edit.png" alt="" />
+              </div>
+              <hr />
+              <input
+                type="text"
+                placeholder={
+                  userIsMusician ? "Enter your name" : "Enter organization name"
+                }
+              />
+
+              <div className="item">
+                <label htmlFor="">Email</label>
+                <img src="/img/icons/Edit.png" alt="" />
+              </div>
+              <hr />
+              <input type="email" placeholder="Enter your email" />
+
+              <div className="item">
+                <label htmlFor="">Profile Picture</label>
+                <img src="/img/icons/Edit.png" alt="" />
+              </div>
+              <hr />
+              <input type="file" />
+
+              {userIsMusician && (
+                <>
+                  <div className="item">
+                    <label htmlFor="">Work Experience</label>
+                    <img src="/img/icons/Edit.png" alt="" />
+                  </div>
+                  <hr />
+                  <select>
+                    <option value="">Select work experience</option>
+                    <option value="1">1 year</option>
+                    <option value="2">2 years</option>
+                    <option value="3">3 years</option>
+                  </select>
+                </>
+              )}
+
+              <div className="item">
+                <label htmlFor="">Location</label>
+                <img src="/img/icons/Edit.png" alt="" />
+              </div>
+              <hr />
+              <input type="text" placeholder="Enter your location" />
+
+              <div className="item">
+                <label htmlFor="">Interested in</label>
+                <img src="/img/icons/Edit.png" alt="" />
+              </div>
+              <hr />
+              <select>
+                <option value="">Select the genres</option>
+                <option value="jazz">Jazz</option>
+                <option value="rock">Rock</option>
+                <option value="pop">Pop</option>
+              </select>
+
+              <div className="button-container">
+                <button>Create</button>
+              </div>
+            </div>
+
+            <div className="details">
+              <div className="item">
+                <label htmlFor="">Short Description</label>
+                <img src="/img/icons/Edit.png" alt="" />
+              </div>
+              <hr />
+              <textarea
+                placeholder={`${
+                  userIsMusician
+                    ? "Short description about yourself"
+                    : "Short description about your brand"
+                }`}
+                cols="30"
+                rows="10"
+              ></textarea>
+
+              <div className="item">
+                <label htmlFor="">Phone Number</label>
+                <img src="/img/icons/Edit.png" alt="" />
+              </div>
+              <hr />
+              <input type="tel" placeholder="Enter your phone number" />
+
+              <div className="item">
+                <label htmlFor="">Payment Card Information</label>
+              </div>
+
+              <hr />
+              <p>
+                No card added. Please add your credit card information for
+                seamless payments.
+              </p>
+              <div className="item pay">
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    width: "100%",
+                  }}
+                >
+                  <label htmlFor="">Owner</label>
+                  <label htmlFor="">CVV</label>
+                </div>
+              </div>
+              <div className="item pay">
+                <input type="text" placeholder="Enter card owner name" />
+                <input type="text" placeholder="Enter CVV" />
+              </div>
+              <div
+                className="item pay"
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  width: "100%",
+                }}
+              >
+                <label htmlFor="">Card Number</label>
+
+                <label htmlFor="">Expiration Date</label>
+              </div>
+              <div className="item pay">
+                <input type="text" placeholder="Enter card number" />
+                <input type="text" placeholder="MM/YY" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Add;

@@ -49,7 +49,7 @@ const Home = () => {
               Explore our diverse roster of artists today and bring your vision
               to life with the perfect musical touch.
             </div>
-            <Link to="/genres?genre=classical">
+            <Link to="/gigs?genre=all">
               <button>Explore</button>
             </Link>
           </div>

@@ -1,13 +1,14 @@
 import "./Gig.scss";
 import { Slider } from "infinite-react-carousel";
+import { Link } from "react-router-dom";
 
 const Gig = () => {
   return (
     <div className="gig">
       <div className="container">
         <div className="left">
-          <span className="breadCrumbs">TUNIFY > CLASSICAL</span>
-          
+          <span className="breadCrumbs">TUNIFY {">"} CLASSICAL</span>
+
           <div className="user">
             <img src="/img/pp3.png" alt="" />
             <span>Jace Smith</span>
@@ -20,13 +21,13 @@ const Gig = () => {
               <span>5</span>
             </div>
           </div>
-          
+
           <Slider slidesToShow={1} arrowsScroll={1} className="slider">
             <img src="/img/account1.png" alt="" />
             <img src="/img/discoCard.png" alt="" />
             <img src="/img/account8.png" alt="" />
           </Slider>
-          
+
           <h2>About This Artist</h2>
           <p>
             I’m available for bookings from October 15th through December 10th.
@@ -35,7 +36,7 @@ const Gig = () => {
             private events, or festival slots. My set includes original
             compositions and select covers to create an engaging atmosphere.
           </p>
-          
+
           <div className="seller">
             <div className="user">
               <img src="/img/pp3.png" alt="" />
@@ -52,7 +53,7 @@ const Gig = () => {
                 <button>Contact Me</button>
               </div>
             </div>
-            
+
             <div className="box">
               <div className="items">
                 <div className="item">
@@ -84,16 +85,17 @@ const Gig = () => {
               </p>
             </div>
           </div>
-          
-          <div className="reviews">
-          <div className="top">
 
-            <h2>Reviews</h2>
-            <h3> See more </h3>
+          <div className="reviews">
+            <div className="top">
+              <h2>Reviews</h2>
+              <Link to="/gig/:id/reviews" className="link">
+                <h3> See more </h3>
+              </Link>
             </div>
             <div className="item">
               <div className="user">
-                <img src="/img/pp2.png" alt="" className="pp"/>
+                <img src="/img/pp2.png" alt="" className="pp" />
                 <div className="info">
                   <span>Marcela Popovici</span>
                   <div className="country">
@@ -119,32 +121,37 @@ const Gig = () => {
                 <h1>Helpful?</h1>
                 <img src="/img/icons/Thumbsup.png" alt="" />
                 <span>Yes</span>
-                <img src="/img/icons/Thumbsup.png" alt="" className="thumbsdown" />
+                <img
+                  src="/img/icons/Thumbsup.png"
+                  alt=""
+                  className="thumbsdown"
+                />
                 <span>No</span>
               </div>
             </div>
             <hr />
           </div>
         </div>
-        
+
         <div className="right">
           <div className="price">
             <h3>1 hour canto with background band</h3>
             <h2>$82</h2>
           </div>
-          
+
           <p>
-          As the voice of my band I will make sure we bring the best energy and sound to your party. Inquiries change per time, whole events are discounted.
+            As the voice of my band I will make sure we bring the best energy
+            and sound to your party. Inquiries change per time, whole events are
+            discounted.
           </p>
-          
+
           <div className="details">
             <div className="item">
               <img src="/img/icons/clock.png" alt="" />
               <span>replies in a few minutes</span>
             </div>
-            
           </div>
-          
+
           <div className="more">
             <div className="item">
               <img src="/img/icons/radio.png" alt="" />
@@ -154,10 +161,9 @@ const Gig = () => {
               <img src="/img/icons/radio.png" alt="" />
               <span>experience with multiple instruments and genres</span>
             </div>
-            
           </div>
-          
-          <button>Continue</button>
+
+          <button>Order</button>
         </div>
       </div>
     </div>

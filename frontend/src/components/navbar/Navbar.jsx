@@ -10,6 +10,14 @@ const Navbar = () => {
 
   const { pathname } = useLocation();
 
+  const isActivePath = ![
+    "/",
+    "/add",
+    "/account",
+    "/auth/signup",
+    "/auth/login",
+  ].includes(pathname);
+
   const isActive = () => {
     console.log("Scroll Y:", window.scrollY);
     window.scrollY > 0 ? setActive(true) : setActive(false);
@@ -29,8 +37,10 @@ const Navbar = () => {
     isMusician: true,
   };
 
+  // currentUser = null;
+
   return (
-    <div className={active || pathname !== "/" ? "navbar active" : "navbar"}>
+    <div className={active || isActivePath ? "navbar active" : "navbar"}>
       <div className="container">
         <div className="logo">
           <Link to="/" className="link">
@@ -48,14 +58,14 @@ const Navbar = () => {
               Become a Musician
             </Link>
           )}
-          {currentUser  && (
+          {currentUser && (
             <Link to="/orders" className="link">
               Orders
             </Link>
           )}
           {!currentUser && (
             <>
-              <Link to="/auth/signin" className="link">
+              <Link to="/auth/login" className="link">
                 Sign In
               </Link>
               <Link to="/auth/signup" className="link">
@@ -84,7 +94,7 @@ const Navbar = () => {
                   <Link to="/payments" className="link">
                     Payments
                   </Link>
-                  <Link to="/logout" className="link">
+                  <Link to="/auth/login" className="link">
                     Log out
                   </Link>
                 </div>

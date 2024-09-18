@@ -3,3 +3,7 @@ export { default as Gigs } from "./gigs/Gigs";
 export { default as Gig } from "./gig/Gig";
 export { default as MyGigs } from "./myGigs/MyGigs";
 export { default as Orders } from "./orders/Orders";
+export { default as Login } from "./login/Login";
+export { default as Signup } from "./signup/Signup";
+export { default as Add } from "./add/Add";
+export { default as Create } from "./add/Create";

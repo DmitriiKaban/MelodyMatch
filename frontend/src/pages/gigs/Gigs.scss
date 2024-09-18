@@ -42,7 +42,7 @@
 
         span {
           color: $text-color;
-
+          margin-left: 20px;
           font-size: $font-size-small;
         }
 
@@ -50,13 +50,17 @@
           border: 1px solid $text-color-pages;
           border-radius: 10px;
           outline: none;
-          width: 150px;
+          width: 100px;
           height: 30px;
 
           &::placeholder {
             padding-left: 10px;
             font-size: 12px;
           }
+        }
+
+        .search-input {
+          width: 420px;
         }
 
         button {
@@ -124,6 +128,27 @@
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       justify-items: center;
+
+      .no-matches {
+        text-align: center;
+        margin: 0 auto;
+        grid-column: 1 / -1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        img {
+          width: 400px;
+          height: auto;
+        }
+
+        span {
+          color: $text-color-pages;
+          font-size: $font-size-medium;
+          font-family: $font-family-primary;
+          display: block;
+        }
+      }
     }
   }
 }

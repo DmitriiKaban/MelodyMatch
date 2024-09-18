@@ -1,5 +1,15 @@
-import { Navbar, Footer } from "./components";
-import { Home, Gig, Gigs, MyGigs, Orders } from "./pages";
+import { Navbar, Footer, ScrollToTop } from "./components";
+import {
+  Home,
+  Gig,
+  Gigs,
+  MyGigs,
+  Orders,
+  Login,
+  Signup,
+  Add,
+  Create,
+} from "./pages";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import "./app.scss";
 
@@ -7,6 +17,7 @@ function App() {
   const Layout = () => {
     return (
       <div className="app">
+        <ScrollToTop />
         <Navbar />
         <Outlet />
         <Footer />
@@ -24,6 +35,14 @@ function App() {
           element: <Home />,
         },
         {
+          path: "/auth/login",
+          element: <Login />,
+        },
+        {
+          path: "/auth/signup",
+          element: <Signup />,
+        },
+        {
           path: "/gigs",
           element: <Gigs />,
         },
@@ -38,6 +57,14 @@ function App() {
         {
           path: "/orders",
           element: <Orders />,
+        },
+        {
+          path: "/add",
+          element: <Add />,
+        },
+        {
+          path: "/account",
+          element: <Create />,
         },
       ],
     },

@@ -5,12 +5,17 @@ import search from "/img/icons/search.png";
 import featured from "/img/Featured.png";
 
 const Featured = () => {
-
   const [input, setInput] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = () => {
-    navigate(`/gigs?search=${input}`);
+    if (!input.trim()) {
+      setError("Please enter a genre or an artist.");
+    } else {
+      setError("");
+      navigate(`/gigs?search=${input}`);
+    }
   };
 
   return (
@@ -24,15 +29,22 @@ const Featured = () => {
           <div className="search">
             <div className="searchInput">
               <img src={search} alt="" />
-              <input type="text" placeholder=" Try 'Disco'" onChange={(e) => setInput(e.target.value)}/>
+              <input
+                type="text"
+                placeholder=" Try 'Disco'"
+                onChange={(e) => setInput(e.target.value)}
+              />
             </div>
             <button onClick={handleSubmit}>Search</button>
           </div>
+          {error && <div className="error">{error}</div>}{" "}
           <div className="popular">
             <span>Popular:</span>
-            <button>Jazz</button>
-            <button>Classical</button>
-            <button>Lupii lui Calancea</button>
+            <button onClick={() => setInput("Jazz")}>Jazz</button>
+            <button onClick={() => setInput("Classical")}>Classical</button>
+            <button onClick={() => setInput("Lupii lui Calancea")}>
+              Lupii lui Calancea
+            </button>
           </div>
         </div>
         <div className="right">

@@ -111,6 +111,7 @@ export const gigs = [
     star: 4.9,
     reviews: 23,
     username: "Jace Smith",
+    genre: "Classical",
   },
   {
     id: 2,
@@ -121,6 +122,7 @@ export const gigs = [
     star: 4.9,
     reviews: 23,
     username: "Jace Smith",
+    genre: "Jazz",
   },
   {
     id: 3,
@@ -131,6 +133,7 @@ export const gigs = [
     star: 4.9,
     reviews: 23,
     username: "Jace Smith",
+    genre: "Rock",
   },
   {
     id: 4,
@@ -141,6 +144,7 @@ export const gigs = [
     star: 4.9,
     reviews: 23,
     username: "Jace Smith",
+    genre: "Pop",
   },
   {
     id: 5,
@@ -151,6 +155,7 @@ export const gigs = [
     star: 4.9,
     reviews: 23,
     username: "Jace Smith",
+    genre: "Electronic",
   },
   {
     id: 6,
@@ -161,6 +166,7 @@ export const gigs = [
     star: 4.9,
     reviews: 23,
     username: "Jace Smith",
+    genre: "Blues",
   },
   {
     id: 7,
@@ -171,6 +177,7 @@ export const gigs = [
     star: 4.9,
     reviews: 23,
     username: "Jace Smith",
+    genre: "Reggae",
   },
   {
     id: 8,
@@ -181,6 +188,7 @@ export const gigs = [
     star: 4.9,
     reviews: 23,
     username: "Jace Smith",
+    genre: "Blues",
   },
   {
     id: 9,
@@ -191,6 +199,7 @@ export const gigs = [
     star: 4.9,
     reviews: 23,
     username: "Jace Smith",
+    genre: "Electronic",
   },
   {
     id: 10,
@@ -201,6 +210,7 @@ export const gigs = [
     star: 4.9,
     reviews: 23,
     username: "Jace Smith",
+    genre: "Folklore",
   },
   {
     id: 11,
@@ -211,6 +221,7 @@ export const gigs = [
     star: 4.9,
     reviews: 23,
     username: "Jace Smith",
+    genre: "Classical",
   },
   {
     id: 12,
@@ -221,6 +232,7 @@ export const gigs = [
     star: 4.9,
     reviews: 23,
     username: "Jace Smith",
+    genre: "Rock",
   },
   {
     id: 13,
@@ -231,6 +243,7 @@ export const gigs = [
     star: 4.9,
     reviews: 23,
     username: "Jace Smith",
+    genre: "Jazz",
   },
   {
     id: 14,
@@ -241,6 +254,7 @@ export const gigs = [
     star: 4.9,
     reviews: 23,
     username: "Jace Smith",
+    genre: "Disco",
   },
   {
     id: 15,
@@ -251,6 +265,7 @@ export const gigs = [
     star: 4.9,
     reviews: 23,
     username: "Jace Smith",
+    genre: "Pop",
   },
   {
     id: 16,
@@ -261,5 +276,6 @@ export const gigs = [
     star: 4.9,
     reviews: 23,
     username: "Jace Smith",
+    genre: "Metal",
   },
 ];

@@ -11,17 +11,45 @@
     width: 100%;
     display: flex;
     align-items: center;
+    // gap: 60px;
 
     .left {
-      margin-top: 100px;
-      padding-left: 60px;
+      margin-top: 130px;
+      padding-left: 80px;
       display: flex;
       flex-direction: column;
       gap: 30px;
 
+      .button-container {
+        display: flex;
+        justify-content: center;
+
+        .button-85 {
+          width: 100px;
+          font-size: $font-family-primary;
+          padding: 10px;
+          margin-top: 100px;
+          border: 2px solid white;
+          border-radius: 30px;
+        }
+      }
+
+      .error {
+        color: $secondary-color;
+        font-size: $font-size-medium;
+        font-family: $font-family-primary;
+      }
+
       h1 {
         font-family: $font-family-primary;
         font-size: $font-size-large;
+        font-weight: 200;
+        color: #ffffff;
+      }
+
+      .subtitle {
+        font-family: $font-family-primary;
+        font-size: $font-size-medium;
         font-weight: 200;
         color: #ffffff;
       }
