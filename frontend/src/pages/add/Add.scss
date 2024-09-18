@@ -1,0 +1,114 @@
+@import "../../global";
+
+.add {
+  display: flex;
+  justify-content: center;
+
+  .container {
+    width: 1400px;
+    padding: 100px 80px;
+
+    h1 {
+      font-family: $font-family-primary;
+      width: max-content;
+      margin-bottom: 20px;
+      color: black;
+      font-weight: bold;
+      font-size: $font-size-large;
+    }
+
+    .sections {
+      display: flex;
+      justify-content: space-between;
+      gap: 200px;
+      color: $text-color-pages;
+
+      hr {
+        border: none;
+        height: 1px;
+        background-color: gray;
+        margin: 0;
+      }
+
+      label {
+        margin-top: 10px;
+        font-family: $font-family-primary;
+        font-size: 20px;
+        font-weight: 600;
+      }
+
+      .info,
+      .details {
+        margin-top: 40px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        justify-content: space-between;
+
+        p {
+          font-size: $font-size-small;
+          font-family: $font-family-secondary;
+        }
+        .item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          label {
+            color: gray;
+            font-size: 18px;
+            flex: 1;
+          }
+
+          img {
+            cursor: pointer;
+            margin-left: 10px;
+            height: 20px;
+            width: auto;
+          }
+        }
+
+        .pay {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          width: 100%;
+
+          label {
+            margin: 0;
+          }
+
+          input {
+            flex: 1;
+          }
+        }
+
+        input,
+        select,
+        textarea {
+          height: 45px;
+          border-radius: 10px;
+        }
+
+        .button-container {
+          display: flex;
+          justify-content: center;
+          margin-top: 20px;
+        }
+
+        button {
+          border: none;
+          padding: 20px;
+          color: white;
+          font-weight: 500;
+          font-size: 18px;
+          background-color: $primary-color;
+          cursor: pointer;
+          width: 200px;
+          border-radius: 30px;
+        }
+      }
+    }
+  }
+}

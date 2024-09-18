@@ -1,0 +1,52 @@
+@import "../../global";
+
+.accountCard {
+  width: 367px;
+  height: 245px;
+  color: $background-color;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: $card-shadow;
+
+  img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .info {
+    font-family: $font-family-secondary;
+    background-color: $background-color;
+    height: 60px;
+    position: absolute;
+    left: 20px;
+    right: 60px;
+    bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    padding-left: 20px;
+    gap: 20px;
+    overflow: hidden;
+    box-shadow: $card-shadow;
+
+    img {
+      display: flex;
+      align-items: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+    .texts {
+      color: black;
+
+      h2 {
+        margin: 0;
+        font-size: $font-size-small;
+      }
+      span {
+        font-size: 12px;
+      }
+    }
+  }
+}

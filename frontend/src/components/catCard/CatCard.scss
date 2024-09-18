@@ -1,0 +1,28 @@
+@import "../../global";
+
+.catCard {
+  width: 209px;
+  height: 272px;
+  color: $background-color;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  box-shadow: $card-shadow;
+
+  img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .genre {
+    color: $background-color;
+    font-family: $font-family-secondary;
+    font-size: $font-size-small;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+  }
+}
