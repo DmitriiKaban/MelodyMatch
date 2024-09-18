@@ -1,0 +1,74 @@
+@import "../../global";
+
+.messages {
+  display: flex;
+  justify-content: center;
+
+  .container {
+    width: 1400px;
+    padding: 50px 80px;
+
+    .title {
+      display: flex;
+      justify-content: space-between;
+      font-family: $font-family-primary;
+    }
+
+    table {
+      width: 100%;
+      font-family: $font-family-secondary;
+
+      tr {
+        height: 70px;
+
+        th {
+          text-align: left;
+        }
+
+        &:not(.active) td {
+          padding: 10px;
+          border-radius: 10px;
+          background-color: #f5f5f5;
+
+          &:first-child {
+            font-weight: 600;
+          }
+
+          &:nth-child(2),
+          &:nth-child(3) {
+            color: $text-color-pages;
+          }
+
+          &:hover {
+            background-color: rgba(#e0dfdf, 1);
+          }
+        }
+
+        button {
+          background-color: $primary-color;
+          color: white;
+          padding: 10px;
+          border: none;
+          cursor: pointer;
+          border-radius: 30px;
+        }
+
+        &.active {
+          background-color: rgba(19, 1, 96, 0.17);
+          font-weight: 600;
+
+          td {
+            border-radius: 10px;
+            background-color: transparent;
+            padding: 10px;
+            margin-right: 10px;
+          }
+
+          &:hover {
+            background-color: rgba(19, 1, 96, 0.25);
+          }
+        }
+      }
+    }
+  }
+}

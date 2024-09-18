@@ -9,6 +9,8 @@ import {
   Signup,
   Add,
   Create,
+  Message,
+  Messages,
 } from "./pages";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import "./app.scss";
@@ -65,6 +67,14 @@ function App() {
         {
           path: "/account",
           element: <Create />,
+        },
+        {
+          path: "/message/:id",
+          element: <Message />,
+        },
+        {
+          path: "/messages",
+          element: <Messages />,
         },
       ],
     },

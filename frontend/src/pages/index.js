@@ -7,3 +7,5 @@ export { default as Login } from "./login/Login";
 export { default as Signup } from "./signup/Signup";
 export { default as Add } from "./add/Add";
 export { default as Create } from "./add/Create";
+export { default as Message } from "./message/Message";
+export { default as Messages } from "./messages/Messages";
