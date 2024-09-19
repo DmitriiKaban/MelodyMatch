@@ -3,14 +3,14 @@ package com.app.lovemusic.services;
 import com.app.lovemusic.dtos.LoginUserDto;
 import com.app.lovemusic.dtos.RegisterUserDto;
 import com.app.lovemusic.entity.User;
+import com.app.lovemusic.entity.accountTypes.MusicianAccountType;
+import com.app.lovemusic.entity.accountTypes.OrganizerAccountType;
 import com.app.lovemusic.exceptions.UserAlreadyExistsException;
 import com.app.lovemusic.repositories.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Set;
 
 @Service
 public class AuthenticationService {
@@ -37,11 +37,19 @@ public class AuthenticationService {
         user.setPassword(passwordEncoder.encode(input.getPassword()));
         user.setFullName(input.getFullName());
 
-        if (!Set.of("organizer", "musician").contains(input.getRole().toLowerCase())) {
-            throw new IllegalArgumentException("Invalid role");
+        user.setUserRole("ROLE_USER");
+
+        switch (input.getAccountType().toLowerCase()) {
+            case "organizer":
+                user.setAccountType(new OrganizerAccountType());
+                break;
+            case "musician":
+                user.setAccountType(new MusicianAccountType());
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid account type");
         }
 
-        user.setUserRole("ROLE_" + input.getRole().toUpperCase());
 
         if (userRepository.findByEmail(input.getEmail()).isPresent()) {
             throw new UserAlreadyExistsException("User with email " + input.getEmail() + " already exists");

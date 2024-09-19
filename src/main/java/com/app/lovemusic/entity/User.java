@@ -1,7 +1,10 @@
 package com.app.lovemusic.entity;
 
+import com.app.lovemusic.entity.accountTypes.AccountType;
+import com.app.lovemusic.entity.accountTypes.MusicianAccountType;
+import com.app.lovemusic.entity.accountTypes.OrganizerAccountType;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.Data;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -16,8 +19,7 @@ import java.util.stream.Collectors;
 
 @Table(name = "users")
 @Entity
-@Getter
-@Setter
+@Data
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,8 +33,19 @@ public class User implements UserDetails {
     @Column(unique = true, length = 50, nullable = false)
     private String email;
 
-    @Column()
+    @Column
     private String password;
+
+    @Column
+    private String profilePicture;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id", referencedColumnName = "id")
+    private PaymentInformation paymentInformation;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id", referencedColumnName = "id")
+    private AccountType accountType;
 
     @Column
     private String userRole;
@@ -65,5 +78,13 @@ public class User implements UserDetails {
     @Override
     public String getUsername() {
         return email;
+    }
+
+    public boolean isMusician() {
+        return accountType instanceof MusicianAccountType;
+    }
+
+    public boolean isOrganizer() {
+        return accountType instanceof OrganizerAccountType;
     }
 }
