@@ -1,0 +1,288 @@
+@import "../../global";
+
+.account {
+  display: flex;
+  justify-content: center;
+  margin: 40px 80px;
+
+  .container {
+    display: flex;
+    width: 100%;
+
+    .left {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      font-family: $font-family-secondary;
+      color: $text-color-pages;
+      background-color: #f4f4f6;
+      padding: 40px;
+      border-radius: 20px;
+
+      .parts {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .part1,
+      .part2 {
+        flex: 1;
+        margin: 10px;
+      }
+
+      .top {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+
+        img {
+          width: 100px;
+          height: 100px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+
+        .info {
+          display: flex;
+          flex-direction: column;
+          gap: 5px;
+
+          span {
+            font-size: $font-size-medium;
+            font-weight: bold;
+            color: black;
+          }
+
+          .stars {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+
+            img {
+              height: 14px;
+              width: 14px;
+            }
+
+            span {
+              font-size: $font-size-small;
+              font-weight: bold;
+              color: $secondary-color;
+            }
+          }
+
+          button {
+            background-color: white;
+            border-radius: 10px;
+            border: 1px solid $text-color-pages;
+            padding: 5px;
+            font-weight: bold;
+            color: $text-color-pages;
+            cursor: pointer;
+            margin-top: 5px;
+          }
+        }
+      }
+
+      button {
+        margin-top: 20px;
+        background-color: $primary-color;
+        border-radius: 10px;
+        width: 150px;
+        padding: 10px;
+        font-weight: bold;
+        color: white;
+        cursor: pointer;
+      }
+
+      .carousel-prev,
+      .carousel-next {
+        color: white;
+        width: 50px;
+        position: absolute;
+        height: 50px;
+        background-color: $primary-color;
+        border-radius: 50%;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+
+        &::before {
+          filter: contrast(0) brightness(2);
+        }
+      }
+
+      .slider {
+        width: 100%;
+        margin-bottom: 40px;
+        margin-left: 10px;
+      }
+
+      h2 {
+        font-weight: 600;
+        font-family: $font-family-primary;
+        color: black;
+      }
+
+      p {
+        font-weight: 300;
+        line-height: 25px;
+        margin-top: 0;
+        width: 100%;
+      }
+
+      .seller {
+        margin-top: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        .box {
+          width: 600px;
+          border: 1px solid $text-color-pages;
+          border-radius: 5px;
+          padding: 20px;
+          margin-top: 20px;
+        }
+
+        .items {
+          display: flex;
+          width: 100%;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          margin-left: 30px;
+        }
+
+        .item {
+          width: calc(50% - 10px);
+          display: flex;
+          flex-direction: column;
+          gap: 5px;
+          margin-bottom: 20px;
+
+          .title {
+            font-weight: 600;
+          }
+        }
+
+        hr {
+          height: 0;
+          border: 0.5px solid lightgray;
+          margin-bottom: 10px;
+          width: 90%;
+        }
+      }
+
+      .bottom {
+        margin-left: 30px;
+        width: 90%;
+      }
+
+      .reviews {
+        margin: 20px;
+
+        .top {
+          display: flex;
+          justify-content: column;
+          justify-content: space-between;
+          align-items: center;
+          width: 100%;
+
+          h3 {
+            cursor: pointer;
+            color: black;
+            font-size: $font-size-small;
+            text-decoration: underline;
+          }
+        }
+
+        .item {
+          display: flex;
+          flex-direction: column;
+          gap: 30px;
+          margin: 20px 0px;
+
+          .user {
+            display: flex;
+            align-items: center;
+
+            .pp {
+              height: 50px;
+              width: 50px;
+              border-radius: 50%;
+              margin-right: 10px;
+            }
+
+            .info {
+              font-weight: bold;
+              color: black;
+            }
+
+            .country {
+              display: flex;
+              align-items: center;
+              gap: 10px;
+              color: $text-color-pages;
+
+              img {
+                width: 20px;
+              }
+            }
+          }
+
+          .stars {
+            display: flex;
+            gap: 5px;
+
+            img {
+              height: 14px;
+              width: 14px;
+            }
+
+            span {
+              font-size: 14px;
+              font-weight: bold;
+              color: $secondary-color;
+            }
+          }
+
+          .helpful {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: black;
+            font-weight: bold;
+            font-size: $font-size-small;
+
+            h1 {
+              font-size: $font-size-small;
+            }
+
+            span {
+              cursor: pointer;
+
+              &:hover {
+                text-decoration: underline;
+              }
+            }
+
+            img {
+              width: 14px;
+            }
+
+            .thumbsdown {
+              transform: scaleY(-1);
+            }
+          }
+        }
+
+        hr {
+          height: 0;
+          border: 0.5px solid lightgray;
+          margin: 20px 0px;
+          width: 100%;
+        }
+      }
+    }
+  }
+}

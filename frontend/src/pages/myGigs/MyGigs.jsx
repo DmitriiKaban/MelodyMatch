@@ -14,11 +14,9 @@ function MyGigs() {
       <div className="container">
         <div className="title">
           <h1>{currentUser.isMusician ? " My Gigs" : "My Events"}</h1>
-          {currentUser.isMusician && (
-            <Link to="/add">
-              <button>Add New Gig</button>
-            </Link>
-          )}
+          <Link to="/add">
+            <button>Add New</button>
+          </Link>
         </div>
         <table>
           <tr>
