@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { Link } from "react-router-dom";
 import "./Add.scss";
 import { Banner } from "../../components";
 
@@ -32,7 +33,7 @@ const Add = () => {
       </div>
       <div className="add" ref={formRef}>
         <div className="container">
-          <h1>{userIsMusician ? "Add New Gig" : "Add New Event"}</h1>
+          <h1>Create Account</h1>
           <div className="sections">
             <div className="info">
               <div className="item">
@@ -97,10 +98,6 @@ const Add = () => {
                 <option value="rock">Rock</option>
                 <option value="pop">Pop</option>
               </select>
-
-              <div className="button-container">
-                <button>Create</button>
-              </div>
             </div>
 
             <div className="details">
@@ -135,21 +132,11 @@ const Add = () => {
                 No card added. Please add your credit card information for
                 seamless payments.
               </p>
-              <div className="item pay">
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    width: "100%",
-                  }}
-                >
-                  <label htmlFor="">Owner</label>
-                  <label htmlFor="">CVV</label>
-                </div>
+              <div className="item ">
+                <label htmlFor="">Card Number</label>
               </div>
               <div className="item pay">
-                <input type="text" placeholder="Enter card owner name" />
-                <input type="text" placeholder="Enter CVV" />
+                <input type="text" placeholder="Enter card number" />
               </div>
               <div
                 className="item pay"
@@ -159,16 +146,21 @@ const Add = () => {
                   width: "100%",
                 }}
               >
-                <label htmlFor="">Card Number</label>
+                <label htmlFor="">CVV</label>
 
                 <label htmlFor="">Expiration Date</label>
               </div>
               <div className="item pay">
-                <input type="text" placeholder="Enter card number" />
+                <input type="text" placeholder="Enter CVV" />
                 <input type="text" placeholder="MM/YY" />
               </div>
             </div>
           </div>
+          <Link to="/account/user/:id" className="link">
+            <div className="button-container">
+              <button>Create</button>
+            </div>
+          </Link>
         </div>
       </div>
     </>

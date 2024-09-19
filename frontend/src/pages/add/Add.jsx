@@ -36,7 +36,7 @@ const Add = () => {
           <div className="sections">
             <div className="info">
               <div className="item">
-                <label htmlFor="">Title</label>
+                <label htmlFor="">Post Title</label>
                 <img src="/img/icons/Edit.png" alt="" />
               </div>
               <hr />
@@ -51,10 +51,10 @@ const Add = () => {
               </div>
               <hr />
               <select name="cats" id="cats">
-                <option value="design">Design</option>
-                <option value="web">Web Development</option>
-                <option value="animation">Animation</option>
-                <option value="music">Music</option>
+                <option value="design">See all</option>
+                <option value="web">Rock</option>
+                <option value="animation">Traditional</option>
+                <option value="music">Classical</option>
               </select>
 
               <div className="item">
@@ -77,9 +77,11 @@ const Add = () => {
               </div>
               <hr />
               <textarea
-                name=""
-                id=""
-                placeholder="Brief descriptions to introduce your service to customers"
+                placeholder={
+                  userIsMusician
+                    ? "Brief description of your services to your customers"
+                    : "Brief description of your event"
+                }
                 cols="0"
                 rows="16"
               ></textarea>
@@ -91,7 +93,9 @@ const Add = () => {
 
             <div className="details">
               <div className="item">
-                <label htmlFor="">Service Title</label>
+                <label htmlFor="">
+                  {userIsMusician ? "Service title" : "Event title"}
+                </label>
                 <img src="/img/icons/Edit.png" alt="" />
               </div>
               <hr />
@@ -100,7 +104,7 @@ const Add = () => {
                 placeholder={`e.g. ${
                   userIsMusician
                     ? "1 hour canto with background band"
-                    : "Your event title"
+                    : "in need of a wedding singer"
                 }`}
               />
 
@@ -110,32 +114,45 @@ const Add = () => {
               </div>
               <hr />
               <textarea
-                name=""
-                id=""
-                placeholder="Short description of your service"
+                placeholder={
+                  userIsMusician
+                    ? "What services are you offering?"
+                    : "What are you looking for"
+                }
                 cols="30"
                 rows="10"
               ></textarea>
 
               <div className="item">
-                <label htmlFor="">Add Features</label>
+                <label htmlFor="">
+                  {userIsMusician ? "Add extra features" : "Add extra rules"}
+                </label>
                 <img src="/img/icons/Edit.png" alt="" />
               </div>
               <hr />
-              <input type="text" placeholder="e.g. song-writing" />
-              <input type="text" placeholder="e.g. other genres" />
-              <input type="text" placeholder="e.g. band" />
+              <input
+                type="text"
+                placeholder={
+                  userIsMusician
+                    ? "e.g. song writing"
+                    : "e.g. artist needs to know spanish"
+                }
+              />
+              <input
+                type="text"
+                placeholder={
+                  userIsMusician
+                    ? "e.g. other genres"
+                    : "e.g. experience with big crowds"
+                }
+              />
 
-              {userIsMusician && (
-                <>
-                  <div className="item">
-                    <label htmlFor="">Price</label>
-                    <img src="/img/icons/Edit.png" alt="" />
-                  </div>
-                  <hr />
-                  <input type="number" />
-                </>
-              )}
+              <div className="item">
+                <label htmlFor="">{userIsMusician ? "Price" : "Budget"}</label>
+                <img src="/img/icons/Edit.png" alt="" />
+              </div>
+              <hr />
+              <input type="number" />
             </div>
           </div>
         </div>

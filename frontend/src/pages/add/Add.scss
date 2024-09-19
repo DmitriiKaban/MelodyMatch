@@ -8,6 +8,24 @@
     width: 1400px;
     padding: 100px 80px;
 
+    .button-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 40px;
+
+      button {
+        border: none;
+        padding: 20px;
+        color: white;
+        font-weight: 500;
+        font-size: 18px;
+        background-color: $primary-color;
+        cursor: pointer;
+        width: 200px;
+        border-radius: 30px;
+      }
+    }
+
     h1 {
       font-family: $font-family-primary;
       width: max-content;

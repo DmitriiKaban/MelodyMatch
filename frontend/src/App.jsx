@@ -11,6 +11,7 @@ import {
   Create,
   Message,
   Messages,
+  Account,
 } from "./pages";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import "./app.scss";
@@ -76,6 +77,23 @@ function App() {
           path: "/messages",
           element: <Messages />,
         },
+        {
+          path: "/account/user/:id",
+          element: <Account />,
+        },
+        // {
+        //   path: "/pay/:id",
+        //   element: <Pay />,
+        // },
+        // {
+        //   path: "/success",
+        //   element: <Success />,
+        // },
+        //
+        // other used paths:
+        //
+        // "/gigs?genre="
+        // "/gigs?search="
       ],
     },
   ]);
