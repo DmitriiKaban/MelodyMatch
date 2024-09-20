@@ -3,14 +3,12 @@ package com.app.lovemusic.entity;
 import com.app.lovemusic.entity.accountTypes.MusicianAccountType;
 import com.app.lovemusic.entity.accountTypes.OrganizerAccountType;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 @Table(name = "reviews")
 @Entity
-@Getter
-@Setter
-public class MusicianRatingReviews {
+@Data
+public class MusicianRatingReview {
 
     @EmbeddedId
     private RatingReviewKey ratingReviewKey;

@@ -1,6 +1,6 @@
 package com.app.lovemusic.entity.accountTypes;
 
-import com.app.lovemusic.entity.MusicianRatingReviews;
+import com.app.lovemusic.entity.MusicianRatingReview;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,6 +24,6 @@ public class OrganizerAccountType extends AccountType {
 
     @Column
     @OneToMany(mappedBy = "organizer")
-    private List<MusicianRatingReviews> reviews;
+    private List<MusicianRatingReview> reviews;
 
 }
