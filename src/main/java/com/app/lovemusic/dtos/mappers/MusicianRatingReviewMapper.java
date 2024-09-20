@@ -15,7 +15,7 @@ public class MusicianRatingReviewMapper {
         return musicianRatingReviewDto;
     }
 
-    public MusicianRatingReview toMusicianRatingReview(int musicianId, int organizerId, MusicianRatingReviewDto musicianRatingReviewDto) {
+    public MusicianRatingReview toMusicianRatingReview(Long musicianId, Long organizerId, MusicianRatingReviewDto musicianRatingReviewDto) {
         MusicianRatingReview musicianRatingReview = new MusicianRatingReview();
         musicianRatingReview.getRatingReviewKey().setMusicianId(musicianId);
         musicianRatingReview.getRatingReviewKey().setOrganizerId(organizerId);

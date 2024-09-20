@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Data
 public class RatingReviewKey implements Serializable {
 
-    private Integer organizerId;
-    private Integer musicianId;
+    private Long organizerId;
+    private Long musicianId;
 
 }

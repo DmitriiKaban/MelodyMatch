@@ -1,7 +1,6 @@
 package com.app.lovemusic.dtos;
 
 import com.app.lovemusic.entity.AuthenticationProviders;
-import com.app.lovemusic.entity.accountTypes.AccountType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -20,8 +19,8 @@ public class UserDto {
     @NotBlank(message = "Profile picture is required")
     private String profilePicture;
 
-    @NotNull(message = "Account type is required")
-    private AccountType accountType;
+    @NotBlank(message = "Account type is required")
+    private String accountType;
 
     @NotBlank(message = "User role is required")
     private String userRole;

@@ -1,10 +1,8 @@
 package com.app.lovemusic.entity;
 
-import com.app.lovemusic.entity.accountTypes.AccountType;
-import com.app.lovemusic.entity.accountTypes.MusicianAccountType;
-import com.app.lovemusic.entity.accountTypes.OrganizerAccountType;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -20,11 +18,13 @@ import java.util.stream.Collectors;
 @Table(name = "users")
 @Entity
 @Data
-public class User implements UserDetails {
+@Inheritance(strategy = InheritanceType.JOINED)
+@NoArgsConstructor
+public abstract class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    private Integer id;
+    private Long id;
 
     @Column(nullable = false)
     private String fullName;
@@ -43,10 +43,6 @@ public class User implements UserDetails {
     @JoinColumn(name = "id", referencedColumnName = "id")
     private PaymentInformation paymentInformation;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id", referencedColumnName = "id")
-    private AccountType accountType;
-
     @Column
     private String userRole;
 
@@ -61,6 +57,18 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(name = "auth_provider")
     private AuthenticationProviders authProvider;
+
+    public User(String fullName, String email, String password, String profilePicture, PaymentInformation paymentInformation, String userRole, Date createdAt, Date updatedAt, AuthenticationProviders authProvider) {
+        this.fullName = fullName;
+        this.email = email;
+        this.password = password;
+        this.profilePicture = profilePicture;
+        this.paymentInformation = paymentInformation;
+        this.userRole = userRole;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.authProvider = authProvider;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -80,11 +88,4 @@ public class User implements UserDetails {
         return email;
     }
 
-    public boolean isMusician() {
-        return accountType instanceof MusicianAccountType;
-    }
-
-    public boolean isOrganizer() {
-        return accountType instanceof OrganizerAccountType;
-    }
 }

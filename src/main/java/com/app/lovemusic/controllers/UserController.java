@@ -3,10 +3,9 @@ package com.app.lovemusic.controllers;
 import com.app.lovemusic.dtos.PaymentInfoDto;
 import com.app.lovemusic.dtos.UserDto;
 import com.app.lovemusic.dtos.mappers.UserMapper;
-import com.app.lovemusic.entity.MusicianRatingReview;
 import com.app.lovemusic.entity.User;
-import com.app.lovemusic.entity.accountTypes.MusicianAccountType;
-import com.app.lovemusic.entity.accountTypes.OrganizerAccountType;
+import com.app.lovemusic.entity.accountTypes.Musician;
+import com.app.lovemusic.entity.accountTypes.Organizer;
 import com.app.lovemusic.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,21 +31,6 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         User currentUser = (User) authentication.getPrincipal();
-
-        return ResponseEntity.ok(userMapper.toDto(currentUser));
-    }
-
-    @PreAuthorize("hasRole('USER')")
-    @GetMapping("/assign-account-type/{accountType}")
-    public ResponseEntity<UserDto> assignAccountType(@PathVariable String accountType) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        User currentUser = (User) authentication.getPrincipal();
-
-        if (!List.of("musician", "organizer").contains(accountType.toLowerCase())) {
-            throw new IllegalArgumentException("Invalid account type");
-        }
-        userService.updateUserAccountType(currentUser, accountType);
 
         return ResponseEntity.ok(userMapper.toDto(currentUser));
     }
@@ -100,15 +84,13 @@ public class UserController {
             throw new IllegalArgumentException("User not found");
         }
 
-        if(!requestedUser.isOrganizer()) {
+        if(!(requestedUser instanceof Organizer)) {
             throw new IllegalArgumentException("You are not an organizer");
         }
 
-        if(!user.isMusician()) {
+        if(!(user instanceof Musician musician)) {
             throw new IllegalArgumentException("User is not a musician");
         }
-
-        MusicianAccountType musician = (MusicianAccountType) user.getAccountType();
 
         return ResponseEntity.ok(musician.getResume());
     }
@@ -126,15 +108,13 @@ public class UserController {
             throw new IllegalArgumentException("User not found");
         }
 
-        if(!requestedUser.isOrganizer()) {
+        if(!(requestedUser instanceof Organizer)) {
             throw new IllegalArgumentException("You are not an organizer");
         }
 
-        if(!user.isMusician()) {
+        if(!(user instanceof Musician musician)) {
             throw new IllegalArgumentException("User is not a musician");
         }
-
-        MusicianAccountType musician = (MusicianAccountType) user.getAccountType();
 
         return ResponseEntity.ok(musician.getWorkExperience());
     }

@@ -4,8 +4,8 @@ import com.app.lovemusic.dtos.MusicianRatingReviewDto;
 import com.app.lovemusic.dtos.mappers.MusicianRatingReviewMapper;
 import com.app.lovemusic.entity.MusicianRatingReview;
 import com.app.lovemusic.entity.User;
-import com.app.lovemusic.entity.accountTypes.MusicianAccountType;
-import com.app.lovemusic.entity.accountTypes.OrganizerAccountType;
+import com.app.lovemusic.entity.accountTypes.Musician;
+import com.app.lovemusic.entity.accountTypes.Organizer;
 import com.app.lovemusic.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +36,8 @@ public class RatingReviewsController {
 
         List<MusicianRatingReview> reviews;
 
-        if(user.isMusician()) reviews = ((MusicianAccountType) user.getAccountType()).getReviews();
-        else reviews = ((OrganizerAccountType) user.getAccountType()).getReviews();
+        if(user instanceof Musician) reviews = ((Musician) user).getReviews();
+        else reviews = ((Organizer) user).getReviews();
 
         return ResponseEntity.ok(reviews);
     }
@@ -49,7 +49,7 @@ public class RatingReviewsController {
 
         User currentUser = (User) authentication.getPrincipal();
 
-        if(!currentUser.isOrganizer()) {
+        if(!(currentUser instanceof Organizer organizer)) {
             throw new IllegalArgumentException("You are not an organizer");
         }
 
@@ -59,18 +59,14 @@ public class RatingReviewsController {
             throw new IllegalArgumentException("User not found");
         }
 
-        if (!reviewedUser.isMusician()) {
+        if (!(reviewedUser instanceof Musician musician)) {
             throw new IllegalArgumentException("User is not a musician");
         }
-
-        MusicianAccountType musician = (MusicianAccountType) reviewedUser.getAccountType();
-        OrganizerAccountType organizer = (OrganizerAccountType) currentUser.getAccountType();
 
         List<MusicianRatingReview> reviews = musician.getReviews();
 
         reviews.add(musicianRatingReviewMapper.toMusicianRatingReview(musician.getId(), organizer.getId(), reviewDto));
         musician.setReviews(reviews);
-        reviewedUser.setAccountType(musician);
 
         return ResponseEntity.ok(reviewDto);
     }
