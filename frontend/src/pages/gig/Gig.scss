@@ -13,7 +13,6 @@
     gap: 50px;
     width: 100%;
     padding-top: 80px;
-    
 
     .left {
       flex: 2;
@@ -24,21 +23,21 @@
       color: $text-color-pages;
 
       .carousel-prev,
-  .carousel-next {
-    color: white;
-    width: 50px;
-    position: absolute;
-    height: 50px;
-    background-color: #130160;
-    border-radius: 50%;
-    top: 0;
-    bottom: 0;
-    margin: auto;
+      .carousel-next {
+        color: white;
+        width: 50px;
+        position: absolute;
+        height: 50px;
+        background-color: #130160;
+        border-radius: 50%;
+        top: 0;
+        bottom: 0;
+        margin: auto;
 
-    &::before {
-      filter: contrast(0) brightness(2);
-    }
-  }
+        &::before {
+          filter: contrast(0) brightness(2);
+        }
+      }
       .breadCrumbs {
         font-size: $font-size-small;
       }
@@ -81,7 +80,7 @@
 
       .slider {
         width: 550px;
-        
+
         img {
           border-radius: 10px;
           max-height: 400px;
@@ -99,12 +98,11 @@
         font-weight: 300;
         line-height: 25px;
         width: 550px;
-        margin-top:0;
-       
+        margin-top: 0;
       }
 
       .seller {
-       margin-top: 10px;
+        margin-top: 10px;
         display: flex;
         flex-direction: column;
         gap: 20px;
@@ -151,52 +149,51 @@
               background-color: white;
               border-radius: 10px;
               border: 1px solid $text-color-pages;
-             padding: 5px;
-             font-weight: bold;
-             color:  $text-color-pages;
-             cursor: pointer;
+              padding: 5px;
+              font-weight: bold;
+              color: $text-color-pages;
+              cursor: pointer;
             }
           }
         }
 
         .box {
-          width: 550px; 
+          width: 550px;
           border: 1px solid $text-color-pages;
           border-radius: 5px;
           padding: 20px;
           margin-top: 20px;
         }
-        
+
         .items {
           display: flex;
-          justify-content: space-between; 
-          flex-wrap: wrap; 
+          justify-content: space-between;
+          flex-wrap: wrap;
         }
-        
+
         .item {
-          width: calc(50% - 10px); 
+          width: calc(50% - 10px);
           display: flex;
           flex-direction: column;
           gap: 5px;
           margin-bottom: 20px;
-        
+
           .title {
             font-weight: 600;
           }
         }
-        
+
         hr {
           height: 0;
           border: 0.5px solid lightgray;
           margin-bottom: 10px;
         }
-        
       }
 
       .reviews {
         margin-top: 20px;
 
-        .top{
+        .top {
           display: flex;
           justify-content: column;
           justify-content: space-between;
@@ -206,8 +203,8 @@
           h3 {
             cursor: pointer;
             color: black;
-           font-size:  $font-size-small;
-           text-decoration: underline;
+            font-size: $font-size-small;
+            text-decoration: underline;
           }
         }
 
@@ -263,15 +260,15 @@
             font-weight: bold;
             font-size: $font-size-small;
 
-            h1{
+            h1 {
               font-size: $font-size-small;
             }
 
-            span{
+            span {
               cursor: pointer;
 
               &:hover {
-                text-decoration: underline; 
+                text-decoration: underline;
               }
             }
 
@@ -317,7 +314,6 @@
         align-items: center;
         justify-content: space-between;
         font-size: 17px;
-        
 
         h2 {
           font-weight: 600;
@@ -325,7 +321,6 @@
         }
 
         h3 {
-          
           color: $text-color;
           font-weight: 600;
         }
@@ -339,7 +334,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        background-color: #F9F9FA;
+        background-color: #f9f9fa;
         font-size: 14px;
         padding: 10px;
 
