@@ -1,0 +1,67 @@
+@import "../../global";
+
+.orders {
+    display: flex;
+    justify-content: center;
+    color: #555;
+  
+    .container {
+      width: 1400px;
+      max-width: 1400px; 
+      width: 100%;
+    padding-left: 80px;
+    padding-right: 80px;
+    padding-top: 50px;
+    padding-bottom:  80px;
+  
+      .title {
+        display: flex;
+        justify-content: space-between;
+        font-family: $font-family-primary;
+        font-size: $font-size-medium;
+        color: black;
+      }
+  
+      table {
+        width: 100%;
+        font-family: $font-family-secondary;
+  
+        tr {
+          height: 50px;
+          th {
+            text-align: left;
+          }
+
+          th, td {
+            padding-left: 10px; 
+            text-align: left;
+          }
+
+          td {
+            sup{
+              font-size: 15px;
+            }
+  
+            .image {
+              width: 50px;
+              height: 25px;
+              object-fit: cover;
+            }
+  
+            .message {
+              width: 25px;
+              cursor: pointer;
+            }
+          }
+
+          &:nth-child(even) {
+            background: linear-gradient(
+              to right,
+              rgba(white, 1),
+              rgba($primary-color, 0.17)
+            );
+        }
+      }
+    }
+  }
+}

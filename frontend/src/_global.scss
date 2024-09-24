@@ -1,0 +1,24 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap");
+
+// Colors
+$primary-color: #130160;
+$secondary-color: #bc11b0;
+$background-color: #ffffff;
+$text-color: #000000;
+$text-color-pages: #7b7b7f;
+
+// Font Sizes
+$font-size-large: 40px;
+$font-size-medium: 20px;
+$font-size-small: 15px;
+
+// Font Families
+$font-family-primary: "Plus Jakarta Sans", sans-serif;
+$font-family-secondary: "Inter", sans-serif;
+
+// Styles
+$card-shadow: 0px 0px 16px -6px rgba(
+    $color: #000000,
+    $alpha: 1,
+  );

@@ -1,7 +1,8 @@
 package com.app.lovemusic.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -16,13 +17,14 @@ import java.util.stream.Collectors;
 
 @Table(name = "users")
 @Entity
-@Getter
-@Setter
-public class User implements UserDetails {
+@Data
+@Inheritance(strategy = InheritanceType.JOINED)
+@NoArgsConstructor
+public abstract class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    private Integer id;
+    private Long id;
 
     @Column(nullable = false)
     private String fullName;
@@ -31,8 +33,15 @@ public class User implements UserDetails {
     @Column(unique = true, length = 50, nullable = false)
     private String email;
 
-    @Column()
+    @Column
     private String password;
+
+    @Column
+    private String profilePicture;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id", referencedColumnName = "id")
+    private PaymentInformation paymentInformation;
 
     @Column
     private String userRole;
@@ -48,6 +57,18 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(name = "auth_provider")
     private AuthenticationProviders authProvider;
+
+    public User(String fullName, String email, String password, String profilePicture, PaymentInformation paymentInformation, String userRole, Date createdAt, Date updatedAt, AuthenticationProviders authProvider) {
+        this.fullName = fullName;
+        this.email = email;
+        this.password = password;
+        this.profilePicture = profilePicture;
+        this.paymentInformation = paymentInformation;
+        this.userRole = userRole;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.authProvider = authProvider;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -66,4 +87,5 @@ public class User implements UserDetails {
     public String getUsername() {
         return email;
     }
+
 }

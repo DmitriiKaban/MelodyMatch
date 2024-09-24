@@ -1,0 +1,86 @@
+@import "../../global";
+
+.footer {
+  position: relative;
+  overflow: hidden;
+
+  &.active {
+    background-color: $primary-color;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("/img/background.png") no-repeat;
+    background-size: cover;
+    transform: scaleX(-1);
+    z-index: -1;
+  }
+
+  .container {
+    position: relative;
+    color: white;
+
+    .top {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      padding: 100px;
+      padding-top: 50px;
+      padding-bottom: 20px;
+
+      font-family: $font-family-secondary;
+
+      .left {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 40px;
+
+        .item {
+          display: grid;
+          font-size: 11px;
+          gap: 10px;
+
+          h2 {
+            font-size: $font-size-small;
+          }
+        }
+      }
+      .right {
+        display: grid;
+        place-items: center;
+
+        img {
+          width: 133px;
+          height: 33px;
+        }
+      }
+    }
+
+    .bottom {
+      font-family: $font-family-primary;
+      display: flex;
+      justify-content: center;
+      padding-bottom: 30px;
+
+      .copy {
+        margin-right: 20px;
+      }
+      img {
+        width: 20px;
+        margin-right: 10px;
+      }
+    }
+
+    hr {
+      height: 0;
+      border: 1px solid rgba(255, 255, 255, 0.504);
+      margin-left: 100px;
+      margin-right: 100px;
+      margin-bottom: 20px;
+    }
+  }
+}

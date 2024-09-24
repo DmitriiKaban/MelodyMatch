@@ -2,11 +2,11 @@ package com.app.lovemusic.repositories;
 
 import com.app.lovemusic.entity.User;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.NoRepositoryBean;
 
 import java.util.Optional;
 
-@Repository
+@NoRepositoryBean
 public interface UserRepository extends CrudRepository<User, Integer> {
     Optional<User> findByEmail(String email);
 }
