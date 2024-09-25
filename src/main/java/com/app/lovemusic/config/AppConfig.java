@@ -1,6 +1,10 @@
 package com.app.lovemusic.config;
 
-import com.app.lovemusic.repositories.UserRepository;
+import com.app.lovemusic.entity.User;
+import com.app.lovemusic.repositories.MusicianRepository;
+import com.app.lovemusic.repositories.OrganizerRepository;
+import com.app.lovemusic.services.MusicianService;
+import com.app.lovemusic.services.OrganizerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,12 +23,12 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 public class AppConfig {
 
-    private final UserRepository userRepository;
+    private final MusicianService musicianService;
+    private final OrganizerService organizerService;
 
     @Bean
     UserDetailsService userDetailsService() {
-        return username -> userRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return username -> musicianService.findByEmail(username) == null ? organizerService.findByEmail(username) : musicianService.findByEmail(username);
     }
 
     @Bean

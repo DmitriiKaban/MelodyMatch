@@ -6,46 +6,47 @@ import com.app.lovemusic.entity.PaymentInformation;
 import com.app.lovemusic.entity.User;
 import com.app.lovemusic.entity.accountTypes.Musician;
 import com.app.lovemusic.entity.accountTypes.Organizer;
-import com.app.lovemusic.repositories.MusicianRepository;
-import com.app.lovemusic.repositories.OrganizerRepository;
+import com.app.lovemusic.repositories.UserRepository;
+import com.app.lovemusic.util.UserRowMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements UserRepository {
 
-    private final MusicianRepository musicianRepository;
-    private final OrganizerRepository organizerRepository;
+    private final JdbcTemplate jdbcTemplate;
 
     public List<User> allUsers() {
-        List<User> users = new ArrayList<>();
 
-        musicianRepository.findAll().forEach(users::add);
-        organizerRepository.findAll().forEach(users::add);
+        String sql = "SELECT * FROM users";
+        List<User> users = jdbcTemplate.query(sql, new UserRowMapper());
 
         return users;
     }
 
     public User findByEmail(String email) {
-        User user = musicianRepository.findByEmail(email).orElse(null);
-        if(user == null) user = organizerRepository.findByEmail(email).orElse(null);
 
-        return user;
+        String sql = "SELECT * FROM users WHERE email = ?";
+        return jdbcTemplate.queryForObject(sql, new UserRowMapper(), email);
+    }
+
+    @Override
+    public List<User> findAll() {
+        return allUsers();
     }
 
     public User findById(Integer id) {
-        User user = musicianRepository.findById(id).orElse(null);
-        if(user == null) user = organizerRepository.findById(id).orElse(null);
 
-        return user;
+        String sql = "SELECT * FROM users WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, new UserRowMapper(), id);
     }
 
-    public void createNewUserAfterOAuthLoginSuccess(String accountType, String email, String name, AuthenticationProviders provider) {
+    public User createNewUserAfterOAuthLoginSuccess(String accountType, String email, String name, AuthenticationProviders provider) {
         User user = switch (accountType.toLowerCase()) {
             case "musician" -> new Musician();
             case "organizer" -> new Organizer();
@@ -57,37 +58,49 @@ public class UserService {
         user.setAuthProvider(provider);
         user.setCreatedAt(new Date());
 
-        user.setUserRole("ROLE_USER");
+        // Set user role dynamically based on account type
+        user.setUserRole("ROLE_" + accountType.toUpperCase());
 
-        if(user instanceof Musician) musicianRepository.save(user);
-        else organizerRepository.save(user);
+        save(user);
+
+        if (user instanceof Musician) {
+            // save user to the database, connecting to the table musician
+        } else {
+            // save user to the database, connecting to the table organizer
+        }
+
+        return user;
     }
+
+    User save(User user) {
+
+        String sql = "INSERT INTO users (email, full_name, user_role, created_at, updated_at, auth_provider) VALUES (?, ?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql, user.getEmail(), user.getFullName(), user.getUserRole(), user.getCreatedAt(), user.getUpdatedAt(), user.getAuthProvider().toString());
+        return user;
+    }
+
 
     public void updateUserAfterOAuthLoginSuccess(User user, String name, AuthenticationProviders authenticationProviders) {
         user.setFullName(name);
         user.setAuthProvider(authenticationProviders);
         user.setUpdatedAt(new Date());
 
-        if (user instanceof Musician) musicianRepository.save(user);
-        else organizerRepository.save(user);
+        if (user instanceof Musician) save(user);
     }
 
     public void updateUserRole(User currentUser, String role) {
         currentUser.setUserRole("ROLE_" + role.toUpperCase());
-        if(currentUser instanceof Musician) musicianRepository.save((Musician) currentUser);
-        else organizerRepository.save((Organizer) currentUser);
+        save(currentUser);
     }
 
     public void uploadProfilePicture(User currentUser, String profilePicture) {
         currentUser.setProfilePicture(profilePicture);
-        if(currentUser instanceof Musician) musicianRepository.save((Musician) currentUser);
-        else organizerRepository.save((Organizer) currentUser);
+        save(currentUser);
     }
 
     public void updateFullName(User currentUser, String name) {
         currentUser.setFullName(name);
-        if(currentUser instanceof Musician) musicianRepository.save((Musician) currentUser);
-        else organizerRepository.save((Organizer) currentUser);
+        save(currentUser);
     }
 
     public void updatePaymentInformation(User currentUser, PaymentInfoDto paymentInfoDto) {
@@ -101,8 +114,7 @@ public class UserService {
 
         currentUser.setPaymentInformation(paymentInformation);
 
-        if(currentUser instanceof Musician) musicianRepository.save((Musician) currentUser);
-        else organizerRepository.save((Organizer) currentUser);
+        save(currentUser);
     }
 
 }

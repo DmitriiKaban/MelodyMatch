@@ -39,35 +39,35 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
         String registrationId = oauthToken.getAuthorizedClientRegistrationId();
 
-        AuthenticationProviders provider = AuthenticationProviders.GOOGLE;
+        String provider = "GOOGLE";
         if ("github".equals(registrationId)) {
-
             email = gitHubEmailService.getGitHubEmail(accessToken);
             if (email == null) {
                 throw new RuntimeException("Failed to fetch emails from GitHub");
             }
-            provider = AuthenticationProviders.GITHUB;
-
+            provider = "GITHUB";
         } else if ("facebook".equals(registrationId)) {
-            provider = AuthenticationProviders.FACEBOOK;
+            provider = "FACEBOOK";
         }
 
+        // Check if the user already exists
         User user = userService.findByEmail(email);
 
         if (user == null) {
-            userService.createNewUserAfterOAuthLoginSuccess(email, name, provider);
+            // Redirect user to select account type page
+            response.sendRedirect("/select-account-type?email=" + email + "&name=" + name + "&provider=" + provider);
         } else {
-            userService.updateUserAfterOAuthLoginSuccess(user, name, provider);
+            // User already exists, proceed to generate JWT and return the response
+            String jwtToken = jwtService.generateToken(user);
+            LoginResponse loginResponse = new LoginResponse()
+                    .setToken(jwtToken)
+                    .setExpiresIn(jwtService.getExpirationTime());
+
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(new ObjectMapper().writeValueAsString(loginResponse));
         }
-
-        String jwtToken = jwtService.generateToken(user);
-        LoginResponse loginResponse = new LoginResponse()
-                .setToken(jwtToken)
-                .setExpiresIn(jwtService.getExpirationTime());
-
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(new ObjectMapper().writeValueAsString(loginResponse));
     }
 }
+
 

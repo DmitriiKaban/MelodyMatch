@@ -32,6 +32,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/users/**").hasRole("ADMIN")
                         .requestMatchers("/auth/**", "/login/**", "/oauth2/**").permitAll()
+                        .requestMatchers("/select-account-type", "/save-account-type").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

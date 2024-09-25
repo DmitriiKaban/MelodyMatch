@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Account Type</title>
+</head>
+<body>
+<h2>Select Your Account Type</h2>
+<form action="/save-account-type" method="POST">
+    <input type="hidden" name="email" value="${email}">
+    <input type="hidden" name="name" value="${name}">
+    <input type="hidden" name="provider" value="${provider}">
+
+    <label>
+        <input type="radio" name="accountType" value="musician" required> Musician
+    </label><br>
+    <label>
+        <input type="radio" name="accountType" value="organizer" required> Organizer
+    </label><br>
+
+    <button type="submit">Continue</button>
+</form>
+</body>
+</html>

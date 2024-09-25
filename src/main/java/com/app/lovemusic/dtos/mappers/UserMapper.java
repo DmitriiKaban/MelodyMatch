@@ -30,20 +30,20 @@ public class UserMapper {
         return List.of(users.stream().map(this::toDto).toArray(UserDto[]::new));
     }
 
-    public User toUser(UserDto userDto) {
-        User user = new User();
-        user.setEmail(userDto.getEmail());
-        user.setFullName(userDto.getFullName());
-        user.setAuthProvider(userDto.getAuthProvider());
-        user.setCreatedAt(userDto.getCreatedAt());
-        user.setUpdatedAt(userDto.getUpdatedAt());
-        user.setUserRole(userDto.getUserRole());
+//    public User toUser(UserDto userDto) {
+//        User user = new User();
+//        user.setEmail(userDto.getEmail());
+//        user.setFullName(userDto.getFullName());
+//        user.setAuthProvider(userDto.getAuthProvider());
+//        user.setCreatedAt(userDto.getCreatedAt());
+//        user.setUpdatedAt(userDto.getUpdatedAt());
+//        user.setUserRole(userDto.getUserRole());
+//
+//        return user;
+//    }
 
-        return user;
-    }
-
-    public List<User> toUserList(List<UserDto> userDtos) {
-        return List.of(userDtos.stream().map(this::toUser).toArray(User[]::new));
-    }
+//    public List<User> toUserList(List<UserDto> userDtos) {
+//        return List.of(userDtos.stream().map(this::toUser).toArray(User[]::new));
+//    }
 
 }

@@ -25,7 +25,6 @@ public class Musician extends User {
     @Column
     private String workExperience;
 
-    @Column
     @OneToMany(mappedBy = "musician")
     private List<MusicianRatingReview> reviews;
 
@@ -36,3 +35,4 @@ public class Musician extends User {
         this.reviews = reviews;
     }
 }
+

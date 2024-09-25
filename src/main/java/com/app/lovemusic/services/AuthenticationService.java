@@ -8,8 +8,10 @@ import com.app.lovemusic.entity.accountTypes.Organizer;
 import com.app.lovemusic.exceptions.UserAlreadyExistsException;
 import com.app.lovemusic.repositories.MusicianRepository;
 import com.app.lovemusic.repositories.OrganizerRepository;
+import com.app.lovemusic.repositories.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,17 +22,21 @@ public class AuthenticationService {
     private final OrganizerRepository organizerRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
+    private final UserService userService;
 
     public AuthenticationService(
             MusicianRepository musicianRepository,
             OrganizerRepository organizerRepository,
             AuthenticationManager authenticationManager,
-            PasswordEncoder passwordEncoder
-    ) {
+            PasswordEncoder passwordEncoder,
+            UserRepository userRepository, UserService userService) {
         this.musicianRepository = musicianRepository;
         this.organizerRepository = organizerRepository;
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     public User signup(RegisterUserDto input) {
@@ -44,18 +50,8 @@ public class AuthenticationService {
         user.setPassword(passwordEncoder.encode(input.getPassword()));
         user.setFullName(input.getFullName());
         user.setUserRole("ROLE_USER");
-
-        if (input.getAccountType().equalsIgnoreCase("organizer")) {
-            if (organizerRepository.findByEmail(input.getEmail()).isPresent()) {
-                throw new UserAlreadyExistsException("Organizer with email " + input.getEmail() + " already exists");
-            }
-            return organizerRepository.save((Organizer) user);
-        } else {
-            if (musicianRepository.findByEmail(input.getEmail()).isPresent()) {
-                throw new UserAlreadyExistsException("Musician with email " + input.getEmail() + " already exists");
-            }
-            return musicianRepository.save((Musician) user);
-        }
+        // save user to the database, connecting to the table organizer or musician
+        return userService.save(user);
     }
 
     public User authenticate(LoginUserDto input) {
@@ -66,9 +62,11 @@ public class AuthenticationService {
                 )
         );
 
-        return musicianRepository.findByEmail(input.getEmail())
-                .or(() -> organizerRepository.findByEmail(input.getEmail()))
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        User user = userService.findByEmail(input.getEmail());
+        if (user == null) {
+            throw new UsernameNotFoundException("User with email " + input.getEmail() + " not found");
+        }
+        return user;
     }
 }
 

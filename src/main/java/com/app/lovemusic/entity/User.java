@@ -18,9 +18,8 @@ import java.util.stream.Collectors;
 @Table(name = "users")
 @Entity
 @Data
-@Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor
-public abstract class User implements UserDetails {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
