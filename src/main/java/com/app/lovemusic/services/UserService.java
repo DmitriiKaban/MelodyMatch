@@ -4,8 +4,10 @@ import com.app.lovemusic.dtos.PaymentInfoDto;
 import com.app.lovemusic.entity.AuthenticationProviders;
 import com.app.lovemusic.entity.PaymentInformation;
 import com.app.lovemusic.entity.User;
-import com.app.lovemusic.entity.accountTypes.Musician;
-import com.app.lovemusic.entity.accountTypes.Organizer;
+import com.app.lovemusic.entity.accountTypes.Musicians;
+import com.app.lovemusic.entity.accountTypes.Organizers;
+import com.app.lovemusic.repositories.MusicianRepository;
+import com.app.lovemusic.repositories.OrganizerRepository;
 import com.app.lovemusic.repositories.UserRepository;
 import com.app.lovemusic.util.UserRowMapper;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,8 @@ import java.util.Optional;
 public class UserService implements UserRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final MusicianRepository musicianRepository;
+    private final OrganizerRepository organizerRepository;
 
     public List<User> allUsers() {
 
@@ -47,29 +51,46 @@ public class UserService implements UserRepository {
     }
 
     public User createNewUserAfterOAuthLoginSuccess(String accountType, String email, String name, AuthenticationProviders provider) {
-        User user = switch (accountType.toLowerCase()) {
-            case "musician" -> new Musician();
-            case "organizer" -> new Organizer();
+        switch (accountType.toLowerCase()) {
+            case "musician" -> {
+
+                Musicians musicians = new Musicians();
+                musicians.setEmail(email);
+                musicians.setFullName(name);
+                musicians.setAuthProvider(provider);
+                musicians.setCreatedAt(new Date());
+                musicians.setUserRole("ROLE_" + accountType.toUpperCase());
+                saveMusician(musicians);
+                return musicians;
+            }
+            case "organizer" -> {
+
+                Organizers organizers = new Organizers();
+                organizers.setEmail(email);
+                organizers.setFullName(name);
+                organizers.setAuthProvider(provider);
+                organizers.setCreatedAt(new Date());
+                organizers.setUserRole("ROLE_" + accountType.toUpperCase());
+                saveOrganizer(organizers);
+                return organizers;
+            }
             default -> throw new IllegalArgumentException("Invalid account type");
-        };
+        }
+    }
 
-        user.setEmail(email);
-        user.setFullName(name);
-        user.setAuthProvider(provider);
-        user.setCreatedAt(new Date());
+    private void saveOrganizer(Organizers organizers) {
+        organizerRepository.save(organizers);
+    }
 
-        // Set user role dynamically based on account type
-        user.setUserRole("ROLE_" + accountType.toUpperCase());
-
-        save(user);
-
-        return user;
+    private void saveMusician(Musicians musicians) {
+        musicianRepository.save(musicians);
     }
 
     User save(User user) {
 
-        String sql = "INSERT INTO users (email, full_name, user_role, created_at, updated_at, auth_provider) VALUES (?, ?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql, user.getEmail(), user.getFullName(), user.getUserRole(), user.getCreatedAt(), user.getUpdatedAt(), user.getAuthProvider().toString());
+        String sql = "INSERT INTO users (email, full_name, created_at, updated_at, auth_provider) VALUES (?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql, user.getEmail(), user.getFullName(), user.getCreatedAt(), user.getUpdatedAt(), user.getAuthProvider().toString());
+
         return user;
     }
 
@@ -78,7 +99,7 @@ public class UserService implements UserRepository {
         user.setAuthProvider(authenticationProviders);
         user.setUpdatedAt(new Date());
 
-        if (user instanceof Musician) save(user);
+        if (user instanceof Musicians) save(user);
     }
 
     public void updateUserRole(User currentUser, String role) {
