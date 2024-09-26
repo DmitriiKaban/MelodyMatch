@@ -10,6 +10,11 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class MusicianService implements MusicianRepository{
+public class MusicianService implements MusicianRepository {
     private final UserService userService;
+
+    public Musician findByEmail(String email) {
+        Optional<User> user = userService.findByEmail(email);
+        return user.map(value -> (Musician) value).orElse(null);
+    }
 }

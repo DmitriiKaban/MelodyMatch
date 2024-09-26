@@ -33,6 +33,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/users/**").hasRole("ADMIN")
                         .requestMatchers("/auth/**", "/login/**", "/oauth2/**").permitAll()
                         .requestMatchers("/select-account-type", "/save-account-type").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

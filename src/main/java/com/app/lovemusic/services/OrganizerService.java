@@ -13,4 +13,9 @@ import java.util.Optional;
 public class OrganizerService implements OrganizerRepository {
 
     private final UserService userService;
+
+    public Organizer findByEmail(String email) {
+        Optional<User> user = userService.findByEmail(email);
+        return (Organizer) user.orElse(null);
+    }
 }
