@@ -4,8 +4,8 @@ import com.app.lovemusic.dtos.PaymentInfoDto;
 import com.app.lovemusic.entity.AuthenticationProviders;
 import com.app.lovemusic.entity.PaymentInformation;
 import com.app.lovemusic.entity.User;
-import com.app.lovemusic.entity.accountTypes.Musicians;
-import com.app.lovemusic.entity.accountTypes.Organizers;
+import com.app.lovemusic.entity.accountTypes.Musician;
+import com.app.lovemusic.entity.accountTypes.Organizer;
 import com.app.lovemusic.repositories.MusicianRepository;
 import com.app.lovemusic.repositories.OrganizerRepository;
 import com.app.lovemusic.repositories.UserRepository;
@@ -54,36 +54,36 @@ public class UserService implements UserRepository {
         switch (accountType.toLowerCase()) {
             case "musician" -> {
 
-                Musicians musicians = new Musicians();
-                musicians.setEmail(email);
-                musicians.setFullName(name);
-                musicians.setAuthProvider(provider);
-                musicians.setCreatedAt(new Date());
-                musicians.setUserRole("ROLE_" + accountType.toUpperCase());
-                saveMusician(musicians);
-                return musicians;
+                Musician musician = new Musician();
+                musician.setEmail(email);
+                musician.setFullName(name);
+                musician.setAuthProvider(provider);
+                musician.setCreatedAt(new Date());
+                musician.setUserRole("ROLE_" + accountType.toUpperCase());
+                saveMusician(musician);
+                return musician;
             }
             case "organizer" -> {
 
-                Organizers organizers = new Organizers();
-                organizers.setEmail(email);
-                organizers.setFullName(name);
-                organizers.setAuthProvider(provider);
-                organizers.setCreatedAt(new Date());
-                organizers.setUserRole("ROLE_" + accountType.toUpperCase());
-                saveOrganizer(organizers);
-                return organizers;
+                Organizer organizer = new Organizer();
+                organizer.setEmail(email);
+                organizer.setFullName(name);
+                organizer.setAuthProvider(provider);
+                organizer.setCreatedAt(new Date());
+                organizer.setUserRole("ROLE_" + accountType.toUpperCase());
+                saveOrganizer(organizer);
+                return organizer;
             }
             default -> throw new IllegalArgumentException("Invalid account type");
         }
     }
 
-    private void saveOrganizer(Organizers organizers) {
-        organizerRepository.save(organizers);
+    private void saveOrganizer(Organizer organizer) {
+        organizerRepository.save(organizer);
     }
 
-    private void saveMusician(Musicians musicians) {
-        musicianRepository.save(musicians);
+    private void saveMusician(Musician musician) {
+        musicianRepository.save(musician);
     }
 
     User save(User user) {
@@ -99,7 +99,7 @@ public class UserService implements UserRepository {
         user.setAuthProvider(authenticationProviders);
         user.setUpdatedAt(new Date());
 
-        if (user instanceof Musicians) save(user);
+        if (user instanceof Musician) save(user);
     }
 
     public void updateUserRole(User currentUser, String role) {

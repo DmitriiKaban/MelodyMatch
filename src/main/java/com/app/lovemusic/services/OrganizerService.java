@@ -1,7 +1,7 @@
 package com.app.lovemusic.services;
 
 import com.app.lovemusic.entity.User;
-import com.app.lovemusic.entity.accountTypes.Organizers;
+import com.app.lovemusic.entity.accountTypes.Organizer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +13,8 @@ public class OrganizerService {
 
     private final UserService userService;
 
-    public Organizers findByEmail(String email) {
+    public Organizer findByEmail(String email) {
         Optional<User> user = userService.findByEmail(email);
-        return (Organizers) user.orElse(null);
+        return (Organizer) user.orElse(null);
     }
 }

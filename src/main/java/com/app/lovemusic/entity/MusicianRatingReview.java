@@ -1,7 +1,7 @@
 package com.app.lovemusic.entity;
 
-import com.app.lovemusic.entity.accountTypes.Musicians;
-import com.app.lovemusic.entity.accountTypes.Organizers;
+import com.app.lovemusic.entity.accountTypes.Musician;
+import com.app.lovemusic.entity.accountTypes.Organizer;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -16,12 +16,12 @@ public class MusicianRatingReview {
     @ManyToOne
     @MapsId("musicianId")
     @JoinColumn(name = "musician_id")
-    private Musicians musicians;
+    private Musician musician;
 
     @ManyToOne
     @MapsId("organizerId")
     @JoinColumn(name = "organizer_id")
-    private Organizers organizers;
+    private Organizer organizer;
 
     @Column(nullable = false)
     private Integer rating;

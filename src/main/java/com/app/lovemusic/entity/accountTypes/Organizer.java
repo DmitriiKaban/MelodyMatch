@@ -1,7 +1,6 @@
 package com.app.lovemusic.entity.accountTypes;
 
 import com.app.lovemusic.entity.AuthenticationProviders;
-import com.app.lovemusic.entity.MusicianRatingReview;
 import com.app.lovemusic.entity.PaymentInformation;
 import com.app.lovemusic.entity.User;
 import jakarta.persistence.*;
@@ -9,29 +8,30 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
-public class Musicians extends User {
+@Table(name = "organizers")
+public class Organizer extends User {
 
     @Column
-    private String resume;
+    private String companyName;
 
     @Column
-    private String workExperience;
+    private String companyDescription;
 
+    @Column
+    private String companyImage;
 
-    @OneToMany(mappedBy = "musicians")
-    private List<MusicianRatingReview> reviews;
-
-    public Musicians(String fullName, String email, String password, String profilePicture,
+    public Organizer(String fullName, String email, String password, String profilePicture,
                      PaymentInformation paymentInformation, Date createdAt, Date updatedAt,
-                     AuthenticationProviders authProvider, String resume, String workExperience) {
+                     AuthenticationProviders authProvider, String companyName,
+                     String companyDescription, String companyImage) {
         super(fullName, email, password, profilePicture, paymentInformation, createdAt, updatedAt, authProvider);
-        this.resume = resume;
-        this.workExperience = workExperience;
+        this.companyName = companyName;
+        this.companyDescription = companyDescription;
+        this.companyImage = companyImage;
     }
 }
 

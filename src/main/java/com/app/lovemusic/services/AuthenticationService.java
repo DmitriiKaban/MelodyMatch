@@ -3,8 +3,8 @@ package com.app.lovemusic.services;
 import com.app.lovemusic.dtos.LoginUserDto;
 import com.app.lovemusic.dtos.RegisterUserDto;
 import com.app.lovemusic.entity.User;
-import com.app.lovemusic.entity.accountTypes.Musicians;
-import com.app.lovemusic.entity.accountTypes.Organizers;
+import com.app.lovemusic.entity.accountTypes.Musician;
+import com.app.lovemusic.entity.accountTypes.Organizer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,8 +24,8 @@ public class AuthenticationService {
 
     public User signup(RegisterUserDto input) {
         User user = switch (input.getAccountType().toLowerCase()) {
-            case "organizer" -> new Organizers();
-            case "musician" -> new Musicians();
+            case "organizer" -> new Organizer();
+            case "musician" -> new Musician();
             default -> throw new IllegalArgumentException("Invalid account type");
         };
 

@@ -4,8 +4,8 @@ import com.app.lovemusic.dtos.PaymentInfoDto;
 import com.app.lovemusic.dtos.UserDto;
 import com.app.lovemusic.dtos.mappers.UserMapper;
 import com.app.lovemusic.entity.User;
-import com.app.lovemusic.entity.accountTypes.Musicians;
-import com.app.lovemusic.entity.accountTypes.Organizers;
+import com.app.lovemusic.entity.accountTypes.Musician;
+import com.app.lovemusic.entity.accountTypes.Organizer;
 import com.app.lovemusic.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -84,15 +84,15 @@ public class UserController {
             throw new IllegalArgumentException("User not found");
         }
 
-        if(!(requestedUser instanceof Organizers)) {
+        if(!(requestedUser instanceof Organizer)) {
             throw new IllegalArgumentException("You are not an organizer");
         }
 
-        if(!(user instanceof Musicians musicians)) {
+        if(!(user instanceof Musician musician)) {
             throw new IllegalArgumentException("User is not a musician");
         }
 
-        return ResponseEntity.ok(musicians.getResume());
+        return ResponseEntity.ok(musician.getResume());
     }
 
     @PreAuthorize("hasRole('USER')")
@@ -108,15 +108,15 @@ public class UserController {
             throw new IllegalArgumentException("User not found");
         }
 
-        if(!(requestedUser instanceof Organizers)) {
+        if(!(requestedUser instanceof Organizer)) {
             throw new IllegalArgumentException("You are not an organizer");
         }
 
-        if(!(user instanceof Musicians musicians)) {
+        if(!(user instanceof Musician musician)) {
             throw new IllegalArgumentException("User is not a musician");
         }
 
-        return ResponseEntity.ok(musicians.getWorkExperience());
+        return ResponseEntity.ok(musician.getWorkExperience());
     }
 
     @PreAuthorize("hasRole('USER')")
