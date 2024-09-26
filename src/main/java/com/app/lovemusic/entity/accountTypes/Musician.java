@@ -12,11 +12,10 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
-@Table(name = "musician_accounts")
 @Entity
 @Data
 @NoArgsConstructor
+@DiscriminatorValue("MUSICIAN")
 public class Musician extends User {
 
     @Column

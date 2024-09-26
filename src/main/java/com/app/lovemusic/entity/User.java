@@ -19,6 +19,8 @@ import java.util.stream.Collectors;
 @Entity
 @Data
 @NoArgsConstructor
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)  // Using single table strategy
+@DiscriminatorColumn(name = "user_role", discriminatorType = DiscriminatorType.STRING) // Discriminator column to distinguish subclasses
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,7 +44,7 @@ public class User implements UserDetails {
     @JoinColumn(name = "id", referencedColumnName = "id")
     private PaymentInformation paymentInformation;
 
-    @Column
+    @Column(name = "user_role", insertable = false, updatable = false)
     private String userRole;
 
     @CreationTimestamp

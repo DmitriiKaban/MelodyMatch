@@ -12,11 +12,10 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
-@Table(name = "organizer_accounts")
 @Entity
 @Data
 @NoArgsConstructor
+@DiscriminatorValue("ORGANIZER")  // Identifies this subclass in the single table
 public class Organizer extends User {
 
     @Column
@@ -28,15 +27,7 @@ public class Organizer extends User {
     @Column
     private String companyImage;
 
-    @Column
     @OneToMany(mappedBy = "organizer")
     private List<MusicianRatingReview> reviews;
-
-    public Organizer(String fullName, String email, String password, String profilePicture, PaymentInformation paymentInformation, String userRole, Date createdAt, Date updatedAt, AuthenticationProviders authProvider, String companyName, String companyDescription, String companyImage, List<MusicianRatingReview> reviews) {
-        super(fullName, email, password, profilePicture, paymentInformation, userRole, createdAt, updatedAt, authProvider);
-        this.companyName = companyName;
-        this.companyDescription = companyDescription;
-        this.companyImage = companyImage;
-        this.reviews = reviews;
-    }
 }
+
