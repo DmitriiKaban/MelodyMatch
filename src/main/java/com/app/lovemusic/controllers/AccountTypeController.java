@@ -31,7 +31,7 @@ public class AccountTypeController {
         model.addAttribute("email", email);
         model.addAttribute("name", name);
         model.addAttribute("provider", provider);
-        return "accountTypeForm"; // A view where user selects account type (Musician/Organizer)
+        return "accountTypeForm";
     }
 
     @PostMapping("/save-account-type")

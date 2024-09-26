@@ -15,6 +15,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class AuthenticationService {
 
@@ -62,11 +64,11 @@ public class AuthenticationService {
                 )
         );
 
-        User user = userService.findByEmail(input.getEmail());
-        if (user == null) {
+        Optional<User> user = userService.findByEmail(input.getEmail());
+        if (user.isEmpty()) {
             throw new UsernameNotFoundException("User with email " + input.getEmail() + " not found");
         }
-        return user;
+        return user.get();
     }
 }
 

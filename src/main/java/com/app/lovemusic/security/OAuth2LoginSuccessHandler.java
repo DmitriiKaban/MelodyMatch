@@ -17,6 +17,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -51,14 +52,14 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         }
 
         // Check if the user already exists
-        User user = userService.findByEmail(email);
+        Optional<User> user = userService.findByEmail(email);
 
-        if (user == null) {
+        if (user.isEmpty()) {
             // Redirect user to select account type page
             response.sendRedirect("/select-account-type?email=" + email + "&name=" + name + "&provider=" + provider);
         } else {
             // User already exists, proceed to generate JWT and return the response
-            String jwtToken = jwtService.generateToken(user);
+            String jwtToken = jwtService.generateToken(user.get());
             LoginResponse loginResponse = new LoginResponse()
                     .setToken(jwtToken)
                     .setExpiresIn(jwtService.getExpirationTime());

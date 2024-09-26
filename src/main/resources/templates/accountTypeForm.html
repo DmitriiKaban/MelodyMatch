@@ -8,9 +8,9 @@
 <body>
 <h2>Select Your Account Type</h2>
 <form action="/save-account-type" method="POST">
-    <input type="hidden" name="email" value="${email}">
-    <input type="hidden" name="name" value="${name}">
-    <input type="hidden" name="provider" value="${provider}">
+    <input type="hidden" name="email" th:value="${email}">
+    <input type="hidden" name="name" th:value="${name}">
+    <input type="hidden" name="provider" th:value="${provider}">
 
     <label>
         <input type="radio" name="accountType" value="musician" required> Musician

@@ -9,11 +9,13 @@ import com.app.lovemusic.entity.accountTypes.Organizer;
 import com.app.lovemusic.repositories.UserRepository;
 import com.app.lovemusic.util.UserRowMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,10 +31,13 @@ public class UserService implements UserRepository {
         return users;
     }
 
-    public User findByEmail(String email) {
-
+    public Optional<User> findByEmail(String email) {
         String sql = "SELECT * FROM users WHERE email = ?";
-        return jdbcTemplate.queryForObject(sql, new UserRowMapper(), email);
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new UserRowMapper(), email));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
@@ -62,12 +67,6 @@ public class UserService implements UserRepository {
         user.setUserRole("ROLE_" + accountType.toUpperCase());
 
         save(user);
-
-        if (user instanceof Musician) {
-            // save user to the database, connecting to the table musician
-        } else {
-            // save user to the database, connecting to the table organizer
-        }
 
         return user;
     }

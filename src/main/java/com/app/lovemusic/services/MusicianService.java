@@ -6,17 +6,10 @@ import com.app.lovemusic.repositories.MusicianRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
-public class MusicianService implements MusicianRepository {
-
+public class MusicianService implements MusicianRepository{
     private final UserService userService;
-
-    @Override
-    public Musician findByEmail(String username) {
-
-        User user = userService.findByEmail(username);
-        // check if user is a musician (join in DB)
-        return null;
-    }
 }
