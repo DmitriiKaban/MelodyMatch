@@ -9,6 +9,7 @@ import com.app.lovemusic.exceptions.UserAlreadyExistsException;
 import com.app.lovemusic.repositories.MusicianRepository;
 import com.app.lovemusic.repositories.OrganizerRepository;
 import com.app.lovemusic.repositories.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,28 +19,12 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class AuthenticationService {
 
-    private final MusicianRepository musicianRepository;
-    private final OrganizerRepository organizerRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
-    private final UserRepository userRepository;
     private final UserService userService;
-
-    public AuthenticationService(
-            MusicianRepository musicianRepository,
-            OrganizerRepository organizerRepository,
-            AuthenticationManager authenticationManager,
-            PasswordEncoder passwordEncoder,
-            UserRepository userRepository, UserService userService) {
-        this.musicianRepository = musicianRepository;
-        this.organizerRepository = organizerRepository;
-        this.authenticationManager = authenticationManager;
-        this.passwordEncoder = passwordEncoder;
-        this.userRepository = userRepository;
-        this.userService = userService;
-    }
 
     public User signup(RegisterUserDto input) {
         User user = switch (input.getAccountType().toLowerCase()) {
@@ -52,7 +37,7 @@ public class AuthenticationService {
         user.setPassword(passwordEncoder.encode(input.getPassword()));
         user.setFullName(input.getFullName());
         user.setUserRole("ROLE_USER");
-        // save user to the database, connecting to the table organizer or musician
+
         return userService.save(user);
     }
 

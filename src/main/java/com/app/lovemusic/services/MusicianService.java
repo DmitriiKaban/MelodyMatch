@@ -15,6 +15,6 @@ public class MusicianService implements MusicianRepository {
 
     public Musician findByEmail(String email) {
         Optional<User> user = userService.findByEmail(email);
-        return user.map(value -> (Musician) value).orElse(null);
+        return (Musician) user.orElse(null);
     }
 }

@@ -39,7 +39,6 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                // TODO: AFTER USER AUTHENTICATION, HE/SHE ALSO HAS TO MENTION THE ROLE: MUSICIAN OR ORGANIZER
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(oAuth2UserService)

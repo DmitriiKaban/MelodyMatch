@@ -40,11 +40,6 @@ public class UserService implements UserRepository {
         }
     }
 
-    @Override
-    public List<User> findAll() {
-        return allUsers();
-    }
-
     public User findById(Integer id) {
 
         String sql = "SELECT * FROM users WHERE id = ?";
@@ -77,7 +72,6 @@ public class UserService implements UserRepository {
         jdbcTemplate.update(sql, user.getEmail(), user.getFullName(), user.getUserRole(), user.getCreatedAt(), user.getUpdatedAt(), user.getAuthProvider().toString());
         return user;
     }
-
 
     public void updateUserAfterOAuthLoginSuccess(User user, String name, AuthenticationProviders authenticationProviders) {
         user.setFullName(name);
