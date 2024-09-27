@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./Gigs.scss";
 import { GigCard } from "../../components";
-import { gigs } from "../../data";
+import { gigs } from "../../data/gigs";
 
 const Gigs = () => {
   const [open, setOpen] = useState(false);
@@ -33,7 +33,11 @@ const Gigs = () => {
       (gig.desc &&
         gig.desc.toLowerCase().includes(submittedSearchTerm.toLowerCase())) ||
       (gig.username &&
-        gig.username.toLowerCase().includes(submittedSearchTerm.toLowerCase()));
+        gig.username
+          .toLowerCase()
+          .includes(submittedSearchTerm.toLowerCase())) ||
+      (gig.title &&
+        gig.title.toLowerCase().includes(submittedSearchTerm.toLowerCase()));
 
     const matchesGenre =
       genre === "all" ||

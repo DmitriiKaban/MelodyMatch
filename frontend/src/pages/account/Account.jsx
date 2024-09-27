@@ -1,7 +1,8 @@
 import { Slider } from "infinite-react-carousel";
 import { Link } from "react-router-dom";
 import { GigCard, Reviews } from "../../components";
-import { gigs } from "../../data";
+import { gigs } from "../../data/gigs";
+import "./Account.scss";
 
 const Account = () => {
   return (
@@ -62,17 +63,9 @@ const Account = () => {
                       <span className="title">Member since</span>
                       <span className="desc">September 2024</span>
                     </div>
-                    <div className="item">
-                      <span className="title">Last booking</span>
-                      <span className="desc">2 days</span>
-                    </div>
                   </div>
                   <hr />
-                  <p className="bottom">
-                    My name is Jace, since I was a kid I was passionate about
-                    songwriting and performing, always competing at contests.
-                    Now I am writing songs for different bands...
-                  </p>
+                  <p className="bottom">Click here to see Artist's Resume</p>
                 </div>
               </div>
             </div>

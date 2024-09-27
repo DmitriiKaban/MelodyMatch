@@ -11,7 +11,7 @@ const GigCard = ({ item }) => {
             <img src={item.pp} alt="" />
             <span>{item.username}</span>
           </div>
-          <p className="desc">{item.desc}</p>
+          <p className="desc">{item.title}</p>
           <div className="star">
             <img src="/img/icons/star.png" alt="" />
             <span>{item.star}</span>

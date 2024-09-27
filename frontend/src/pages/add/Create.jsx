@@ -6,7 +6,7 @@ import { Banner } from "../../components";
 const currentUser = {
   id: 1,
   username: "Matei Basarab",
-  isMusician: true,
+  isMusician: false,
 };
 
 const Add = () => {
@@ -23,7 +23,7 @@ const Add = () => {
     <>
       <div className="banner">
         <Banner
-          title={`Hop on creating your ${
+          title={`Hop on your personal ${
             userIsMusician ? "Musician" : "Organizer"
           } account!`}
           subtitle1="This is your General Information."
@@ -115,14 +115,16 @@ const Add = () => {
                 cols="30"
                 rows="10"
               ></textarea>
-
-              <div className="item">
-                <label htmlFor="">Phone Number</label>
-                <img src="/img/icons/Edit.png" alt="" />
-              </div>
-              <hr />
-              <input type="tel" placeholder="Enter your phone number" />
-
+              {userIsMusician && (
+                <>
+                  <div className="item">
+                    <label htmlFor="">Upload your resume</label>
+                    <img src="/img/icons/Edit.png" alt="" />
+                  </div>
+                  <hr />
+                  <input type="file" />{" "}
+                </>
+              )}
               <div className="item">
                 <label htmlFor="">Payment Card Information</label>
               </div>

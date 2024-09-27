@@ -109,21 +109,6 @@ const Add = () => {
               />
 
               <div className="item">
-                <label htmlFor="">Short Description</label>
-                <img src="/img/icons/Edit.png" alt="" />
-              </div>
-              <hr />
-              <textarea
-                placeholder={
-                  userIsMusician
-                    ? "What services are you offering?"
-                    : "What are you looking for"
-                }
-                cols="30"
-                rows="10"
-              ></textarea>
-
-              <div className="item">
                 <label htmlFor="">
                   {userIsMusician ? "Add extra features" : "Add extra rules"}
                 </label>
