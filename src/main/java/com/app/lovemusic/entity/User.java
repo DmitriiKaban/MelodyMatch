@@ -1,6 +1,7 @@
 package com.app.lovemusic.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,9 +19,10 @@ import java.util.stream.Collectors;
 @Table(name = "users")
 @Entity
 @Data
-@Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor
-public abstract class User implements UserDetails {
+@Inheritance(strategy = InheritanceType.JOINED)
+@AllArgsConstructor
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
@@ -43,7 +45,7 @@ public abstract class User implements UserDetails {
     @JoinColumn(name = "id", referencedColumnName = "id")
     private PaymentInformation paymentInformation;
 
-    @Column
+    @Column(name = "user_role", insertable = false, updatable = false)
     private String userRole;
 
     @CreationTimestamp
@@ -69,6 +71,18 @@ public abstract class User implements UserDetails {
         this.updatedAt = updatedAt;
         this.authProvider = authProvider;
     }
+
+    public User(String fullName, String email, String password, String profilePicture, PaymentInformation paymentInformation, Date createdAt, Date updatedAt, AuthenticationProviders authProvider) {
+        this.fullName = fullName;
+        this.email = email;
+        this.password = password;
+        this.profilePicture = profilePicture;
+        this.paymentInformation = paymentInformation;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.authProvider = authProvider;
+    }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

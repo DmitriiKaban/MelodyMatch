@@ -28,5 +28,4 @@ public class MusicianRatingReview {
 
     @Column
     private String review;
-
 }

@@ -8,59 +8,90 @@ import com.app.lovemusic.entity.accountTypes.Musician;
 import com.app.lovemusic.entity.accountTypes.Organizer;
 import com.app.lovemusic.repositories.MusicianRepository;
 import com.app.lovemusic.repositories.OrganizerRepository;
+import com.app.lovemusic.repositories.UserRepository;
+import com.app.lovemusic.util.UserRowMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements UserRepository {
 
+    private final JdbcTemplate jdbcTemplate;
     private final MusicianRepository musicianRepository;
     private final OrganizerRepository organizerRepository;
 
     public List<User> allUsers() {
-        List<User> users = new ArrayList<>();
 
-        musicianRepository.findAll().forEach(users::add);
-        organizerRepository.findAll().forEach(users::add);
+        String sql = "SELECT * FROM users";
+        List<User> users = jdbcTemplate.query(sql, new UserRowMapper());
 
         return users;
     }
 
-    public User findByEmail(String email) {
-        User user = musicianRepository.findByEmail(email).orElse(null);
-        if(user == null) user = organizerRepository.findByEmail(email).orElse(null);
-
-        return user;
+    public Optional<User> findByEmail(String email) {
+        String sql = "SELECT * FROM users WHERE email = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new UserRowMapper(), email));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public User findById(Integer id) {
-        User user = musicianRepository.findById(id).orElse(null);
-        if(user == null) user = organizerRepository.findById(id).orElse(null);
 
-        return user;
+        String sql = "SELECT * FROM users WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, new UserRowMapper(), id);
     }
 
-    public void createNewUserAfterOAuthLoginSuccess(String accountType, String email, String name, AuthenticationProviders provider) {
-        User user = switch (accountType.toLowerCase()) {
-            case "musician" -> new Musician();
-            case "organizer" -> new Organizer();
+    public User createNewUserAfterOAuthLoginSuccess(String accountType, String email, String name, AuthenticationProviders provider) {
+        switch (accountType.toLowerCase()) {
+            case "musician" -> {
+
+                Musician musician = new Musician();
+                musician.setEmail(email);
+                musician.setFullName(name);
+                musician.setAuthProvider(provider);
+                musician.setCreatedAt(new Date());
+                musician.setUserRole("ROLE_" + accountType.toUpperCase());
+                saveMusician(musician);
+                return musician;
+            }
+            case "organizer" -> {
+
+                Organizer organizer = new Organizer();
+                organizer.setEmail(email);
+                organizer.setFullName(name);
+                organizer.setAuthProvider(provider);
+                organizer.setCreatedAt(new Date());
+                organizer.setUserRole("ROLE_" + accountType.toUpperCase());
+                saveOrganizer(organizer);
+                return organizer;
+            }
             default -> throw new IllegalArgumentException("Invalid account type");
-        };
+        }
+    }
 
-        user.setEmail(email);
-        user.setFullName(name);
-        user.setAuthProvider(provider);
-        user.setCreatedAt(new Date());
+    private void saveOrganizer(Organizer organizer) {
+        organizerRepository.save(organizer);
+    }
 
-        user.setUserRole("ROLE_USER");
+    private void saveMusician(Musician musician) {
+        musicianRepository.save(musician);
+    }
 
-        if(user instanceof Musician) musicianRepository.save(user);
-        else organizerRepository.save(user);
+    User save(User user) {
+
+        String sql = "INSERT INTO users (email, full_name, created_at, updated_at, auth_provider) VALUES (?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql, user.getEmail(), user.getFullName(), user.getCreatedAt(), user.getUpdatedAt(), user.getAuthProvider().toString());
+
+        return user;
     }
 
     public void updateUserAfterOAuthLoginSuccess(User user, String name, AuthenticationProviders authenticationProviders) {
@@ -68,26 +99,22 @@ public class UserService {
         user.setAuthProvider(authenticationProviders);
         user.setUpdatedAt(new Date());
 
-        if (user instanceof Musician) musicianRepository.save(user);
-        else organizerRepository.save(user);
+        if (user instanceof Musician) save(user);
     }
 
     public void updateUserRole(User currentUser, String role) {
         currentUser.setUserRole("ROLE_" + role.toUpperCase());
-        if(currentUser instanceof Musician) musicianRepository.save((Musician) currentUser);
-        else organizerRepository.save((Organizer) currentUser);
+        save(currentUser);
     }
 
     public void uploadProfilePicture(User currentUser, String profilePicture) {
         currentUser.setProfilePicture(profilePicture);
-        if(currentUser instanceof Musician) musicianRepository.save((Musician) currentUser);
-        else organizerRepository.save((Organizer) currentUser);
+        save(currentUser);
     }
 
     public void updateFullName(User currentUser, String name) {
         currentUser.setFullName(name);
-        if(currentUser instanceof Musician) musicianRepository.save((Musician) currentUser);
-        else organizerRepository.save((Organizer) currentUser);
+        save(currentUser);
     }
 
     public void updatePaymentInformation(User currentUser, PaymentInfoDto paymentInfoDto) {
@@ -101,8 +128,7 @@ public class UserService {
 
         currentUser.setPaymentInformation(paymentInformation);
 
-        if(currentUser instanceof Musician) musicianRepository.save((Musician) currentUser);
-        else organizerRepository.save((Organizer) currentUser);
+        save(currentUser);
     }
 
 }
