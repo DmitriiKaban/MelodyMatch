@@ -1,14 +1,16 @@
-# Use an official OpenJDK runtime as a parent image
-FROM openjdk:17-jdk-alpine
-
-# Set the working directory inside the container
+# First stage: build the application
+FROM maven:3.8.5-openjdk-17 as builder
 WORKDIR /app
+COPY pom.xml .
+RUN mvn dependency:go-offline
+COPY src/ ./src/
+RUN mvn clean package -DskipTests=true
 
-# Copy the jar file from the host to the container
-COPY target/LoveMusic-0.0.1-SNAPSHOT.jar /app/app.jar
-
-# Expose the port that your Spring application runs on
-EXPOSE 8080
-
-# Run the Spring Boot application
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+# Second stage: run the application
+FROM openjdk:17-jdk-alpine as prod
+RUN mkdir /app
+COPY --from=builder /app/target/*.jar /app/app.jar
+ENV SERVER_PORT=8081
+WORKDIR /app
+EXPOSE 8081
+ENTRYPOINT ["java", "-jar", "app.jar"]
