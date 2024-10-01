@@ -29,10 +29,19 @@ public class AuthenticationService {
             default -> throw new IllegalArgumentException("Invalid account type");
         };
 
+        switch (input.getAccountType().toLowerCase()) {
+            case "organizer" -> {
+                user.setUserRole("ROLE_ORGANIZER");
+            }
+            case "musician" -> {
+                user.setUserRole("ROLE_MUSICIAN");
+            }
+            default -> throw new IllegalArgumentException("Invalid account type");
+        }
+
         user.setEmail(input.getEmail());
         user.setPassword(passwordEncoder.encode(input.getPassword()));
         user.setFullName(input.getFullName());
-        user.setUserRole("ROLE_USER");
 
         return userService.save(user);
     }
