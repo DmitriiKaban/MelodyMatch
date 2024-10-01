@@ -3,6 +3,8 @@ package com.app.lovemusic.controllers;
 import com.app.lovemusic.controllers.response.LoginResponse;
 import com.app.lovemusic.dtos.LoginUserDto;
 import com.app.lovemusic.dtos.RegisterUserDto;
+import com.app.lovemusic.dtos.UserDto;
+import com.app.lovemusic.dtos.mappers.UserMapper;
 import com.app.lovemusic.entity.User;
 import com.app.lovemusic.services.AuthenticationService;
 import com.app.lovemusic.services.JwtService;
@@ -18,20 +20,25 @@ import javax.validation.Valid;
 @RequestMapping("/auth")
 @RestController
 public class AuthenticationController {
+
     private final JwtService jwtService;
-
     private final AuthenticationService authenticationService;
+    private final UserMapper userMapper;
 
-    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService) {
+    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService, UserMapper userMapper) {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
+        this.userMapper = userMapper;
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<User> register(@Valid @RequestBody RegisterUserDto registerUserDto) {
+    public ResponseEntity<UserDto> register(@Valid @RequestBody RegisterUserDto registerUserDto) {
+
+        System.out.println("User dto: " + registerUserDto);
+
         User registeredUser = authenticationService.signup(registerUserDto);
 
-        return ResponseEntity.ok(registeredUser);
+        return ResponseEntity.ok(userMapper.toDto(registeredUser));
     }
 
     @PostMapping("/login")

@@ -89,7 +89,8 @@ public class UserService implements UserRepository {
     User save(User user) {
 
         String sql = "INSERT INTO users (email, full_name, created_at, updated_at, auth_provider) VALUES (?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql, user.getEmail(), user.getFullName(), user.getCreatedAt(), user.getUpdatedAt(), user.getAuthProvider().toString());
+        String authProvider = user.getAuthProvider() != null ? user.getAuthProvider().toString() : null;
+        jdbcTemplate.update(sql, user.getEmail(), user.getFullName(), user.getCreatedAt(), user.getUpdatedAt(), authProvider);
 
         return user;
     }

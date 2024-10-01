@@ -5,6 +5,7 @@ import com.app.lovemusic.dtos.RegisterUserDto;
 import com.app.lovemusic.entity.User;
 import com.app.lovemusic.entity.accountTypes.Musician;
 import com.app.lovemusic.entity.accountTypes.Organizer;
+import com.app.lovemusic.exceptions.UserAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +24,11 @@ public class AuthenticationService {
     private final UserService userService;
 
     public User signup(RegisterUserDto input) {
+
+        if (userService.findByEmail(input.getEmail()).isPresent()) {
+            throw new UserAlreadyExistsException("Email is already in use");
+        }
+
         User user = switch (input.getAccountType().toLowerCase()) {
             case "organizer" -> new Organizer();
             case "musician" -> new Musician();
@@ -32,7 +38,14 @@ public class AuthenticationService {
         user.setEmail(input.getEmail());
         user.setPassword(passwordEncoder.encode(input.getPassword()));
         user.setFullName(input.getFullName());
-        user.setUserRole("ROLE_USER");
+        user.setCreatedAt(new java.util.Date());
+
+        if (user instanceof Musician) {
+            user.setUserRole("ROLE_MUSICIAN");
+        }
+        if (user instanceof Organizer) {
+            user.setUserRole("ROLE_ORGANIZER");
+        }
 
         return userService.save(user);
     }
