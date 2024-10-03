@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+/db/db-scripts/db.sql
+/db/docker-compose.yml
+/src/main/resources/application.yml
