@@ -14,6 +14,10 @@ public class MusicianService {
 
     public Musician findByEmail(String email) {
         Optional<User> user = userService.findByEmail(email);
-        return (Musician) user.orElse(null);
+        if (user.isPresent() && user.get() instanceof Musician) {
+            return (Musician) user.get();
+        }
+        return null;
     }
 }
+

@@ -15,6 +15,10 @@ public class OrganizerService {
 
     public Organizer findByEmail(String email) {
         Optional<User> user = userService.findByEmail(email);
-        return (Organizer) user.orElse(null);
+        if (user.isPresent() && user.get() instanceof Organizer) {
+            return (Organizer) user.get();
+        }
+        return null;
     }
 }
+
