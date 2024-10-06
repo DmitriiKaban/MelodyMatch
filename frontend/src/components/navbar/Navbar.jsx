@@ -34,7 +34,7 @@ const Navbar = () => {
   let currentUser = {
     id: 1,
     username: "Matei Basarab",
-    isMusician: true,
+    isMusician: false,
   };
 
   // currentUser = null;
