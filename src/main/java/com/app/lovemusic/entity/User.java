@@ -56,17 +56,17 @@ public class User implements UserDetails {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    @Enumerated(EnumType.STRING)
+//    @Enumerated(EnumType.STRING)
     @Column(name = "auth_provider")
     private AuthenticationProviders authProvider;
 
-    public User(String fullName, String email, String password, String profilePicture, PaymentInformation paymentInformation, String userRole, Date createdAt, Date updatedAt, AuthenticationProviders authProvider) {
+    public User(String fullName, String email, String password, String profilePicture, PaymentInformation paymentInformation, UserRoles userRole, Date createdAt, Date updatedAt, AuthenticationProviders authProvider) {
         this.fullName = fullName;
         this.email = email;
         this.password = password;
         this.profilePicture = profilePicture;
         this.paymentInformation = paymentInformation;
-        this.userRole = userRole;
+        this.userRole = userRole.toString();
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.authProvider = authProvider;
@@ -88,8 +88,8 @@ public class User implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         HashSet<String> roles = new HashSet<>();
 
-        if (userRole != null && !userRole.trim().isEmpty()) {
-            roles.add(userRole);
+        if (userRole != null) {
+            roles.add(userRole.toString());
         }
 
         return roles.stream()

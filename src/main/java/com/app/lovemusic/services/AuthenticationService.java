@@ -3,6 +3,7 @@ package com.app.lovemusic.services;
 import com.app.lovemusic.dtos.LoginUserDto;
 import com.app.lovemusic.dtos.RegisterUserDto;
 import com.app.lovemusic.entity.User;
+import com.app.lovemusic.entity.UserRoles;
 import com.app.lovemusic.entity.accountTypes.Musician;
 import com.app.lovemusic.entity.accountTypes.Organizer;
 import com.app.lovemusic.exceptions.UserAlreadyExistsException;
@@ -41,10 +42,10 @@ public class AuthenticationService {
         user.setCreatedAt(new java.util.Date());
 
         if (user instanceof Musician) {
-            user.setUserRole("ROLE_MUSICIAN");
+            user.setUserRole(UserRoles.MUSICIAN.toString());
         }
         if (user instanceof Organizer) {
-            user.setUserRole("ROLE_ORGANIZER");
+            user.setUserRole(UserRoles.ORGANIZER.toString());
         }
 
         return userService.save(user);

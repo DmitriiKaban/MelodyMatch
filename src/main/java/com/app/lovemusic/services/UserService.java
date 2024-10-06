@@ -4,6 +4,7 @@ import com.app.lovemusic.dtos.PaymentInfoDto;
 import com.app.lovemusic.entity.AuthenticationProviders;
 import com.app.lovemusic.entity.PaymentInformation;
 import com.app.lovemusic.entity.User;
+import com.app.lovemusic.entity.UserRoles;
 import com.app.lovemusic.entity.accountTypes.Musician;
 import com.app.lovemusic.entity.accountTypes.Organizer;
 import com.app.lovemusic.repositories.MusicianRepository;
@@ -59,8 +60,9 @@ public class UserService implements UserRepository {
                 musician.setFullName(name);
                 musician.setAuthProvider(provider);
                 musician.setCreatedAt(new Date());
-                musician.setUserRole("ROLE_" + accountType.toUpperCase());
+                musician.setUserRole(UserRoles.MUSICIAN.toString());
                 saveMusician(musician);
+                System.out.println("New musician: " + musician);
                 return musician;
             }
             case "organizer" -> {
@@ -70,7 +72,7 @@ public class UserService implements UserRepository {
                 organizer.setFullName(name);
                 organizer.setAuthProvider(provider);
                 organizer.setCreatedAt(new Date());
-                organizer.setUserRole("ROLE_" + accountType.toUpperCase());
+                organizer.setUserRole(UserRoles.ORGANIZER.toString());
                 saveOrganizer(organizer);
                 return organizer;
             }
@@ -104,7 +106,11 @@ public class UserService implements UserRepository {
     }
 
     public void updateUserRole(User currentUser, String role) {
-        currentUser.setUserRole("ROLE_" + role.toUpperCase());
+        if (role == null) return;
+        else if (role.equalsIgnoreCase("admin")) currentUser.setUserRole(UserRoles.ADMIN.toString());
+        else if (role.equalsIgnoreCase("musician")) currentUser.setUserRole(UserRoles.MUSICIAN.toString());
+        else if (role.equalsIgnoreCase("organizer")) currentUser.setUserRole(UserRoles.ORGANIZER.toString());
+
         save(currentUser);
     }
 

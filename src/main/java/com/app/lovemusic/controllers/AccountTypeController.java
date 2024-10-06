@@ -51,6 +51,8 @@ public class AccountTypeController {
 
         User user = userService.createNewUserAfterOAuthLoginSuccess(accountType, email, name, authProvider);
 
+        System.out.println("New user: " + user);
+
         String jwtToken = jwtService.generateToken(user);
         LoginResponse loginResponse = new LoginResponse()
                 .setToken(jwtToken)

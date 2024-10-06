@@ -34,6 +34,15 @@ public class Musician extends User {
         this.resume = resume;
         this.workExperience = workExperience;
     }
+
+    @Override
+    public String toString() {
+        return "Musician{" +
+                "resume='" + resume + '\'' +
+                ", workExperience='" + workExperience + '\'' +
+                ", reviews=" + reviews +
+                '}' + super.toString();
+    }
 }
 
 

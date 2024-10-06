@@ -17,6 +17,8 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Optional;
 
 @Component
@@ -53,12 +55,13 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
         // Check if the user already exists
         Optional<User> user = userService.findByEmail(email);
+        System.out.println("User: " + user);
 
         if (user.isEmpty()) {
-            // Redirect user to select account type page
-            response.sendRedirect("/select-account-type?email=" + email + "&name=" + name + "&provider=" + provider);
+            String redirectUrl = encodeUrl(email, name, provider);
+            response.sendRedirect(redirectUrl);
+
         } else {
-            // User already exists, proceed to generate JWT and return the response
             String jwtToken = jwtService.generateToken(user.get());
             LoginResponse loginResponse = new LoginResponse()
                     .setToken(jwtToken)
@@ -68,6 +71,15 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write(new ObjectMapper().writeValueAsString(loginResponse));
         }
+    }
+
+    private String encodeUrl(String email, String name, String provider) throws UnsupportedEncodingException {
+        String baseUrl = "/select-account-type";
+        String encodedEmail = URLEncoder.encode(email, "UTF-8");
+        String encodedName = URLEncoder.encode(name, "UTF-8");  // This encodes non-ASCII characters
+        String encodedProvider = URLEncoder.encode(provider, "UTF-8");
+
+        return String.format("%s?email=%s&name=%s&provider=%s", baseUrl, encodedEmail, encodedName, encodedProvider);
     }
 }
 
