@@ -45,8 +45,9 @@ public class User implements UserDetails {
     @JoinColumn(name = "id", referencedColumnName = "id")
     private PaymentInformation paymentInformation;
 
-    @Column(name = "user_role", insertable = false, updatable = false)
-    private String userRole;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "user_role", nullable = false) // Enable insert/update
+    private UserRoles userRole;
 
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
@@ -56,9 +57,12 @@ public class User implements UserDetails {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-//    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     @Column(name = "auth_provider")
     private AuthenticationProviders authProvider;
+
+    @Column(name = "account_type")
+    private String accountType;
 
     public User(String fullName, String email, String password, String profilePicture, PaymentInformation paymentInformation, UserRoles userRole, Date createdAt, Date updatedAt, AuthenticationProviders authProvider) {
         this.fullName = fullName;
@@ -66,7 +70,7 @@ public class User implements UserDetails {
         this.password = password;
         this.profilePicture = profilePicture;
         this.paymentInformation = paymentInformation;
-        this.userRole = userRole.toString();
+        this.userRole = userRole;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.authProvider = authProvider;

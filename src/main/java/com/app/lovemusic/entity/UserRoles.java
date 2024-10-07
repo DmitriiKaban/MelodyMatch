@@ -1,5 +1,5 @@
 package com.app.lovemusic.entity;
 
 public enum UserRoles {
-    MUSICIAN, ORGANIZER, ADMIN
+   USER, ADMIN
 }

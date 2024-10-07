@@ -2,6 +2,7 @@ package com.app.lovemusic.util;
 
 import com.app.lovemusic.entity.AuthenticationProviders;
 import com.app.lovemusic.entity.User;
+import com.app.lovemusic.entity.UserRoles;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -17,8 +18,9 @@ public class UserRowMapper implements RowMapper<User> {
         user.setPassword(rs.getString("password"));
         user.setCreatedAt(rs.getTimestamp("created_at"));
         user.setUpdatedAt(rs.getTimestamp("updated_at"));
-        user.setUserRole(rs.getString("user_role"));
+        user.setUserRole(UserRoles.valueOf(rs.getString("user_role")));
         user.setAuthProvider(AuthenticationProviders.valueOf(rs.getString("auth_provider")));
+        user.setAccountType(rs.getString("account_type"));
         return user;
     }
 }

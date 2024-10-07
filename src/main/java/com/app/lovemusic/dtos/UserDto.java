@@ -1,6 +1,7 @@
 package com.app.lovemusic.dtos;
 
 import com.app.lovemusic.entity.AuthenticationProviders;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -34,8 +35,9 @@ public class UserDto {
     @NotNull(message = "Authentication provider is required")
     private AuthenticationProviders authProvider;
 
-    public String getUsername() {
-        return email;
-    }
+//    @JsonIgnore
+//    public String getUsername() {
+//        return email;
+//    }
 
 }

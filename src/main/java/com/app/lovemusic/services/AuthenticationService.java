@@ -40,13 +40,7 @@ public class AuthenticationService {
         user.setPassword(passwordEncoder.encode(input.getPassword()));
         user.setFullName(input.getFullName());
         user.setCreatedAt(new java.util.Date());
-
-        if (user instanceof Musician) {
-            user.setUserRole(UserRoles.MUSICIAN.toString());
-        }
-        if (user instanceof Organizer) {
-            user.setUserRole(UserRoles.ORGANIZER.toString());
-        }
+        user.setUserRole(UserRoles.USER);
 
         return userService.save(user);
     }

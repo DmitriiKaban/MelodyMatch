@@ -54,7 +54,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (userEmail != null && authentication == null) {
 
                 Optional<User> userDetails = userService.findByEmail(userEmail);
-                System.out.println("User: " + userDetails.get());
 
                 if (userDetails.isEmpty()) {
                     filterChain.doFilter(request, response);

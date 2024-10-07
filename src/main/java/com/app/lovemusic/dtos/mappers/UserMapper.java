@@ -2,6 +2,7 @@ package com.app.lovemusic.dtos.mappers;
 
 import com.app.lovemusic.dtos.UserDto;
 import com.app.lovemusic.entity.User;
+import com.app.lovemusic.entity.UserRoles;
 import com.app.lovemusic.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -12,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserMapper {
 
-    private final UserService userService;
+//    private final UserService userService;
 
     public UserDto toDto(User user) {
         UserDto userDto = new UserDto();
@@ -21,7 +22,8 @@ public class UserMapper {
         userDto.setAuthProvider(user.getAuthProvider());
         userDto.setCreatedAt(user.getCreatedAt());
         userDto.setUpdatedAt(user.getUpdatedAt());
-        userDto.setUserRole(user.getUserRole());
+        userDto.setUserRole(user.getUserRole().toString());
+        userDto.setAccountType(user.getAccountType());
 
         return userDto;
     }
@@ -30,20 +32,20 @@ public class UserMapper {
         return List.of(users.stream().map(this::toDto).toArray(UserDto[]::new));
     }
 
-//    public User toUser(UserDto userDto) {
-//        User user = new User();
-//        user.setEmail(userDto.getEmail());
-//        user.setFullName(userDto.getFullName());
-//        user.setAuthProvider(userDto.getAuthProvider());
-//        user.setCreatedAt(userDto.getCreatedAt());
-//        user.setUpdatedAt(userDto.getUpdatedAt());
-//        user.setUserRole(userDto.getUserRole());
-//
-//        return user;
-//    }
+    public User toUser(UserDto userDto) {
+        User user = new User();
+        user.setEmail(userDto.getEmail());
+        user.setFullName(userDto.getFullName());
+        user.setAuthProvider(userDto.getAuthProvider());
+        user.setCreatedAt(userDto.getCreatedAt());
+        user.setUpdatedAt(userDto.getUpdatedAt());
+        user.setUserRole(UserRoles.valueOf(userDto.getUserRole()));
 
-//    public List<User> toUserList(List<UserDto> userDtos) {
-//        return List.of(userDtos.stream().map(this::toUser).toArray(User[]::new));
-//    }
+        return user;
+    }
+
+    public List<User> toUserList(List<UserDto> userDtos) {
+        return List.of(userDtos.stream().map(this::toUser).toArray(User[]::new));
+    }
 
 }

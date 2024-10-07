@@ -31,7 +31,7 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         User currentUser = (User) authentication.getPrincipal();
-//        System.out.println(currentUser);
+        System.out.println(userMapper.toDto(currentUser));
 
         return ResponseEntity.ok(userMapper.toDto(currentUser));
     }

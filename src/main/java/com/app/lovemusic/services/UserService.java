@@ -60,7 +60,8 @@ public class UserService implements UserRepository {
                 musician.setFullName(name);
                 musician.setAuthProvider(provider);
                 musician.setCreatedAt(new Date());
-                musician.setUserRole(UserRoles.MUSICIAN.toString());
+                musician.setUserRole(UserRoles.USER);
+                musician.setAccountType("musician");
                 saveMusician(musician);
                 System.out.println("New musician: " + musician);
                 return musician;
@@ -72,7 +73,8 @@ public class UserService implements UserRepository {
                 organizer.setFullName(name);
                 organizer.setAuthProvider(provider);
                 organizer.setCreatedAt(new Date());
-                organizer.setUserRole(UserRoles.ORGANIZER.toString());
+                organizer.setUserRole(UserRoles.USER);
+                organizer.setAccountType("organizer");
                 saveOrganizer(organizer);
                 return organizer;
             }
@@ -107,9 +109,9 @@ public class UserService implements UserRepository {
 
     public void updateUserRole(User currentUser, String role) {
         if (role == null) return;
-        else if (role.equalsIgnoreCase("admin")) currentUser.setUserRole(UserRoles.ADMIN.toString());
-        else if (role.equalsIgnoreCase("musician")) currentUser.setUserRole(UserRoles.MUSICIAN.toString());
-        else if (role.equalsIgnoreCase("organizer")) currentUser.setUserRole(UserRoles.ORGANIZER.toString());
+        else if (role.equalsIgnoreCase("admin")) currentUser.setUserRole(UserRoles.ADMIN);
+        else if (role.equalsIgnoreCase("musician")) currentUser.setUserRole(UserRoles.USER);
+        else if (role.equalsIgnoreCase("organizer")) currentUser.setUserRole(UserRoles.USER);
 
         save(currentUser);
     }
