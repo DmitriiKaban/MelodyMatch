@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -37,8 +38,8 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/upload-pfp/{profilePicture}")
-    public ResponseEntity<UserDto> uploadProfilePicture(@PathVariable String profilePicture) {
+    @PostMapping("/upload-pfp")
+    public ResponseEntity<UserDto> uploadProfilePicture(@RequestParam("profilePicture") MultipartFile profilePicture) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         User currentUser = (User) authentication.getPrincipal();
@@ -49,8 +50,8 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/update-name/{name}")
-    public ResponseEntity<UserDto> updateName(@PathVariable String name) {
+    @PostMapping("/update-name")
+    public ResponseEntity<UserDto> updateName(@RequestBody String name) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         User currentUser = (User) authentication.getPrincipal();

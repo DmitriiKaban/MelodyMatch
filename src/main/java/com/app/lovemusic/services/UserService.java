@@ -15,7 +15,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -116,9 +119,14 @@ public class UserService implements UserRepository {
         save(currentUser);
     }
 
-    public void uploadProfilePicture(User currentUser, String profilePicture) {
-        currentUser.setProfilePicture(profilePicture);
-        save(currentUser);
+    public void uploadProfilePicture(User currentUser, MultipartFile profilePicture) {
+        try {
+            String base64EncodedImage = Base64.getEncoder().encodeToString(profilePicture.getBytes());
+            currentUser.setProfilePicture(base64EncodedImage);
+            save(currentUser);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to upload profile picture", e);
+        }
     }
 
     public void updateFullName(User currentUser, String name) {
