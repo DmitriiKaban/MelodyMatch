@@ -1,7 +1,6 @@
 package com.app.lovemusic.entity.accountTypes;
 
 import com.app.lovemusic.entity.AuthenticationProviders;
-import com.app.lovemusic.entity.RatingReview;
 import com.app.lovemusic.entity.PaymentInformation;
 import com.app.lovemusic.entity.User;
 import jakarta.persistence.*;
@@ -9,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Data
@@ -22,9 +20,6 @@ public class Musician extends User {
 
     @Column
     private String workExperience;
-
-    @OneToMany(mappedBy = "musician")
-    private List<RatingReview> reviews;
 
     public Musician(String fullName, String email, String password, String profilePicture,
                     PaymentInformation paymentInformation, Date createdAt, Date updatedAt,
@@ -39,7 +34,6 @@ public class Musician extends User {
         return "Musician{" +
                 "resume='" + resume + '\'' +
                 ", workExperience='" + workExperience + '\'' +
-                ", reviews=" + reviews +
                 '}' + super.toString();
     }
 }
