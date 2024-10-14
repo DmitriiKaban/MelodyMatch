@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class MusicianRatingReviewDto {
+public class RatingReviewDto {
 
     @NotNull(message = "Rating is required")
     @DecimalMin(value = "1", message = "Rating must be at least 1")

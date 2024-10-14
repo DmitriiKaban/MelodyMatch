@@ -1,7 +1,7 @@
 package com.app.lovemusic.entity.accountTypes;
 
 import com.app.lovemusic.entity.AuthenticationProviders;
-import com.app.lovemusic.entity.MusicianRatingReview;
+import com.app.lovemusic.entity.RatingReview;
 import com.app.lovemusic.entity.PaymentInformation;
 import com.app.lovemusic.entity.User;
 import jakarta.persistence.*;
@@ -24,7 +24,7 @@ public class Musician extends User {
     private String workExperience;
 
     @OneToMany(mappedBy = "musician")
-    private List<MusicianRatingReview> reviews;
+    private List<RatingReview> reviews;
 
     public Musician(String fullName, String email, String password, String profilePicture,
                     PaymentInformation paymentInformation, Date createdAt, Date updatedAt,

@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Table(name = "users")
@@ -44,6 +45,12 @@ public class User implements UserDetails {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id", referencedColumnName = "id")
     private PaymentInformation paymentInformation;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RatingReview> reviewsAuthored;
+
+    @OneToMany(mappedBy = "target", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RatingReview> reviewsReceived;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "user_role", nullable = false) // Enable insert/update
