@@ -11,10 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Table(name = "users")
@@ -47,10 +44,10 @@ public class User implements UserDetails {
     private PaymentInformation paymentInformation;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<RatingReview> reviewsAuthored;
+    private List<RatingReview> reviewsAuthored = new ArrayList<>();
 
     @OneToMany(mappedBy = "target", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<RatingReview> reviewsReceived;
+    private List<RatingReview> reviewsReceived = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "user_role", nullable = false) // Enable insert/update

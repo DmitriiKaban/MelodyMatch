@@ -4,6 +4,7 @@ import com.app.lovemusic.dtos.RatingReviewDto;
 import com.app.lovemusic.dtos.mappers.RatingReviewMapper;
 import com.app.lovemusic.entity.RatingReview;
 import com.app.lovemusic.entity.User;
+import com.app.lovemusic.services.RatingReviewService;
 import com.app.lovemusic.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class RatingReviewsController {
 
     private final UserService userService;
     private final RatingReviewMapper ratingReviewMapper;
+    private final RatingReviewService ratingReviewService;
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/get-reviews/received/{userId}")
@@ -63,6 +65,8 @@ public class RatingReviewsController {
         List<RatingReview> reviews = currentUser.getReviewsAuthored();
         reviews.add(ratingReviewMapper.toRatingReview(currentUser.getId(), reviewedUser.getId(), reviewDto));
         currentUser.setReviewsAuthored(reviews);
+
+        ratingReviewService.saveReview(currentUser.getId(), reviewedUser.getId(), reviewDto);
 
         return ResponseEntity.ok(reviewDto);
     }
