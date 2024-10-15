@@ -2,6 +2,7 @@ package com.app.lovemusic.dtos.mappers;
 
 import com.app.lovemusic.dtos.RatingReviewDto;
 import com.app.lovemusic.entity.RatingReview;
+import com.app.lovemusic.entity.RatingReviewKey;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class RatingReviewMapper {
 
     public RatingReview toRatingReview(Long authorId, Long targetId, RatingReviewDto ratingReviewDto) {
         RatingReview ratingReview = new RatingReview();
+        ratingReview.setRatingReviewKey(new RatingReviewKey());
         ratingReview.getRatingReviewKey().setAuthorId(authorId);
         ratingReview.getRatingReviewKey().setTargetId(targetId);
         ratingReview.setRating(ratingReviewDto.getRating());
