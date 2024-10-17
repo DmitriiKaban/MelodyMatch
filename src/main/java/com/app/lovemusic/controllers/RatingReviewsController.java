@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequestMapping("/rating-reviews")
 @RestController
@@ -28,25 +29,29 @@ public class RatingReviewsController {
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/get-reviews/received/{userId}")
     public ResponseEntity<List<RatingReviewDto>> getUserReceivedReviews(@PathVariable Long userId) {
-        User user = userService.findById(userId);
+        Optional<User> user = userService.findById(userId);
 
-        if (user == null) {
+        if (user.isEmpty()) {
             throw new IllegalArgumentException("User not found");
         }
 
-        return ResponseEntity.ok(ratingReviewMapper.toDtos(user.getReviewsReceived()));
+        List<RatingReview> reviews = user.get().getReviewsReceived();
+
+        return ResponseEntity.ok(ratingReviewMapper.toDtos(reviews));
     }
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/get-reviews/authored/{userId}")
     public ResponseEntity<List<RatingReviewDto>> getUserAuthoredReviews(@PathVariable Long userId) {
-        User user = userService.findById(userId);
+        Optional<User> user = userService.findById(userId);
 
-        if (user == null) {
+        if (user.isEmpty()) {
             throw new IllegalArgumentException("User not found");
         }
 
-        return ResponseEntity.ok(ratingReviewMapper.toDtos(user.getReviewsAuthored()));
+        List<RatingReview> reviews = user.get().getReviewsAuthored();
+
+        return ResponseEntity.ok(ratingReviewMapper.toDtos(reviews));
     }
 
     @PreAuthorize("hasRole('USER')")
@@ -56,17 +61,17 @@ public class RatingReviewsController {
 
         User currentUser = (User) authentication.getPrincipal();
 
-        User reviewedUser = userService.findById(userId);
+        Optional<User> reviewedUser = userService.findById(userId);
 
-        if (reviewedUser == null) {
+        if (reviewedUser.isEmpty()) {
             throw new IllegalArgumentException("User not found");
         }
 
         List<RatingReview> reviews = currentUser.getReviewsAuthored();
-        reviews.add(ratingReviewMapper.toRatingReview(currentUser.getId(), reviewedUser.getId(), reviewDto));
+        reviews.add(ratingReviewMapper.toRatingReview(currentUser.getId(), reviewedUser.get().getId(), reviewDto));
         currentUser.setReviewsAuthored(reviews);
 
-        ratingReviewService.saveReview(currentUser.getId(), reviewedUser.getId(), reviewDto);
+        ratingReviewService.saveReview(currentUser.getId(), reviewedUser.get().getId(), reviewDto);
 
         return ResponseEntity.ok(reviewDto);
     }

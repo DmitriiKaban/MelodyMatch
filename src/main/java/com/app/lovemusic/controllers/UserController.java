@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @RequestMapping("/users")
 @RestController
@@ -80,9 +81,9 @@ public class UserController {
 
         User requestedUser = (User) authentication.getPrincipal();
 
-        User user = userService.findById(userId);
+        Optional<User> user = userService.findById(userId);
 
-        if (user == null) {
+        if (user.isEmpty()) {
             throw new IllegalArgumentException("User not found");
         }
 
@@ -90,7 +91,7 @@ public class UserController {
             throw new IllegalArgumentException("You are not an organizer");
         }
 
-        if(!(user instanceof Musician musician)) {
+        if(!(user.get() instanceof Musician musician)) {
             throw new IllegalArgumentException("User is not a musician");
         }
 
@@ -104,9 +105,9 @@ public class UserController {
 
         User requestedUser = (User) authentication.getPrincipal();
 
-        User user = userService.findById(userId);
+        Optional<User> user = userService.findById(userId);
 
-        if(user == null) {
+        if(user.isEmpty()) {
             throw new IllegalArgumentException("User not found");
         }
 
@@ -114,7 +115,7 @@ public class UserController {
             throw new IllegalArgumentException("You are not an organizer");
         }
 
-        if(!(user instanceof Musician musician)) {
+        if(!(user.get() instanceof Musician musician)) {
             throw new IllegalArgumentException("User is not a musician");
         }
 
@@ -124,13 +125,13 @@ public class UserController {
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/get-user/{userId}")
     public ResponseEntity<UserDto> getUser(@PathVariable Long userId) {
-        User user = userService.findById(userId);
+        Optional<User> user = userService.findById(userId);
 
-        if(user == null) {
+        if(user.isEmpty()) {
             throw new IllegalArgumentException("User not found");
         }
 
-        return ResponseEntity.ok(userMapper.toDto(user));
+        return ResponseEntity.ok(userMapper.toDto(user.get()));
     }
 
     @PreAuthorize("hasRole('ADMIN')")

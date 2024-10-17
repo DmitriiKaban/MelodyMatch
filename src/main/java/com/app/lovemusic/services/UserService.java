@@ -16,6 +16,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.Base64;
@@ -32,11 +33,8 @@ public class UserService implements UserRepository {
     private final OrganizerRepository organizerRepository;
 
     public List<User> allUsers() {
-
         String sql = "SELECT * FROM users";
-        List<User> users = jdbcTemplate.query(sql, new UserRowMapper());
-
-        return users;
+        return jdbcTemplate.query(sql, new UserRowMapper());
     }
 
     public Optional<User> findByEmail(String email) {
@@ -48,16 +46,19 @@ public class UserService implements UserRepository {
         }
     }
 
-    public User findById(Long id) {
-
+    public Optional<User> findById(Long id) {
         String sql = "SELECT * FROM users WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new UserRowMapper(), id);
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new UserRowMapper(), id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
+    @Transactional
     public User createNewUserAfterOAuthLoginSuccess(String accountType, String email, String name, AuthenticationProviders provider) {
         switch (accountType.toLowerCase()) {
-            case "musician" -> {
-
+            case "musician":
                 Musician musician = new Musician();
                 musician.setEmail(email);
                 musician.setFullName(name);
@@ -65,12 +66,9 @@ public class UserService implements UserRepository {
                 musician.setCreatedAt(new Date());
                 musician.setUserRole(UserRoles.USER);
                 musician.setAccountType("musician");
-                saveMusician(musician);
-                System.out.println("New musician: " + musician);
-                return musician;
-            }
-            case "organizer" -> {
+                return saveMusician(musician);
 
+            case "organizer":
                 Organizer organizer = new Organizer();
                 organizer.setEmail(email);
                 organizer.setFullName(name);
@@ -78,44 +76,42 @@ public class UserService implements UserRepository {
                 organizer.setCreatedAt(new Date());
                 organizer.setUserRole(UserRoles.USER);
                 organizer.setAccountType("organizer");
-                saveOrganizer(organizer);
-                return organizer;
-            }
-            default -> throw new IllegalArgumentException("Invalid account type");
+                return saveOrganizer(organizer);
+
+            default:
+                throw new IllegalArgumentException("Invalid account type");
         }
     }
 
-    private void saveOrganizer(Organizer organizer) {
-        organizerRepository.save(organizer);
+    private User saveOrganizer(Organizer organizer) {
+        return organizerRepository.save(organizer);
     }
 
-    private void saveMusician(Musician musician) {
-        musicianRepository.save(musician);
-    }
-
-    User save(User user) {
-
-        String sql = "INSERT INTO users (email, full_name, created_at, updated_at, auth_provider) VALUES (?, ?, ?, ?, ?)";
-        String authProvider = user.getAuthProvider() != null ? user.getAuthProvider().toString() : null;
-        jdbcTemplate.update(sql, user.getEmail(), user.getFullName(), user.getCreatedAt(), user.getUpdatedAt(), authProvider);
-
-        return user;
+    private User saveMusician(Musician musician) {
+        return musicianRepository.save(musician);
     }
 
     public void updateUserAfterOAuthLoginSuccess(User user, String name, AuthenticationProviders authenticationProviders) {
         user.setFullName(name);
         user.setAuthProvider(authenticationProviders);
         user.setUpdatedAt(new Date());
-
-        if (user instanceof Musician) save(user);
+        save(user);
     }
 
     public void updateUserRole(User currentUser, String role) {
         if (role == null) return;
-        else if (role.equalsIgnoreCase("admin")) currentUser.setUserRole(UserRoles.ADMIN);
-        else if (role.equalsIgnoreCase("musician")) currentUser.setUserRole(UserRoles.USER);
-        else if (role.equalsIgnoreCase("organizer")) currentUser.setUserRole(UserRoles.USER);
 
+        switch (role.toLowerCase()) {
+            case "admin":
+                currentUser.setUserRole(UserRoles.ADMIN);
+                break;
+            case "musician":
+            case "organizer":
+                currentUser.setUserRole(UserRoles.USER);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid role");
+        }
         save(currentUser);
     }
 
@@ -136,7 +132,6 @@ public class UserService implements UserRepository {
 
     public void updatePaymentInformation(User currentUser, PaymentInfoDto paymentInfoDto) {
         PaymentInformation paymentInformation = new PaymentInformation();
-
         paymentInformation.setCardNumber(paymentInfoDto.getCardNumber());
         paymentInformation.setCardHolderName(paymentInfoDto.getCardHolderName());
         paymentInformation.setExpirationDate(paymentInfoDto.getExpirationDate());
@@ -144,8 +139,13 @@ public class UserService implements UserRepository {
         paymentInformation.setUser(currentUser);
 
         currentUser.setPaymentInformation(paymentInformation);
-
         save(currentUser);
     }
 
+    public User save(User user) {
+        String sql = "INSERT INTO users (email, full_name, created_at, updated_at, auth_provider) VALUES (?, ?, ?, ?, ?)";
+        String authProvider = user.getAuthProvider() != null ? user.getAuthProvider().toString() : null;
+        jdbcTemplate.update(sql, user.getEmail(), user.getFullName(), user.getCreatedAt(), user.getUpdatedAt(), authProvider);
+        return user;
+    }
 }
