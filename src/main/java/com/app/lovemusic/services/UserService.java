@@ -48,7 +48,7 @@ public class UserService implements UserRepository {
         }
     }
 
-    public User findById(Integer id) {
+    public User findById(Long id) {
 
         String sql = "SELECT * FROM users WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new UserRowMapper(), id);

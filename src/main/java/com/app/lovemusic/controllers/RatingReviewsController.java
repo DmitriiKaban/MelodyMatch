@@ -27,7 +27,7 @@ public class RatingReviewsController {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/get-reviews/received/{userId}")
-    public ResponseEntity<List<RatingReviewDto>> getUserReceivedReviews(@PathVariable Integer userId) {
+    public ResponseEntity<List<RatingReviewDto>> getUserReceivedReviews(@PathVariable Long userId) {
         User user = userService.findById(userId);
 
         if (user == null) {
@@ -39,7 +39,7 @@ public class RatingReviewsController {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/get-reviews/authored/{userId}")
-    public ResponseEntity<List<RatingReviewDto>> getUserAuthoredReviews(@PathVariable Integer userId) {
+    public ResponseEntity<List<RatingReviewDto>> getUserAuthoredReviews(@PathVariable Long userId) {
         User user = userService.findById(userId);
 
         if (user == null) {
@@ -51,7 +51,7 @@ public class RatingReviewsController {
 
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/add-review/{userId}")
-    public ResponseEntity<RatingReviewDto> addReview(@PathVariable Integer userId, @Valid @RequestBody RatingReviewDto reviewDto) {
+    public ResponseEntity<RatingReviewDto> addReview(@PathVariable Long userId, @Valid @RequestBody RatingReviewDto reviewDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         User currentUser = (User) authentication.getPrincipal();

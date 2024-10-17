@@ -75,7 +75,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/get-resume/{userId}")
-    public ResponseEntity<String> getUserResume(@PathVariable Integer userId) {
+    public ResponseEntity<String> getUserResume(@PathVariable Long userId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         User requestedUser = (User) authentication.getPrincipal();
@@ -99,7 +99,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/get-work-experience/{userId}")
-    public ResponseEntity<String> getUserWorkExperience(@PathVariable Integer userId) {
+    public ResponseEntity<String> getUserWorkExperience(@PathVariable Long userId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         User requestedUser = (User) authentication.getPrincipal();
@@ -123,7 +123,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/get-user/{userId}")
-    public ResponseEntity<UserDto> getUser(@PathVariable Integer userId) {
+    public ResponseEntity<UserDto> getUser(@PathVariable Long userId) {
         User user = userService.findById(userId);
 
         if(user == null) {

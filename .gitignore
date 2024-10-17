@@ -34,3 +34,4 @@ build/
 /src/main/resources/application.yml
 /db/docker-compose.yml
 /db/db-scripts/db.sql
+/db/.env
