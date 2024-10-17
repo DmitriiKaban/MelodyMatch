@@ -36,6 +36,7 @@ public class RatingReviewsController {
         }
 
         List<RatingReview> reviews = user.get().getReviewsReceived();
+        System.out.println("reviews: " + reviews);
 
         return ResponseEntity.ok(ratingReviewMapper.toDtos(reviews));
     }

@@ -43,14 +43,14 @@ public class User implements UserDetails {
     @JoinColumn(name = "id", referencedColumnName = "id")
     private PaymentInformation paymentInformation;
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<RatingReview> reviewsAuthored = new ArrayList<>();
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<RatingReview> reviewsAuthored;
 
-    @OneToMany(mappedBy = "target", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<RatingReview> reviewsReceived = new ArrayList<>();
+    @OneToMany(mappedBy = "target", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<RatingReview> reviewsReceived;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "user_role", nullable = false) // Enable insert/update
+    @Column(name = "user_role", nullable = false)
     private UserRoles userRole;
 
     @CreationTimestamp

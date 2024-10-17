@@ -32,11 +32,13 @@ public class UserService implements UserRepository {
     private final MusicianRepository musicianRepository;
     private final OrganizerRepository organizerRepository;
 
+    @Transactional(readOnly = true)
     public List<User> allUsers() {
         String sql = "SELECT * FROM users";
         return jdbcTemplate.query(sql, new UserRowMapper());
     }
 
+    @Transactional(readOnly = true)
     public Optional<User> findByEmail(String email) {
         String sql = "SELECT * FROM users WHERE email = ?";
         try {
@@ -46,6 +48,7 @@ public class UserService implements UserRepository {
         }
     }
 
+    @Transactional(readOnly = true)
     public Optional<User> findById(Long id) {
         String sql = "SELECT * FROM users WHERE id = ?";
         try {
