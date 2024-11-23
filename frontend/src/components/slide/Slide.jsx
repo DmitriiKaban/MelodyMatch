@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import "./Slide.scss";
 import Slider from "infinite-react-carousel";
 

@@ -1,5 +1,5 @@
-import React from "react";
 import { Link } from "react-router-dom";
+import { ordersData } from "../../data/orders";
 import "./Orders.scss";
 
 const Orders = () => {
@@ -13,106 +13,44 @@ const Orders = () => {
     <div className="orders">
       <div className="container">
         <div className="title">
-          <h1>My Orders</h1>
+          <h1>{currentUser.isMusician ? "Orders" : "My orders"}</h1>
         </div>
         <table>
-          <tr>
-            <th>Image</th>
-            <th>Title</th>
-            <th>Price</th>
-            {<th>{currentUser.isMusician ? "Buyer" : "Seller"}</th>}
-            <th>Contact</th>
-          </tr>
-          <tr>
-            <td>
-              <img
-                className="image"
-                src="https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt=""
-              />
-            </td>
-            <td>Stunning concept art</td>
-            <td>59.<sup>99</sup></td>
-            <td>Maria Anders</td>
-            <td>
-              <img className="message" src="./img/icons/message.png" alt="" />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <img
-                className="image"
-                src="https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt=""
-              />
-            </td>
-            <td>Ai generated concept art</td>
-            <td>79.<sup>99</sup></td>
-            <td>Francisco Chang</td>
-            <td>
-              <img className="message" src="./img/icons/message.png" alt="" />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <img
-                className="image"
-                src="https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt=""
-              />
-            </td>
-            <td>High quality digital character</td>
-            <td>110.<sup>99</sup></td>
-            <td>Roland Mendel</td>
-            <td>
-              <img className="message" src="./img/icons/message.png" alt="" />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <img
-                className="image"
-                src="https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt=""
-              />
-            </td>
-            <td>Illustration hyper realistic painting</td>
-            <td>39.<sup>99</sup></td>
-            <td>Helen Bennett</td>
-            <td>
-              <img className="message" src="./img/icons/message.png" alt="" />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <img
-                className="image"
-                src="https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt=""
-              />
-            </td>
-            <td>Original ai generated digital art</td>
-            <td>119.<sup>99</sup></td>
-            <td>Yoshi Tannamuri</td>
-            <td>
-              <img className="message" src="./img/icons/message.png" alt="" />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <img
-                className="image"
-                src="https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt=""
-              />
-            </td>
-            <td>Text based ai generated art</td>
-            <td>49.<sup>99</sup></td>
-            <td>Giovanni Rovelli</td>
-            <td>
-              <img className="message" src="./img/icons/message.png" alt="" />
-            </td>
-          </tr>
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Title</th>
+              <th>Price</th>
+              <th>{currentUser.isMusician ? "Buyer" : "Seller"}</th>
+              <th>Contact</th>
+            </tr>
+          </thead>
+          <tbody>
+            {ordersData.map((order) => (
+              <tr key={order.id}>
+                <td>
+                  <img
+                    className="image"
+                    src={order.gig.img}
+                    alt={order.gig.title}
+                  />
+                </td>
+                <td>{order.gig.title}</td>
+                <td>
+                  {order.gig.price.toFixed(2)}
+                  <sup>99</sup>
+                </td>
+                <td>{order.buyer}</td>
+                <td>
+                  <img
+                    className="message"
+                    src="./img/icons/message.png"
+                    alt="message"
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
         </table>
       </div>
     </div>

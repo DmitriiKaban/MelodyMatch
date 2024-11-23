@@ -1,4 +1,5 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import { sanitizeInput } from "../../utils/sanitize";
 import "./Add.scss";
 import { Banner } from "../../components";
 
@@ -11,11 +12,27 @@ const currentUser = {
 const Add = () => {
   const formRef = useRef(null);
   const userIsMusician = currentUser.isMusician;
+  const [formData, setFormData] = useState({
+    title: "",
+    category: "",
+    description: "",
+    serviceTitle: "",
+    extraFeatures: "",
+    price: "",
+  });
 
   const scrollToForm = () => {
     if (formRef.current) {
       formRef.current.scrollIntoView({ behavior: "smooth" });
     }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: sanitizeInput(value),
+    });
   };
 
   return (
@@ -42,7 +59,10 @@ const Add = () => {
               <hr />
               <input
                 type="text"
+                name="title"
                 placeholder={`e.g. I will do something I'm really good at`}
+                value={formData.title}
+                onChange={handleInputChange}
               />
 
               <div className="item">
@@ -50,7 +70,11 @@ const Add = () => {
                 <img src="/img/icons/Edit.png" alt="" />
               </div>
               <hr />
-              <select name="cats" id="cats">
+              <select
+                name="category"
+                value={formData.category}
+                onChange={handleInputChange}
+              >
                 <option value="design">See all</option>
                 <option value="web">Rock</option>
                 <option value="animation">Traditional</option>
@@ -77,11 +101,14 @@ const Add = () => {
               </div>
               <hr />
               <textarea
+                name="description"
                 placeholder={
                   userIsMusician
                     ? "Brief description of your services to your customers"
                     : "Brief description of your event"
                 }
+                value={formData.description}
+                onChange={handleInputChange}
                 cols="0"
                 rows="16"
               ></textarea>
@@ -101,27 +128,15 @@ const Add = () => {
               <hr />
               <input
                 type="text"
+                name="serviceTitle"
                 placeholder={`e.g. ${
                   userIsMusician
                     ? "1 hour canto with background band"
                     : "in need of a wedding singer"
                 }`}
+                value={formData.serviceTitle}
+                onChange={handleInputChange}
               />
-
-              <div className="item">
-                <label htmlFor="">Short Description</label>
-                <img src="/img/icons/Edit.png" alt="" />
-              </div>
-              <hr />
-              <textarea
-                placeholder={
-                  userIsMusician
-                    ? "What services are you offering?"
-                    : "What are you looking for"
-                }
-                cols="30"
-                rows="10"
-              ></textarea>
 
               <div className="item">
                 <label htmlFor="">
@@ -132,19 +147,25 @@ const Add = () => {
               <hr />
               <input
                 type="text"
+                name="extraFeatures"
                 placeholder={
                   userIsMusician
                     ? "e.g. song writing"
                     : "e.g. artist needs to know spanish"
                 }
+                value={formData.extraFeatures}
+                onChange={handleInputChange}
               />
               <input
                 type="text"
+                name="extraFeatures"
                 placeholder={
                   userIsMusician
                     ? "e.g. other genres"
                     : "e.g. experience with big crowds"
                 }
+                value={formData.extraFeatures}
+                onChange={handleInputChange} // Handle input change with sanitization
               />
 
               <div className="item">
@@ -152,7 +173,12 @@ const Add = () => {
                 <img src="/img/icons/Edit.png" alt="" />
               </div>
               <hr />
-              <input type="number" />
+              <input
+                type="number"
+                name="price"
+                value={formData.price}
+                onChange={handleInputChange}
+              />
             </div>
           </div>
         </div>

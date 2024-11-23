@@ -1,4 +1,5 @@
-import { accounts, cards } from "../../data";
+import { cards } from "../../data/genres";
+import { accountsMusician } from "../../data/accounts";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logoName.png";
 import "./Home.scss";
@@ -63,7 +64,7 @@ const Home = () => {
         autoplaySpeed={3000}
         pauseOnHover={true}
       >
-        {accounts.map((account) => {
+        {accountsMusician.map((account) => {
           return <AccountCard key={account.id} item={account} />;
         })}
       </Slide>

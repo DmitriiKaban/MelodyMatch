@@ -9,7 +9,7 @@ const Gig = () => {
       <div className="container">
         <div className="left">
           <span className="breadCrumbs">TUNIFY {">"} CLASSICAL</span>
-
+          <h2>Open for Events</h2>
           <div className="user">
             <img src="/img/pp3.png" alt="" />
             <span>Jace Smith</span>
@@ -29,7 +29,7 @@ const Gig = () => {
             <img src="/img/account8.png" alt="" />
           </Slider>
 
-          <h2>About This Artist</h2>
+          <h2>About This Gig</h2>
           <p>
             I’m available for bookings from October 15th through December 10th.
             Feel free to reach out to discuss specific dates and event details.
@@ -73,17 +73,9 @@ const Gig = () => {
                   <span className="title">Member since</span>
                   <span className="desc">September 2024</span>
                 </div>
-                <div className="item">
-                  <span className="title">Last booking</span>
-                  <span className="desc">2 days</span>
-                </div>
               </div>
               <hr />
-              <p>
-                My name is Jace, since I was a kid I was passionate about
-                songwriting and performing, always competing at contests. Now I
-                am writing songs for different bands...
-              </p>
+              <p>Click here to see the artist's Resume</p>
             </div>
           </div>
 
@@ -92,7 +84,7 @@ const Gig = () => {
               <div className="top">
                 <h2>Reviews</h2>
                 <Link to="/gig/:id/reviews" className="link">
-                  <h3> See more </h3>
+                  <h3> Add your review </h3>
                 </Link>
               </div>
               <Review />
@@ -105,12 +97,6 @@ const Gig = () => {
             <h3>1 hour canto with background band</h3>
             <h2>$82</h2>
           </div>
-
-          <p>
-            As the voice of my band I will make sure we bring the best energy
-            and sound to your party. Inquiries change per time, whole events are
-            discounted.
-          </p>
 
           <div className="details">
             <div className="item">
