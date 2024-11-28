@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && copy public\\_headers dist\\_headers",
     "lint": "eslint .",
     "preview": "vite preview"
   },

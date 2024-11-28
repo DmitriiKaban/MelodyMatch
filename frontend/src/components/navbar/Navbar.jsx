@@ -2,13 +2,15 @@ import { useState, useEffect } from "react";
 import "./Navbar.scss";
 import logo from "../../assets/Logo.png";
 import userMusician from "../../assets/Musician.png";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [active, setActive] = useState(false);
   const [open, setOpen] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const { pathname } = useLocation();
+  const navigate = useNavigate(); // Hook for navigation
 
   const isActivePath = ![
     "/",
@@ -19,7 +21,6 @@ const Navbar = () => {
   ].includes(pathname);
 
   const isActive = () => {
-    console.log("Scroll Y:", window.scrollY);
     window.scrollY > 0 ? setActive(true) : setActive(false);
   };
 
@@ -34,10 +35,13 @@ const Navbar = () => {
   let currentUser = {
     id: 1,
     username: "Matei Basarab",
-    isMusician: false,
+    isMusician: true,
   };
 
-  // currentUser = null;
+  const handleLogout = () => {
+    setShowLogoutModal(false);
+    navigate("/auth/login");
+  };
 
   return (
     <div className={active || isActivePath ? "navbar active" : "navbar"}>
@@ -94,15 +98,32 @@ const Navbar = () => {
                   <Link to="/payments" className="link">
                     Payments
                   </Link>
-                  <Link to="/auth/login" className="link">
+                  <span
+                    className="link logout-text"
+                    onClick={() => setShowLogoutModal(true)}
+                  >
                     Log out
-                  </Link>
+                  </span>
                 </div>
               )}
             </div>
           )}
         </div>
       </div>
+
+      {showLogoutModal && (
+        <div className="logout-modal">
+          <div className="modal-content">
+            <h2>Are you sure you want to log out?</h2>
+            <div className="modal-buttons">
+              <button onClick={handleLogout} className="agreed">
+                Yes, log out
+              </button>
+              <button onClick={() => setShowLogoutModal(false)}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
