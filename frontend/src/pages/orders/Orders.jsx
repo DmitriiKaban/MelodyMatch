@@ -42,11 +42,13 @@ const Orders = () => {
                 </td>
                 <td>{order.buyer}</td>
                 <td>
-                  <img
-                    className="message"
-                    src="./img/icons/message.png"
-                    alt="message"
-                  />
+                  <Link to="/message/:id">
+                    <img
+                      className="message"
+                      src="./img/icons/message.png"
+                      alt="message"
+                    />
+                  </Link>
                 </td>
               </tr>
             ))}

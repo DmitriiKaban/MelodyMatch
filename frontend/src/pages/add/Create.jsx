@@ -7,7 +7,7 @@ import { sanitizeInput } from "../../utils/sanitize";
 const currentUser = {
   id: 1,
   username: "Matei Basarab",
-  isMusician: false,
+  isMusician: true,
 };
 
 const Create = () => {

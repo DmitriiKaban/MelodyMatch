@@ -1,5 +1,7 @@
+import { messages } from "../../data/messages";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+
 import "./Messages.scss";
 
 const Messages = () => {
@@ -9,12 +11,9 @@ const Messages = () => {
     isSeller: true,
   };
 
-  const message = `Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident
-  maxime cum corporis esse aspernatur laborum dolorum? Animi
-  molestias aliquam, cum nesciunt, aut, ut quam vitae saepe repellat
-  nobis praesentium placeat.`;
-
-  const [readMessages, setReadMessages] = useState(new Array(5).fill(false));
+  const [readMessages, setReadMessages] = useState(
+    messages.map((msg) => msg.messages[msg.messages.length - 1].isRead)
+  );
 
   const markAsRead = (index) => {
     const updatedReadMessages = [...readMessages];
@@ -38,26 +37,39 @@ const Messages = () => {
             </tr>
           </thead>
           <tbody>
-            {[...Array(5)].map((_, index) => (
-              <tr key={index} className={readMessages[index] ? "" : "active"}>
-                <td>{`User ${index + 1}`}</td>
-                <td>
-                  {readMessages[index] ? (
-                    <span>{message.substring(0, 100)}...</span>
-                  ) : (
-                    <Link to={`/message/${index}`} className="link">
-                      {message.substring(0, 100)}...
-                    </Link>
-                  )}
-                </td>
-                <td>{`${index + 1} hour${index + 1 > 1 ? "s" : ""} ago`}</td>
-                <td>
-                  <button onClick={() => markAsRead(index)}>
-                    Mark as Read
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {messages.map((msg, index) => {
+              const lastMessage = msg.messages[msg.messages.length - 1];
+              const participant = msg.participants.find(
+                (participant) => participant.id !== currentUser.id
+              );
+
+              return (
+                <tr
+                  key={msg.id}
+                  className={readMessages[index] ? "" : "active"}
+                >
+                  <td>{participant.username}</td>
+                  <td>
+                    {readMessages[index] ? (
+                      <span>{lastMessage.content.substring(0, 100)}...</span>
+                    ) : (
+                      <Link to={`/message/${msg.id}`} className="link">
+                        {lastMessage.content.substring(0, 100)}...
+                      </Link>
+                    )}
+                  </td>
+                  <td>{lastMessage.date}</td>
+                  <td>
+                    <button
+                      onClick={() => !readMessages[index] && markAsRead(index)}
+                      disabled={readMessages[index]}
+                    >
+                      {readMessages[index] ? "Read" : "Mark as Read"}
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

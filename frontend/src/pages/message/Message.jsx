@@ -1,13 +1,19 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { messages } from "../../data/messages";
 import { sanitizeInput } from "../../utils/sanitize";
 import "./Message.scss";
 
 const Message = () => {
-  const [conversation, setConversation] = useState(
-    messages[messages.length - 1]
-  );
+  const { id } = useParams();
+  const initialConversation = messages.find((msg) => msg.id === parseInt(id));
+
+  if (!initialConversation) {
+    return <div>Conversation not found.</div>;
+  }
+
+  const [conversation, setConversation] = useState(initialConversation);
   const [newMessage, setNewMessage] = useState("");
 
   const handleSendMessage = () => {

@@ -8,9 +8,14 @@ const Navbar = () => {
   const [active, setActive] = useState(false);
   const [open, setOpen] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [currentUser, setCurrentUser] = useState({
+    id: 1,
+    username: "Matei Basarab",
+    isMusician: true,
+  });
 
   const { pathname } = useLocation();
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
 
   const isActivePath = ![
     "/",
@@ -32,15 +37,10 @@ const Navbar = () => {
     };
   }, []);
 
-  let currentUser = {
-    id: 1,
-    username: "Matei Basarab",
-    isMusician: true,
-  };
-
   const handleLogout = () => {
     setShowLogoutModal(false);
     navigate("/auth/login");
+    setCurrentUser(null);
   };
 
   return (
