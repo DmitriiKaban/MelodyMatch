@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "./Signup.scss";
 import logo from "../../assets/Logo.png";
-import newRequest from "../../utils/newRequest";
 import { useNavigate, Link } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 
@@ -38,31 +37,29 @@ const Register = () => {
     setOpen(false);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      await newRequest.post("/auth/signup", { ...user });
-      navigate("/");
-    } catch (err) {
-      setError(err.response.data);
-    }
+
+    const mockUser = { ...user, id: Date.now(), token: "mockToken" };
+    localStorage.setItem("currentUser", JSON.stringify(mockUser));
+    navigate("/verify-email");
   };
 
-  const handleGoogleSuccess = async (response) => {
-    const idToken = response.credential;
-    try {
-      const res = await newRequest.post("/auth/google-login", { idToken });
-      localStorage.setItem("currentUser", JSON.stringify(res.data));
-      navigate("/");
-    } catch (err) {
-      setError(err.response.data);
-    }
+  const handleGoogleSuccess = (response) => {
+    const mockGoogleUser = {
+      id: Date.now(),
+      username: "googleUser",
+      email: "googleuser@example.com",
+      token: "mockGoogleToken",
+    };
+    localStorage.setItem("currentUser", JSON.stringify(mockGoogleUser));
+    navigate("/verify-email");
   };
 
   return (
     <div className="register">
       <div className="top">
-        <img src={logo} alt="" />
+        <img src={logo} alt="Logo" />
         <h1>Thank you for choosing us</h1>
         <span>Sign Up</span>
       </div>

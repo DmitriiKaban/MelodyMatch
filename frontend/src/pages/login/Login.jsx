@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import newRequest from "../../utils/newRequest";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import { LoginComponent } from "../../components";
@@ -11,26 +10,22 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      const res = await newRequest.post("/auth/login", { username, password });
-      localStorage.setItem("currentUser", JSON.stringify(res.data));
-      navigate("/");
-    } catch (err) {
-      setError(err.response.data);
-    }
+
+    const mockUser = { id: 1, username: "Matei Basarab", token: "mockToken" };
+    localStorage.setItem("currentUser", JSON.stringify(mockUser));
+    navigate("/");
   };
 
-  const handleGoogleSuccess = async (response) => {
-    const idToken = response.credential;
-    try {
-      const res = await newRequest.post("/auth/google-login", { idToken });
-      localStorage.setItem("currentUser", JSON.stringify(res.data));
-      navigate("/");
-    } catch (err) {
-      setError(err.response.data);
-    }
+  const handleGoogleSuccess = (response) => {
+    const mockGoogleUser = {
+      id: 1,
+      username: "googleUser",
+      token: "mockGoogleToken",
+    };
+    localStorage.setItem("currentUser", JSON.stringify(mockGoogleUser));
+    navigate("/");
   };
 
   return (
@@ -39,7 +34,7 @@ const Login = () => {
         <LoginComponent />
         <GoogleLogin
           onSuccess={handleGoogleSuccess}
-          onError={(error) => setError("Google login failed")}
+          onError={() => setError("Google login failed")}
         />
         <Link to="/" className="link">
           I forgot my password
