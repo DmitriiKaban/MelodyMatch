@@ -1,7 +1,6 @@
 package com.app.lovemusic.security;
 
 import com.app.lovemusic.controllers.response.LoginResponse;
-import com.app.lovemusic.entity.AuthenticationProviders;
 import com.app.lovemusic.entity.User;
 import com.app.lovemusic.services.GitHubEmailService;
 import com.app.lovemusic.services.JwtService;
@@ -55,7 +54,6 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
         // Check if the user already exists
         Optional<User> user = userService.findByEmail(email);
-//        System.out.println("User: " + user);
 
         if (user.isEmpty()) {
             String redirectUrl = encodeUrl(email, name, provider);
@@ -64,10 +62,11 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         } else {
 
             if (user.get().isUsing2FA()) {
-                // ask for the code
                 response.setContentType("application/json");
                 response.setCharacterEncoding("UTF-8");
-                response.getWriter().write("{\"username\": \"" + user.get().getEmail() + "\", \"2fa\": true}");
+                // TODO: create a separate class for this response
+                response.getWriter().write("{\"username\": \"" + user.get().getEmail() + "\", \"2fa_required\": true}");
+                return;
             }
 
             String jwtToken = jwtService.generateToken(user.get());
@@ -84,7 +83,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     private String encodeUrl(String email, String name, String provider) throws UnsupportedEncodingException {
         String baseUrl = "/select-account-type";
         String encodedEmail = URLEncoder.encode(email, "UTF-8");
-        String encodedName = URLEncoder.encode(name, "UTF-8");  // This encodes non-ASCII characters
+        String encodedName = URLEncoder.encode(name, "UTF-8");
         String encodedProvider = URLEncoder.encode(provider, "UTF-8");
 
         return String.format("%s?email=%s&name=%s&provider=%s", baseUrl, encodedEmail, encodedName, encodedProvider);
