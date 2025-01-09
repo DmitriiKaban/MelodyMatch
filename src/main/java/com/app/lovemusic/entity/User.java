@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.jboss.aerogear.security.otp.api.Base32;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -69,10 +68,11 @@ public class User implements UserDetails {
     @Column(name = "account_type")
     private String accountType;
 
-//    @Transient
-//    private boolean isUsing2FA;
-//    @Transient
-//    private String secret;
+    @Column(name = "mfa_enabled")
+    private boolean isUsing2FA;
+
+    @Column(name = "mfa_secret")
+    private String secret;
 
     public User(String fullName, String email, String password, String profilePicture, PaymentInformation paymentInformation, UserRoles userRole, Date createdAt, Date updatedAt, AuthenticationProviders authProvider) {
         this.fullName = fullName;
