@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
@@ -43,9 +44,14 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> authenticate(@Valid @RequestBody LoginUserDto loginUserDto) {
+    public ResponseEntity<Object> authenticate(@Valid @RequestBody LoginUserDto loginUserDto) {
 
         User authenticatedUser = authenticationService.authenticate(loginUserDto);
+
+        if (authenticatedUser.isUsing2FA()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"username\": \"" + authenticatedUser.getEmail() + "\", \"2fa_required\": true}");
+        }
+
         String jwtToken = jwtService.generateToken(authenticatedUser);
         LoginResponse loginResponse = new LoginResponse().setToken(jwtToken).setExpiresIn(jwtService.getExpirationTime());
 
@@ -54,11 +60,16 @@ public class AuthenticationController {
 
     @PostMapping("/mfa/validate")
     public ResponseEntity<?> validateMfaCode(@RequestParam String username, @RequestParam int code) {
-        // Retrieve the user's MFA secret from the database
+
+        User user = userService.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
         String secret = userService.getUserMfaSecret(username);
+        String jwtToken = jwtService.generateToken(user);
 
         if (gaService.isValid(secret, code)) {
-            return ResponseEntity.ok(true); // isValid
+            LoginResponse loginResponse = new LoginResponse().setToken(jwtToken).setExpiresIn(jwtService.getExpirationTime());
+            return ResponseEntity.ok(loginResponse); // isValid
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(false);
         }

@@ -62,6 +62,14 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
             response.sendRedirect(redirectUrl);
 
         } else {
+
+            if (user.get().isUsing2FA()) {
+                // ask for the code
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write("{\"username\": \"" + user.get().getEmail() + "\", \"2fa\": true}");
+            }
+
             String jwtToken = jwtService.generateToken(user.get());
             LoginResponse loginResponse = new LoginResponse()
                     .setToken(jwtToken)
