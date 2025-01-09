@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.jboss.aerogear.security.otp.api.Base32;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -68,6 +69,11 @@ public class User implements UserDetails {
     @Column(name = "account_type")
     private String accountType;
 
+//    @Transient
+//    private boolean isUsing2FA;
+//    @Transient
+//    private String secret;
+
     public User(String fullName, String email, String password, String profilePicture, PaymentInformation paymentInformation, UserRoles userRole, Date createdAt, Date updatedAt, AuthenticationProviders authProvider) {
         this.fullName = fullName;
         this.email = email;
@@ -78,6 +84,8 @@ public class User implements UserDetails {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.authProvider = authProvider;
+
+//        this.secret = Base32.random();
     }
 
     public User(String fullName, String email, String password, String profilePicture, PaymentInformation paymentInformation, Date createdAt, Date updatedAt, AuthenticationProviders authProvider) {

@@ -55,7 +55,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
         // Check if the user already exists
         Optional<User> user = userService.findByEmail(email);
-        System.out.println("User: " + user);
+//        System.out.println("User: " + user);
 
         if (user.isEmpty()) {
             String redirectUrl = encodeUrl(email, name, provider);

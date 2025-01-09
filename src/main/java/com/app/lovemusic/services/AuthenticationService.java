@@ -2,6 +2,7 @@ package com.app.lovemusic.services;
 
 import com.app.lovemusic.dtos.LoginUserDto;
 import com.app.lovemusic.dtos.RegisterUserDto;
+import com.app.lovemusic.entity.AuthenticationProviders;
 import com.app.lovemusic.entity.User;
 import com.app.lovemusic.entity.UserRoles;
 import com.app.lovemusic.entity.accountTypes.Musician;
@@ -40,12 +41,17 @@ public class AuthenticationService {
         user.setPassword(passwordEncoder.encode(input.getPassword()));
         user.setFullName(input.getFullName());
         user.setCreatedAt(new java.util.Date());
+        user.setUpdatedAt(new java.util.Date());
         user.setUserRole(UserRoles.USER);
+        user.setAuthProvider(AuthenticationProviders.LOCAL);
+
+        user.setAccountType(input.getAccountType().toUpperCase());
 
         return userService.save(user);
     }
 
     public User authenticate(LoginUserDto input) {
+        System.out.println("Authenticating user: " + input.getEmail() + " " + input.getPassword());
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         input.getEmail(),
@@ -53,7 +59,9 @@ public class AuthenticationService {
                 )
         );
 
+        System.out.println("Authenticating user: " + input.getEmail());
         Optional<User> user = userService.findByEmail(input.getEmail());
+
         if (user.isEmpty()) {
             throw new UsernameNotFoundException("User with email " + input.getEmail() + " not found");
         }

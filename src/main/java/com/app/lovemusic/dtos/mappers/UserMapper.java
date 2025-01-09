@@ -13,8 +13,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserMapper {
 
-//    private final UserService userService;
-
     public UserDto toDto(User user) {
         UserDto userDto = new UserDto();
         userDto.setEmail(user.getEmail());

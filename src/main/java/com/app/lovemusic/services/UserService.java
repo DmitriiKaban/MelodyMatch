@@ -146,9 +146,9 @@ public class UserService implements UserRepository {
     }
 
     public User save(User user) {
-        String sql = "INSERT INTO users (email, full_name, created_at, updated_at, auth_provider) VALUES (?, ?, ?, ?, ?)";
-        String authProvider = user.getAuthProvider() != null ? user.getAuthProvider().toString() : null;
-        jdbcTemplate.update(sql, user.getEmail(), user.getFullName(), user.getCreatedAt(), user.getUpdatedAt(), authProvider);
+        String sql = "INSERT INTO users (email, full_name, created_at, updated_at, auth_provider, user_role, password, account_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+        jdbcTemplate.update(sql, user.getEmail(), user.getFullName(), user.getCreatedAt(), user.getUpdatedAt(), user.getAuthProvider().toString(), user.getUserRole().name(), user.getPassword(), user.getAccountType());
         return user;
     }
 }
