@@ -314,6 +314,7 @@
         align-items: center;
         justify-content: space-between;
         font-size: 17px;
+        margin: 0;
 
         h2 {
           font-weight: 600;
@@ -326,10 +327,6 @@
         }
       }
 
-      p {
-        margin-top: 0px;
-      }
-
       .details {
         display: flex;
         align-items: center;
@@ -337,6 +334,8 @@
         background-color: #f9f9fa;
         font-size: 14px;
         padding: 10px;
+        margin-top: 0px;
+        margin-bottom: 15px;
 
         .item {
           display: flex;

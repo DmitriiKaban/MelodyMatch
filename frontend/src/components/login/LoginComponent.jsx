@@ -19,7 +19,7 @@ const LoginComponent = () => {
       <input
         name="username"
         type="text"
-        placeholder="John Doe"
+        placeholder="john.doe@gmail.com"
         onChange={(e) => setUsername(e.target.value)}
       />
 

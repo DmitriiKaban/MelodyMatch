@@ -12,6 +12,7 @@ import {
   Message,
   Messages,
   Account,
+  VerifyEmail,
 } from "./pages";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import "./app.scss";
@@ -44,6 +45,10 @@ function App() {
         {
           path: "/auth/signup",
           element: <Signup />,
+        },
+        {
+          path: "/verify-email",
+          element: <VerifyEmail />,
         },
         {
           path: "/gigs",

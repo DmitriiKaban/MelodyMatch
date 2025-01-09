@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import "./Add.scss";
 import { Banner } from "../../components";
+import { sanitizeInput } from "../../utils/sanitize";
 
 const currentUser = {
   id: 1,
@@ -22,133 +23,134 @@ const Add = () => {
     <>
       <div className="banner">
         <Banner
-          title={`Welcome back. Hop on creating your new ${
-            userIsMusician ? "Gig" : "Event"
-          }`}
-          subtitle1="This is your General Information."
-          subtitle2={`Complete the form below:`}
+          title={sanitizeInput(
+            `Welcome back. Hop on creating your new ${
+              userIsMusician ? "Gig" : "Event"
+            }`
+          )}
+          subtitle1={sanitizeInput("This is your General Information.")}
+          subtitle2={sanitizeInput(`Complete the form below:`)}
           scrollToForm={scrollToForm}
         />
       </div>
       <div className="add" ref={formRef}>
         <div className="container">
-          <h1>{userIsMusician ? "Add New Gig" : "Add New Event"}</h1>
+          <h1>
+            {sanitizeInput(userIsMusician ? "Add New Gig" : "Add New Event")}
+          </h1>
           <div className="sections">
             <div className="info">
               <div className="item">
-                <label htmlFor="">Post Title</label>
+                <label htmlFor="">{sanitizeInput("Post Title")}</label>
                 <img src="/img/icons/Edit.png" alt="" />
               </div>
               <hr />
               <input
                 type="text"
-                placeholder={`e.g. I will do something I'm really good at`}
+                placeholder={sanitizeInput(
+                  `e.g. I will do something I'm really good at`
+                )}
               />
 
               <div className="item">
-                <label htmlFor="">Category</label>
+                <label htmlFor="">{sanitizeInput("Category")}</label>
                 <img src="/img/icons/Edit.png" alt="" />
               </div>
               <hr />
               <select name="cats" id="cats">
-                <option value="design">See all</option>
-                <option value="web">Rock</option>
-                <option value="animation">Traditional</option>
-                <option value="music">Classical</option>
+                <option value="design">{sanitizeInput("See all")}</option>
+                <option value="web">{sanitizeInput("Rock")}</option>
+                <option value="animation">
+                  {sanitizeInput("Traditional")}
+                </option>
+                <option value="music">{sanitizeInput("Classical")}</option>
               </select>
 
               <div className="item">
-                <label htmlFor="">Cover Image</label>
+                <label htmlFor="">{sanitizeInput("Cover Image")}</label>
                 <img src="/img/icons/Edit.png" alt="" />
               </div>
               <hr />
               <input type="file" />
 
               <div className="item">
-                <label htmlFor="">Upload Images</label>
+                <label htmlFor="">{sanitizeInput("Upload Images")}</label>
                 <img src="/img/icons/Edit.png" alt="" />
               </div>
               <hr />
               <input type="file" multiple />
 
               <div className="item">
-                <label htmlFor="">Description</label>
+                <label htmlFor="">{sanitizeInput("Description")}</label>
                 <img src="/img/icons/Edit.png" alt="" />
               </div>
               <hr />
               <textarea
-                placeholder={
+                placeholder={sanitizeInput(
                   userIsMusician
                     ? "Brief description of your services to your customers"
                     : "Brief description of your event"
-                }
+                )}
                 cols="0"
                 rows="16"
               ></textarea>
 
               <div className="button-container">
-                <button>Create</button>
+                <button>{sanitizeInput("Create")}</button>
               </div>
             </div>
 
             <div className="details">
               <div className="item">
                 <label htmlFor="">
-                  {userIsMusician ? "Service title" : "Event title"}
+                  {sanitizeInput(
+                    userIsMusician ? "Service title" : "Event title"
+                  )}
                 </label>
                 <img src="/img/icons/Edit.png" alt="" />
               </div>
               <hr />
               <input
                 type="text"
-                placeholder={`e.g. ${
-                  userIsMusician
-                    ? "1 hour canto with background band"
-                    : "in need of a wedding singer"
-                }`}
+                placeholder={sanitizeInput(
+                  `e.g. ${
+                    userIsMusician
+                      ? "1 hour canto with background band"
+                      : "in need of a wedding singer"
+                  }`
+                )}
               />
-
-              <div className="item">
-                <label htmlFor="">Short Description</label>
-                <img src="/img/icons/Edit.png" alt="" />
-              </div>
-              <hr />
-              <textarea
-                placeholder={
-                  userIsMusician
-                    ? "What services are you offering?"
-                    : "What are you looking for"
-                }
-                cols="30"
-                rows="10"
-              ></textarea>
 
               <div className="item">
                 <label htmlFor="">
-                  {userIsMusician ? "Add extra features" : "Add extra rules"}
+                  {sanitizeInput(
+                    userIsMusician ? "Add extra features" : "Add extra rules"
+                  )}
                 </label>
                 <img src="/img/icons/Edit.png" alt="" />
               </div>
               <hr />
               <input
                 type="text"
-                placeholder={
+                placeholder={sanitizeInput(
                   userIsMusician
                     ? "e.g. song writing"
                     : "e.g. artist needs to know spanish"
-                }
+                )}
               />
               <input
                 type="text"
-                placeholder={
+                placeholder={sanitizeInput(
                   userIsMusician
                     ? "e.g. other genres"
                     : "e.g. experience with big crowds"
-                }
+                )}
               />
 
               <div className="item">
-                <label htmlFor="">{userIsMusician ? "Price" : "Budget"}</label>
+                <label htmlFor="">
+                  {sanitizeInput(userIsMusician ? "Price" : "Budget")}
+                </label>
                 <img src="/img/icons/Edit.png" alt="" />
               </div>
               <hr />

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && copy public\\_headers dist\\_headers",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -14,6 +14,7 @@
     "@react-oauth/google": "^0.12.1",
     "@tanstack/react-query": "^5.56.2",
     "axios": "^1.7.7",
+    "dompurify": "^3.2.1",
     "infinite-react-carousel": "^1.2.11",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
