@@ -1,4 +1,7 @@
 HELP.md
+*.env
+*.sql
+
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
@@ -31,3 +34,7 @@ build/
 
 ### VS Code ###
 .vscode/
+/src/main/resources/application.yml
+/db/docker-compose.yml
+/db/db-scripts/db.sql
+/db/.env

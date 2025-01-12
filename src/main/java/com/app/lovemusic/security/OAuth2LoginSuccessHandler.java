@@ -1,7 +1,6 @@
 package com.app.lovemusic.security;
 
 import com.app.lovemusic.controllers.response.LoginResponse;
-import com.app.lovemusic.entity.AuthenticationProviders;
 import com.app.lovemusic.entity.User;
 import com.app.lovemusic.services.GitHubEmailService;
 import com.app.lovemusic.services.JwtService;
@@ -17,6 +16,9 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -37,37 +39,55 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         String name = oAuth2User.getName();
 
         OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
-        String registrationId = oauthToken.getAuthorizedClientRegistrationId();  // google, github, or facebook
+        String registrationId = oauthToken.getAuthorizedClientRegistrationId();
 
-        AuthenticationProviders provider = AuthenticationProviders.GOOGLE;
+        String provider = "GOOGLE";
         if ("github".equals(registrationId)) {
-
             email = gitHubEmailService.getGitHubEmail(accessToken);
             if (email == null) {
                 throw new RuntimeException("Failed to fetch emails from GitHub");
             }
-            provider = AuthenticationProviders.GITHUB;
-
+            provider = "GITHUB";
         } else if ("facebook".equals(registrationId)) {
-            provider = AuthenticationProviders.FACEBOOK;
+            provider = "FACEBOOK";
         }
 
-        User user = userService.findByEmail(email);
+        // Check if the user already exists
+        Optional<User> user = userService.findByEmail(email);
 
-        if (user == null) {
-            userService.createNewUserAfterOAuthLoginSuccess(email, name, provider);
+        if (user.isEmpty()) {
+            String redirectUrl = encodeUrl(email, name, provider);
+            response.sendRedirect(redirectUrl);
+
         } else {
-            userService.updateUserAfterOAuthLoginSuccess(user, name, provider);
+
+            if (user.get().isUsing2FA()) {
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                // TODO: create a separate class for this response
+                response.getWriter().write("{\"username\": \"" + user.get().getEmail() + "\", \"2fa_required\": true}");
+                return;
+            }
+
+            String jwtToken = jwtService.generateToken(user.get());
+            LoginResponse loginResponse = new LoginResponse()
+                    .setToken(jwtToken)
+                    .setExpiresIn(jwtService.getExpirationTime());
+
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(new ObjectMapper().writeValueAsString(loginResponse));
         }
+    }
 
-        String jwtToken = jwtService.generateToken(user);
-        LoginResponse loginResponse = new LoginResponse()
-                .setToken(jwtToken)
-                .setExpiresIn(jwtService.getExpirationTime());
+    private String encodeUrl(String email, String name, String provider) throws UnsupportedEncodingException {
+        String baseUrl = "/select-account-type";
+        String encodedEmail = URLEncoder.encode(email, "UTF-8");
+        String encodedName = URLEncoder.encode(name, "UTF-8");
+        String encodedProvider = URLEncoder.encode(provider, "UTF-8");
 
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(new ObjectMapper().writeValueAsString(loginResponse));
+        return String.format("%s?email=%s&name=%s&provider=%s", baseUrl, encodedEmail, encodedName, encodedProvider);
     }
 }
+
 

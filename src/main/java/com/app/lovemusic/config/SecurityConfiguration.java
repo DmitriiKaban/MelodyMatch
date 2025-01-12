@@ -1,11 +1,12 @@
 package com.app.lovemusic.config;
 
+import com.app.lovemusic.security.CustomAuthenticationProvider;
 import com.app.lovemusic.security.CustomOAuth2UserService;
+//import com.app.lovemusic.security.CustomWebAuthenticationDetailsSource;
 import com.app.lovemusic.security.OAuth2LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -18,7 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    private final AuthenticationProvider authenticationProvider;
+    private final CustomAuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomOAuth2UserService oAuth2UserService;
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
@@ -30,14 +31,15 @@ public class SecurityConfiguration {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/users/**").hasRole("ADMIN")
-                        .requestMatchers("/auth/**", "/login/**", "/oauth2/**").permitAll()
+                        .requestMatchers("/users/admin").hasRole("ADMIN")
+                        .requestMatchers("/auth/**", "/login/**", "/oauth2/**", "/auth/mfa/validate").permitAll()
+                        .requestMatchers("/select-account-type", "/save-account-type").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                // TODO: AFTER USER AUTHENTICATION, HE/SHE ALSO HAS TO MENTION THE ROLE: MUSICIAN OR ORGANIZER
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(oAuth2UserService)
