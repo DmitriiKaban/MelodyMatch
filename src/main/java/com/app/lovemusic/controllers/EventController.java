@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@RequestMapping("/events")
+//@RequestMapping("/events")
 @RestController
 @RequiredArgsConstructor
 public class EventController {
@@ -22,7 +22,7 @@ public class EventController {
     private final EventService eventService;
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/all-events")
+    @GetMapping("/gigs")
     public ResponseEntity<List<Event>> allEvents() {
         List<Event> events = eventService.allEvents();
 
@@ -30,7 +30,31 @@ public class EventController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/create-event")
+    @GetMapping("/gigs/{id}")
+    public ResponseEntity<Event> getEvent(@PathVariable Integer id) {
+        Event event = eventService.getEvent(id).orElse(null);
+
+        if (event == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(event);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/myGigs")
+    public ResponseEntity<List<Event>> myEvents() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        User currentUser = (User) authentication.getPrincipal();
+
+        List<Event> events = eventService.getUserEvents(currentUser);
+
+        return ResponseEntity.ok(events);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/add")
     public ResponseEntity<Event> createEvent(@Valid @RequestBody EventDto eventDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

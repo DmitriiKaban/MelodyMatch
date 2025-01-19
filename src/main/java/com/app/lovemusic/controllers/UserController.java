@@ -19,7 +19,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
-@RequestMapping("/users")
+@RequestMapping("/account")
 @RestController
 @RequiredArgsConstructor
 public class UserController {
@@ -122,7 +122,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/get-user/{userId}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<UserDto> getUser(@PathVariable Long userId) {
         Optional<User> user = userService.findById(userId);
 
