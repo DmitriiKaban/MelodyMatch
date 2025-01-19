@@ -4,18 +4,12 @@ import com.app.lovemusic.dtos.RatingReviewDto;
 import com.app.lovemusic.entity.RatingReview;
 import com.app.lovemusic.entity.RatingReviewKey;
 import com.app.lovemusic.entity.User;
-import com.app.lovemusic.services.UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
-@RequiredArgsConstructor
 public class RatingReviewMapper {
-
-    private final UserService userService;
 
     public RatingReviewDto toDto(RatingReview ratingReview) {
         RatingReviewDto ratingReviewDto = new RatingReviewDto();
@@ -25,28 +19,19 @@ public class RatingReviewMapper {
         return ratingReviewDto;
     }
 
-    public RatingReview toRatingReview(Long authorId, Long targetId, RatingReviewDto ratingReviewDto) {
+    public RatingReview toRatingReview(Long authorId, Long targetId, RatingReviewDto ratingReviewDto, User author, User target) {
         RatingReview ratingReview = new RatingReview();
-        ratingReview.setRatingReviewKey(new RatingReviewKey());
-        ratingReview.getRatingReviewKey().setAuthorId(authorId);
-        ratingReview.getRatingReviewKey().setTargetId(targetId);
+        RatingReviewKey key = new RatingReviewKey();
 
-        Optional<User> author = userService.findById(authorId);
+        key.setAuthorId(authorId);
+        key.setTargetId(targetId);
+        ratingReview.setRatingReviewKey(key);
 
-        if (author.isEmpty()) {
-            throw new IllegalArgumentException("Author not found");
-        }
-
-        Optional<User> target = userService.findById(targetId);
-
-        if (target.isEmpty()) {
-            throw new IllegalArgumentException("Target not found");
-        }
-
-        ratingReview.setAuthor(author.get());
-        ratingReview.setTarget(target.get());
         ratingReview.setRating(ratingReviewDto.getRating());
         ratingReview.setReview(ratingReviewDto.getReview());
+
+        ratingReview.setAuthor(author);
+        ratingReview.setTarget(target);
 
         return ratingReview;
     }
