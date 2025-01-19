@@ -21,6 +21,8 @@ public class UserRowMapper implements RowMapper<User> {
         user.setUserRole(UserRoles.valueOf(rs.getString("user_role")));
         user.setAuthProvider(AuthenticationProviders.valueOf(rs.getString("auth_provider")));
         user.setAccountType(rs.getString("account_type"));
+        user.setSecret(rs.getString("mfa_secret"));
+        user.setUsing2FA(rs.getBoolean("mfa_enabled"));
 
         return user;
     }

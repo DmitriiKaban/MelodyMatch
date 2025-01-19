@@ -69,6 +69,7 @@ public class UserService implements UserRepository {
                 musician.setCreatedAt(new Date());
                 musician.setUserRole(UserRoles.USER);
                 musician.setAccountType("musician");
+                musician.setSecret(null);
                 return saveMusician(musician);
 
             case "organizer":
@@ -79,6 +80,7 @@ public class UserService implements UserRepository {
                 organizer.setCreatedAt(new Date());
                 organizer.setUserRole(UserRoles.USER);
                 organizer.setAccountType("organizer");
+                organizer.setSecret(null);
                 return saveOrganizer(organizer);
 
             default:
@@ -146,9 +148,55 @@ public class UserService implements UserRepository {
     }
 
     public User save(User user) {
-        String sql = "INSERT INTO users (email, full_name, created_at, updated_at, auth_provider, user_role, password, account_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO users (email, full_name, created_at, updated_at, auth_provider, user_role, password, account_type, mfa_secret, mfa_enabled) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        jdbcTemplate.update(sql, user.getEmail(), user.getFullName(), user.getCreatedAt(), user.getUpdatedAt(), user.getAuthProvider().toString(), user.getUserRole().name(), user.getPassword(), user.getAccountType());
+        jdbcTemplate.update(sql,
+                user.getEmail(),
+                user.getFullName(),
+                user.getCreatedAt(),
+                user.getUpdatedAt(),
+                user.getAuthProvider().toString(),
+                user.getUserRole().name(),
+                user.getPassword(),
+                user.getAccountType(),
+                user.getSecret(),
+                false
+        );
+
         return user;
+    }
+
+    public User update(User user) {
+        String sql = "UPDATE users SET full_name = ?, created_at = ?, updated_at = ?, auth_provider = ?, user_role = ?, password = ?, account_type = ?, mfa_secret = ?, mfa_enabled = ? WHERE email = ?";
+
+        jdbcTemplate.update(sql,
+                user.getFullName(),
+                user.getCreatedAt(),
+                user.getUpdatedAt(),
+                user.getAuthProvider().toString(),
+                user.getUserRole().name(),
+                user.getPassword(),
+                user.getAccountType(),
+                user.getSecret(),
+                user.isUsing2FA(),
+                user.getEmail()
+        );
+
+        return user;
+    }
+
+    public void updateUserMfaSecret(String username, String secret) {
+        String sql = "UPDATE users SET mfa_secret = ?, mfa_enabled = ? WHERE email = ?";
+
+        jdbcTemplate.update(sql,
+                secret,
+                true,
+                username
+        );
+    }
+
+    public String getUserMfaSecret(String username) {
+        User user = findByEmail(username).get(); // ADD VERIFICATION
+        return user.getSecret();
     }
 }

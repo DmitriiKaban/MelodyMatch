@@ -7,29 +7,33 @@ import com.app.lovemusic.dtos.UserDto;
 import com.app.lovemusic.dtos.mappers.UserMapper;
 import com.app.lovemusic.entity.User;
 import com.app.lovemusic.services.AuthenticationService;
+import com.app.lovemusic.services.GAService;
 import com.app.lovemusic.services.JwtService;
+import com.app.lovemusic.services.UserService;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.*;
 
+import javax.imageio.ImageIO;
 import javax.validation.Valid;
-
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.OutputStream;
 
 @RequestMapping("/auth")
 @RestController
+@RequiredArgsConstructor
 public class AuthenticationController {
 
     private final JwtService jwtService;
     private final AuthenticationService authenticationService;
     private final UserMapper userMapper;
-
-    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService, UserMapper userMapper) {
-        this.jwtService = jwtService;
-        this.authenticationService = authenticationService;
-        this.userMapper = userMapper;
-    }
+    private final UserService userService;
+    private final GAService gaService;
 
     @PostMapping("/signup")
     public ResponseEntity<UserDto> register(@Valid @RequestBody RegisterUserDto registerUserDto) {
@@ -40,13 +44,61 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> authenticate(@Valid @RequestBody LoginUserDto loginUserDto) {
+    public ResponseEntity<Object> authenticate(@Valid @RequestBody LoginUserDto loginUserDto) {
 
         User authenticatedUser = authenticationService.authenticate(loginUserDto);
+
+        if (authenticatedUser.isUsing2FA()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"username\": \"" + authenticatedUser.getEmail() + "\", \"2fa_required\": true}");
+        }
+
         String jwtToken = jwtService.generateToken(authenticatedUser);
         LoginResponse loginResponse = new LoginResponse().setToken(jwtToken).setExpiresIn(jwtService.getExpirationTime());
 
         return ResponseEntity.ok(loginResponse);
     }
 
+    @PostMapping("/mfa/validate")
+    public ResponseEntity<?> validateMfaCode(@RequestParam String username, @RequestParam int code) {
+
+        User user = userService.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        String secret = userService.getUserMfaSecret(username);
+        String jwtToken = jwtService.generateToken(user);
+
+        if (gaService.isValid(secret, code)) {
+            LoginResponse loginResponse = new LoginResponse().setToken(jwtToken).setExpiresIn(jwtService.getExpirationTime());
+            return ResponseEntity.ok(loginResponse); // isValid
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(false);
+        }
+    }
+
+
+    @GetMapping("/qr/generate")
+    public void generateQR(@RequestParam String username, HttpServletResponse response) {
+        // Step 1: Generate a secret key for the user
+        String secret = gaService.generateKey();
+
+        // Step 2: Save the secret to the user's account in your database
+        userService.updateUserMfaSecret(username, secret);
+
+        // Step 3: Generate a QR code using the secret
+        BufferedImage qrImage = gaService.generateQRImage(secret, username);
+
+        if (qrImage != null) {
+            try {
+                response.setContentType(MediaType.IMAGE_PNG_VALUE);
+                OutputStream outputStream = response.getOutputStream();
+                ImageIO.write(qrImage, "png", outputStream);
+                outputStream.flush();
+                outputStream.close();
+                return;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+    }
 }

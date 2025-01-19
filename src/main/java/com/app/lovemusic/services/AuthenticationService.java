@@ -44,6 +44,7 @@ public class AuthenticationService {
         user.setUpdatedAt(new java.util.Date());
         user.setUserRole(UserRoles.USER);
         user.setAuthProvider(AuthenticationProviders.LOCAL);
+        user.setUsing2FA(false);
 
         user.setAccountType(input.getAccountType().toUpperCase());
 

@@ -1,4 +1,7 @@
 HELP.md
+*.env
+*.sql
+
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
