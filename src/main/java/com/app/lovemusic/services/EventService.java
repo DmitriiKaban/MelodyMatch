@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +25,14 @@ public class EventService {
         eventRepository.findAll().forEach(events::add);
 
         return events;
+    }
+
+    public List<Event> getUserEvents(User user) {
+        return eventRepository.findByOrganizer(user);
+    }
+
+    public Optional<Event> getEvent(Integer id) {
+        return eventRepository.findById(id);
     }
 
     public Event createEvent(User organizer, EventDto eventDto) {
