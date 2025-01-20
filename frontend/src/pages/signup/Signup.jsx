@@ -3,6 +3,7 @@ import "./Signup.scss";
 import logo from "../../assets/Logo.png";
 import { useNavigate, Link } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
+import newRequest from "../../utils/newRequest";
 
 const Register = () => {
   const [error, setError] = useState(null);
@@ -37,12 +38,33 @@ const Register = () => {
     setOpen(false);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const mockUser = { ...user, id: Date.now(), token: "mockToken" };
-    localStorage.setItem("currentUser", JSON.stringify(mockUser));
-    navigate("/verify-email");
+    // Check if passwords match
+    if (user.password !== user.repeatPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    try {
+      const response = await newRequest.post("/auth/signup", {
+        username: user.username,
+        email: user.email,
+        password: user.password,
+        isMusician: user.isMusician,
+      });
+
+      // If successful, navigate to verify email
+      if (response.status === 200) {
+        const registeredUser = response.data;
+        localStorage.setItem("currentUser", JSON.stringify(registeredUser));
+        // navigate("/verify-email");
+      }
+    } catch (error) {
+      console.error(error);
+      setError("Registration failed. Please try again.");
+    }
   };
 
   const handleGoogleSuccess = (response) => {
@@ -126,6 +148,7 @@ const Register = () => {
         <button type="submit" className="button-85">
           Register
         </button>
+        {error && <p className="error">{error}</p>}
         <Link to="/auth/login" className="link account">
           Already have an account?
         </Link>
