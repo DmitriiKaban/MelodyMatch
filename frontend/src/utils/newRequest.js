@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const newRequest = axios.create({
-  baseURL: "http://localhost:8081/",
+  baseURL: "/auth",
   withCredentials: true,
 });
 

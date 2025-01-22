@@ -39,30 +39,36 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     // Check if passwords match
     if (user.password !== user.repeatPassword) {
       setError("Passwords do not match.");
       return;
     }
-
+  
     try {
-      const response = await newRequest.post("/auth/signup", {
+      const response = await newRequest.post("/signup", {
         email: user.email,
         password: user.password,
         fullName: user.username,
         accountType: user.isMusician ? "musician" : "organizer",
       });
-
-      // If successful, navigate to verify email
+  
       if (response.status === 200) {
         const registeredUser = response.data;
         localStorage.setItem("currentUser", JSON.stringify(registeredUser));
-        navigate("/verify-email");
+        navigate("/");
       }
-    } catch (error) {
-      console.error(error);
-      setError("Registration failed. Please try again.");
+    } catch (err) {
+      console.error("Registration error:", err);
+      
+      if (err.response?.status === 409) {
+        setError("An account with this email already exists. Please use a different email or try logging in.");
+      } else if (err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else {
+        setError("Registration failed. Please try again.");
+      }
     }
   };
 

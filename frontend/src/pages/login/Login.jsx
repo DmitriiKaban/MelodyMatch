@@ -15,9 +15,14 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const requestData = { email: username, password: password };
+    console.log('Request data:', requestData)
 
     try {
-      const response = await newRequest.post("/auth/login", { username, password });
+      const response = await newRequest.post("/login", {
+        email: username,
+        password: password  // explicitly include password
+      });
 
       if (response.status === 200) {
         // Login successful without 2FA
@@ -38,7 +43,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await newRequest.post(`/auth/mfa/validate`, null, {
+      const response = await newRequest.post(`/mfa/validate`, null, {
         params: { username, code: mfaCode },
       });
 
@@ -58,12 +63,12 @@ const Login = () => {
       <form onSubmit={is2FA ? handle2FAValidation : handleSubmit}>
         {!is2FA && (
           <>
-            <LoginComponent
-              username={username}
-              setUsername={setUsername}
-              password={password}
-              setPassword={setPassword}
-            />
+             <LoginComponent
+        username={username}
+        setUsername={setUsername}
+        password={password}
+        setPassword={setPassword}
+      />
             <GoogleLogin
               onSuccess={(response) => {
                 // Google login logic here

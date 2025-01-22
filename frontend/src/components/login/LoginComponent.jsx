@@ -1,13 +1,8 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Login.scss";
 import logo from "../../assets/Logo.png";
 
-const LoginComponent = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
-
+const LoginComponent = ({ username, setUsername, password, setPassword }) => {
   return (
     <> 
       <div className="top">
@@ -19,6 +14,7 @@ const LoginComponent = () => {
       <input
         name="username"
         type="text"
+        value={username} 
         placeholder="john.doe@gmail.com"
         onChange={(e) => setUsername(e.target.value)}
       />
@@ -27,6 +23,7 @@ const LoginComponent = () => {
       <input
         name="password"
         type="password"
+        value={password} 
         placeholder="Your password"
         onChange={(e) => setPassword(e.target.value)}
       />
@@ -36,7 +33,6 @@ const LoginComponent = () => {
       <Link to="/auth/signup" className="link account">
         <button type="submit">Don't have an account?</button>
       </Link>
-      {error && <p className="error">{error}</p>}
     </>
   );
 };
