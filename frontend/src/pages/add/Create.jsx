@@ -29,7 +29,7 @@ const Create = () => {
     if (!checked) {
       try {
         // Use axios to send the POST request
-        const response = await newRequest.post(`/auth/qr/generate?username=${currentUser.username}`);
+        const response = await newRequest.post(`/qr/generate?username=${currentUser.username}`);
         
         if (response.status === 200) {
           const data = response.data; // Assuming response contains the QR code URL

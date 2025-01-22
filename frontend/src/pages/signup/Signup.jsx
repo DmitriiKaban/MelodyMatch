@@ -55,8 +55,16 @@ const Register = () => {
       });
   
       if (response.status === 200) {
-        const registeredUser = response.data;
-        localStorage.setItem("currentUser", JSON.stringify(registeredUser));
+        localStorage.setItem("token", response.data.token);
+      
+      // Store user info
+      localStorage.setItem("currentUser", JSON.stringify({
+        id: response.data.id,
+        fullName: response.data.fullName,
+        email: response.data.email,
+        accountType: response.data.accountType,
+        profilePicture: response.data.profilePicture
+      }));
         navigate("/");
       }
     } catch (err) {

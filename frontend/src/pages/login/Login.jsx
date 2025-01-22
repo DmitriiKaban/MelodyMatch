@@ -48,7 +48,14 @@ const Login = () => {
       });
 
       if (response.status === 200) {
-        localStorage.setItem("currentUser", JSON.stringify(response.data));
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("currentUser", JSON.stringify({
+          id: response.data.id,
+          fullName: response.data.fullName,
+          email: response.data.email,
+          accountType: response.data.accountType,
+          profilePicture: response.data.profilePicture
+        }));
         navigate("/");
       } else {
         throw new Error("Invalid MFA code");

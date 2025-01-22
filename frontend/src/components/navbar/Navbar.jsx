@@ -2,17 +2,14 @@ import { useState, useEffect } from "react";
 import "./Navbar.scss";
 import logo from "../../assets/Logo.png";
 import userMusician from "../../assets/Musician.png";
+import defaultAvatar from "../../assets/user.png"; 
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [active, setActive] = useState(false);
   const [open, setOpen] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
-  const [currentUser, setCurrentUser] = useState({
-    id: 1,
-    username: "Matei Basarab",
-    isMusician: true,
-  });
+  const [currentUser, setCurrentUser] = useState(null);
 
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -25,22 +22,46 @@ const Navbar = () => {
     "/auth/login",
   ].includes(pathname);
 
+  useEffect(() => {
+    // Check for user data in localStorage when component mounts
+    const userData = localStorage.getItem("currentUser");
+    
+    if (userData) {
+      const user = JSON.parse(userData);
+      setCurrentUser({
+        id: user.id,
+        username: user.fullName, 
+        email: user.email,
+        isMusician: user.accountType === "MUSICIAN",
+        profilePicture: user.profilePicture
+      });
+    }
+  }, []);
+
   const isActive = () => {
     window.scrollY > 0 ? setActive(true) : setActive(false);
   };
 
   useEffect(() => {
     window.addEventListener("scroll", isActive);
-
     return () => {
       window.removeEventListener("scroll", isActive);
     };
   }, []);
 
   const handleLogout = () => {
+    localStorage.removeItem("token"); 
+    localStorage.removeItem("currentUser"); 
     setShowLogoutModal(false);
-    navigate("/auth/login");
     setCurrentUser(null);
+    navigate("/auth/login");
+  };
+
+  const getProfilePicture = () => {
+    if (currentUser?.profilePicture) {
+      return currentUser.profilePicture;
+    } else return defaultAvatar
+    
   };
 
   return (
@@ -84,7 +105,11 @@ const Navbar = () => {
           )}
           {currentUser && (
             <div className="user" onClick={() => setOpen(!open)}>
-              <img src={userMusician} alt="" />
+              <img 
+                src={getProfilePicture()} 
+                alt="Profile" 
+                className="profile-picture"
+              />
               <span>{currentUser.username}</span>
 
               {open && (
