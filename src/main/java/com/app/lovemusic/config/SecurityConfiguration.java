@@ -30,6 +30,7 @@ public class SecurityConfiguration {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/users/admin").hasRole("ADMIN")
                         .requestMatchers("/auth/**", "/login/**", "/oauth2/**", "/auth/mfa/validate").permitAll()
