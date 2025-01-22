@@ -8,6 +8,45 @@
   background-size: cover;
   margin-top: -700px;
 
+  .two-factor-section {
+    width: 100%;
+    margin: 10px 0;
+
+    .two-factor-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: white;
+      font-family: $font-family-secondary;
+      font-size: 18px;
+
+      .two-factor-checkbox {
+        width: auto;
+        margin: 0;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .qr-code-section {
+    width: 100%;
+    text-align: center;
+    margin: 10px 0;
+
+    p {
+      color: white;
+      font-family: $font-family-secondary;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    img {
+      background: white;
+      padding: 10px;
+      border-radius: 10px;
+    }
+  }
+
   form {
     margin-top: 580px;
     width: 360px;

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { GigCard, Reviews } from "../../components";
 import { gigs } from "../../data/gigs";
 import "./Account.scss";
+import userMusician from "../../assets/Musician.png";
 
 const Account = () => {
   return (
@@ -10,9 +11,9 @@ const Account = () => {
       <div className="container">
         <div className="left">
           <div className="top">
-            <img src="/img/pp3.png" alt="" />
+            <img src={userMusician} alt="" />
             <div className="info">
-              <span>Jace Smith</span>
+              <span>Matei Basarab</span>
               <div className="stars">
                 <img src="/img/icons/star.png" alt="" />
                 <img src="/img/icons/star.png" alt="" />
