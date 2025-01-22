@@ -9,7 +9,7 @@ const LoginComponent = () => {
   const [error, setError] = useState(null);
 
   return (
-    <>
+    <> 
       <div className="top">
         <img src={logo} alt="" />
         <h1>Welcome back!</h1>

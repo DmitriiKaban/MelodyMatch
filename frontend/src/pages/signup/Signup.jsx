@@ -16,7 +16,6 @@ const Register = () => {
   });
 
   const [open, setOpen] = useState(false);
-
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -49,17 +48,17 @@ const Register = () => {
 
     try {
       const response = await newRequest.post("/auth/signup", {
-        username: user.username,
         email: user.email,
         password: user.password,
-        isMusician: user.isMusician,
+        fullName: user.username,
+        accountType: user.isMusician ? "musician" : "organizer",
       });
 
       // If successful, navigate to verify email
       if (response.status === 200) {
         const registeredUser = response.data;
         localStorage.setItem("currentUser", JSON.stringify(registeredUser));
-        // navigate("/verify-email");
+        navigate("/verify-email");
       }
     } catch (error) {
       console.error(error);
@@ -67,15 +66,25 @@ const Register = () => {
     }
   };
 
-  const handleGoogleSuccess = (response) => {
-    const mockGoogleUser = {
-      id: Date.now(),
-      username: "googleUser",
-      email: "googleuser@example.com",
-      token: "mockGoogleToken",
-    };
-    localStorage.setItem("currentUser", JSON.stringify(mockGoogleUser));
-    navigate("/verify-email");
+  const handleGoogleSuccess = async (response) => {
+    try {
+      // Send the Google ID token to the backend for verification and user creation
+      const googleResponse = await newRequest.post("/auth/google-login", {
+        email: response.profileObj.email, // Email obtained from Google's response
+        password: null, // Google users typically won't have a password
+        fullName: response.profileObj.name, // Full name from Google's response
+        accountType: user.isMusician ? "musician" : "organizer",
+      });
+
+      if (googleResponse.status === 200) {
+        const registeredUser = googleResponse.data;
+        localStorage.setItem("currentUser", JSON.stringify(registeredUser));
+        navigate("/verify-email");
+      }
+    } catch (error) {
+      console.error(error);
+      setError("Google login failed. Please try again.");
+    }
   };
 
   return (

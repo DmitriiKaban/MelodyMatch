@@ -22,6 +22,8 @@ export default defineConfig({
         "img-src 'self' data: blob: https://images.pexels.com; " +
         "connect-src 'self' http://localhost:8081; " +
         "frame-src 'self' https://accounts.google.com;",
+      
+      "Cross-Origin-Opener-Policy": "unsafe-none",
     },
   },
 });

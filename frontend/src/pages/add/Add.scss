@@ -64,6 +64,69 @@
         gap: 10px;
         justify-content: space-between;
 
+        .checkbox-wrapper-9 {
+          .tgl {
+            display: none;
+          }
+        
+          .tgl, 
+          .tgl:after,
+          .tgl:before,
+          .tgl * {
+            box-sizing: border-box;
+          }
+        
+          .tgl + .tgl-btn {
+            outline: 0;
+            display: block;
+            width: 2em;
+            height: 1em;
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+            background: #f2f2f2;
+            border-radius: 2em;
+            transition: background-color 0.2s ease;
+          }
+        
+          .tgl + .tgl-btn:after {
+            transition: all 0.2s ease;
+            background: #f2f2f2;
+            content: "";
+            border-radius: 1em;
+            width: 50%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+          }
+        
+          .tgl:checked + .tgl-btn:after {
+            left: 50%;
+            background: #bc11b0; 
+          }
+        
+          .tgl-flat + .tgl-btn {
+            padding: 2px;
+            background: #fff;
+            border: 2px solid gray;
+            border-radius: 2em;
+          }
+        
+          .tgl-flat + .tgl-btn:after {
+            background: #f2f2f2;
+          }
+        
+          .tgl-flat:checked + .tgl-btn {
+            border: 2px solid $secondary-color;
+          }
+        
+          .tgl-flat:checked + .tgl-btn:after {
+            left: 50%;
+            background: $secondary-color;
+          }
+        }
+        
         p {
           font-size: $font-size-small;
           font-family: $font-family-secondary;

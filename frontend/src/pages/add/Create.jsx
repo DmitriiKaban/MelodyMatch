@@ -1,16 +1,20 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import "./Add.scss";
 import { Banner } from "../../components";
 import { sanitizeInput } from "../../utils/sanitize";
+import newRequest from "../../utils/newRequest";
 
 const currentUser = {
   id: 1,
-  username: "Matei Basarab",
+  username: "killnobb@gmail.com",
   isMusician: true,
 };
 
 const Create = () => {
+  const [checked, setChecked] = useState(false);
+  const [qrCode, setQrCode] = useState(null);  // Store the QR code URL
   const formRef = useRef(null);
   const userIsMusician = currentUser.isMusician;
 
@@ -20,14 +24,33 @@ const Create = () => {
     }
   };
 
+  const handleCheckboxChange = async () => {
+    setChecked(!checked);
+    if (!checked) {
+      try {
+        // Use axios to send the POST request
+        const response = await newRequest.post(`/auth/qr/generate?username=${currentUser.username}`);
+        
+        if (response.status === 200) {
+          const data = response.data; // Assuming response contains the QR code URL
+          setQrCode(data.qrCodeUrl);  // Set the QR code URL to state
+        } else {
+          console.error("Failed to generate QR code");
+        }
+      } catch (error) {
+        console.error("Error generating QR code:", error);
+      }
+    } else {
+      setQrCode(null);  // Clear QR code if unchecked
+    }
+  };
+
   return (
     <>
       <div className="banner">
         <Banner
           title={sanitizeInput(
-            `Hop on your personal ${
-              userIsMusician ? "Musician" : "Organizer"
-            } account!`
+            `Hop on your personal ${userIsMusician ? "Musician" : "Organizer"} account!`
           )}
           subtitle1={sanitizeInput("This is your General Information.")}
           subtitle2={sanitizeInput("Complete the form below:")}
@@ -78,9 +101,7 @@ const Create = () => {
                   </div>
                   <hr />
                   <select>
-                    <option value="">
-                      {sanitizeInput("Select work experience")}
-                    </option>
+                    <option value="">{sanitizeInput("Select work experience")}</option>
                     <option value="1">{sanitizeInput("1 year")}</option>
                     <option value="2">{sanitizeInput("2 years")}</option>
                     <option value="3">{sanitizeInput("3 years")}</option>
@@ -97,7 +118,9 @@ const Create = () => {
                 type="text"
                 placeholder={sanitizeInput("Enter your location")}
               />
+            </div>
 
+            <div className="details">
               <div className="item">
                 <label htmlFor="">{sanitizeInput("Interested in")}</label>
                 <img src="/img/icons/Edit.png" alt="" />
@@ -109,9 +132,6 @@ const Create = () => {
                 <option value="rock">{sanitizeInput("Rock")}</option>
                 <option value="pop">{sanitizeInput("Pop")}</option>
               </select>
-            </div>
-
-            <div className="details">
               <div className="item">
                 <label htmlFor="">{sanitizeInput("Short Description")}</label>
                 <img src="/img/icons/Edit.png" alt="" />
@@ -126,56 +146,43 @@ const Create = () => {
                 cols="30"
                 rows="10"
               ></textarea>
+
               {userIsMusician && (
                 <>
                   <div className="item">
-                    <label htmlFor="">
-                      {sanitizeInput("Upload your resume")}
-                    </label>
+                    <label htmlFor="">{sanitizeInput("Upload your resume")}</label>
                     <img src="/img/icons/Edit.png" alt="" />
                   </div>
                   <hr />
                   <input type="file" />
                 </>
               )}
-              <div className="item">
-                <label htmlFor="">
-                  {sanitizeInput("Payment Card Information")}
-                </label>
-              </div>
 
+              <div className="item">
+                <label htmlFor="">{sanitizeInput("Add Two-Factor Authentication")}</label>
+                <div className="checkbox-wrapper-9">
+                  <input
+                    className="tgl tgl-flat"
+                    id="cb4-9"
+                    type="checkbox"
+                    checked={checked}
+                    onChange={handleCheckboxChange}
+                  />
+                  <label className="tgl-btn" htmlFor="cb4-9"></label>
+                </div>
+              </div>
               <hr />
-              <p>
-                {sanitizeInput(
-                  "No card added. Please add your credit card information for seamless payments."
-                )}
-              </p>
-              <div className="item ">
-                <label htmlFor="">{sanitizeInput("Card Number")}</label>
-              </div>
-              <div className="item pay">
-                <input
-                  type="text"
-                  placeholder={sanitizeInput("Enter card number")}
-                />
-              </div>
-              <div
-                className="item pay"
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  width: "100%",
-                }}
-              >
-                <label htmlFor="">{sanitizeInput("CVV")}</label>
-                <label htmlFor="">{sanitizeInput("Expiration Date")}</label>
-              </div>
-              <div className="item pay">
-                <input type="text" placeholder={sanitizeInput("Enter CVV")} />
-                <input type="text" placeholder={sanitizeInput("MM/YY")} />
-              </div>
+              <p>Once you check it, add us on your Google Accounts via a generated QR Code!</p>
+
+              {qrCode && (
+                <div className="qr-code-container">
+                  <img src={qrCode} alt="QR Code" />
+                  <p>Scan this QR code with Google Authenticator</p>
+                </div>
+              )}
             </div>
           </div>
+
           <Link to="/account/user/:id" className="link">
             <div className="button-container">
               <button>{sanitizeInput("Create")}</button>
