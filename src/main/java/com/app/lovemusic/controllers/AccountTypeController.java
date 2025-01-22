@@ -26,7 +26,7 @@ public class AccountTypeController {
         this.jwtService = jwtService;
     }
 
-    @GetMapping("/select-account-type")
+    @GetMapping("/account")
     public String selectAccountType(Model model, @RequestParam String email, @RequestParam String name, @RequestParam String provider) {
         model.addAttribute("email", email);
         model.addAttribute("name", name);

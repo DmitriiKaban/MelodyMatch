@@ -11,7 +11,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Table(name = "users")
@@ -43,14 +46,14 @@ public class User implements UserDetails {
     @JoinColumn(name = "id", referencedColumnName = "id")
     private PaymentInformation paymentInformation;
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<RatingReview> reviewsAuthored;
 
-    @OneToMany(mappedBy = "target", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "target", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<RatingReview> reviewsReceived;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "user_role", nullable = false)
+    @Column(name = "user_role", nullable = false) // Enable insert/update
     private UserRoles userRole;
 
     @CreationTimestamp
@@ -84,8 +87,6 @@ public class User implements UserDetails {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.authProvider = authProvider;
-
-//        this.secret = Base32.random();
     }
 
     public User(String fullName, String email, String password, String profilePicture, PaymentInformation paymentInformation, Date createdAt, Date updatedAt, AuthenticationProviders authProvider) {
