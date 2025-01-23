@@ -79,7 +79,7 @@ const Gig = () => {
             </div>
           </div>
 
-          <div className="reviews">
+          <div className="reviews"> 
             <div className="reviews">
               <div className="top">
                 <h2>Reviews</h2>

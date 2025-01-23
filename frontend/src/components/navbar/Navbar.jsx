@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import "./Navbar.scss";
 import logo from "../../assets/Logo.png";
-import userMusician from "../../assets/Musician.png";
 import defaultAvatar from "../../assets/user.png"; 
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
@@ -23,11 +22,26 @@ const Navbar = () => {
   ].includes(pathname);
 
   useEffect(() => {
-    // Check for user data in localStorage when component mounts
-    const userData = localStorage.getItem("currentUser");
-    
-    if (userData) {
-      const user = JSON.parse(userData);
+    const handleUserDataUpdate = (event) => {
+      const userData = event.detail; 
+      if (userData) {
+        setCurrentUser({
+          id: userData.id,
+          username: userData.fullName, 
+          email: userData.email,
+          isMusician: userData.accountType === "MUSICIAN",
+          profilePicture: userData.profilePicture
+        });
+      }
+    };
+
+    // Listen for the custom event
+    window.addEventListener('userDataUpdated', handleUserDataUpdate);
+
+    // Initial load
+    const storedUserData = localStorage.getItem("currentUser");
+    if (storedUserData) {
+      const user = JSON.parse(storedUserData);
       setCurrentUser({
         id: user.id,
         username: user.fullName, 
@@ -36,10 +50,14 @@ const Navbar = () => {
         profilePicture: user.profilePicture
       });
     }
+
+    return () => {
+      window.removeEventListener('userDataUpdated', handleUserDataUpdate);
+    };
   }, []);
 
   const isActive = () => {
-    window.scrollY > 0 ? setActive(true) : setActive(false);
+    setActive(window.scrollY > 0);
   };
 
   useEffect(() => {
@@ -58,10 +76,7 @@ const Navbar = () => {
   };
 
   const getProfilePicture = () => {
-    if (currentUser?.profilePicture) {
-      return currentUser.profilePicture;
-    } else return defaultAvatar
-    
+    return currentUser?.profilePicture || defaultAvatar;
   };
 
   return (
@@ -84,54 +99,42 @@ const Navbar = () => {
             </Link>
           )}
           {currentUser && (
-            <Link to="/orders" className="link">
-              Orders
-            </Link>
+            <>
+              <Link to="/orders" className="link">Orders</Link>
+              <Link to="/myGigs" className="link">
+                <span>{currentUser.isMusician ? "Gigs" : "Events"}</span>
+              </Link>
+              <div className="user" onClick={() => setOpen(!open)}>
+                <img 
+                  src={getProfilePicture()} 
+                  alt="Profile" 
+                  className="profile-picture"
+                />
+                <span>{currentUser.username}</span>
+
+                {open && (
+                  <div className="options">
+                    <Link to="/account" className="link">Edit Account</Link>
+                    <Link to="/messages" className="link">Messages</Link>
+                    <Link to="/payments" className="link">Payments</Link>
+                    <span
+                      className="link logout-text"
+                      onClick={() => setShowLogoutModal(true)}
+                    >
+                      Log out
+                    </span>
+                  </div>
+                )}
+              </div>
+            </>
           )}
           {!currentUser && (
             <>
-              <Link to="/auth/login" className="link">
-                Sign In
-              </Link>
+              <Link to="/auth/login" className="link">Sign In</Link>
               <Link to="/auth/signup" className="link">
                 <button>Join Us</button>
               </Link>
             </>
-          )}
-          {currentUser && (
-            <Link to="/myGigs" className="link">
-              <span>{currentUser.isMusician ? "Gigs" : "Events"}</span>
-            </Link>
-          )}
-          {currentUser && (
-            <div className="user" onClick={() => setOpen(!open)}>
-              <img 
-                src={getProfilePicture()} 
-                alt="Profile" 
-                className="profile-picture"
-              />
-              <span>{currentUser.username}</span>
-
-              {open && (
-                <div className="options">
-                  <Link to="/account" className="link">
-                    Edit Account
-                  </Link>
-                  <Link to="/messages" className="link">
-                    Messages
-                  </Link>
-                  <Link to="/payments" className="link">
-                    Payments
-                  </Link>
-                  <span
-                    className="link logout-text"
-                    onClick={() => setShowLogoutModal(true)}
-                  >
-                    Log out
-                  </span>
-                </div>
-              )}
-            </div>
           )}
         </div>
       </div>

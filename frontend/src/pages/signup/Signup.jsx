@@ -40,7 +40,6 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    // Check if passwords match
     if (user.password !== user.repeatPassword) {
       setError("Passwords do not match.");
       return;
@@ -57,16 +56,25 @@ const Register = () => {
       if (response.status === 200) {
         localStorage.setItem("token", response.data.token);
       
-      // Store user info
-      localStorage.setItem("currentUser", JSON.stringify({
-        id: response.data.id,
-        fullName: response.data.fullName,
-        email: response.data.email,
-        accountType: response.data.accountType,
-        profilePicture: response.data.profilePicture
-      }));
+        const userData = {
+          id: response.data.id,
+          fullName: response.data.fullName,
+          email: response.data.email,
+          accountType: response.data.accountType,
+          profilePicture: response.data.profilePicture,
+          token: response.data.token
+        };
+
+        localStorage.setItem("currentUser", JSON.stringify(userData));
+        
+        console.log('Custom event dispatched with:', userData); 
+        
+        window.dispatchEvent(new CustomEvent('userDataUpdated', { 
+          detail: userData 
+        }));
         navigate("/");
       }
+      
     } catch (err) {
       console.error("Registration error:", err);
       

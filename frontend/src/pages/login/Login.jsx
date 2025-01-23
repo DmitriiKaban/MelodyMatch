@@ -15,21 +15,35 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const requestData = { email: username, password: password };
-    console.log('Request data:', requestData)
 
     try {
       const response = await newRequest.post("/login", {
         email: username,
-        password: password  // explicitly include password
+        password: password  
       });
 
       if (response.status === 200) {
-        // Login successful without 2FA
-        localStorage.setItem("currentUser", JSON.stringify(response.data));
+        const userData = {
+          id: response.data.id,
+          fullName: response.data.fullName,
+          email: response.data.email,
+          accountType: response.data.accountType,
+          profilePicture: response.data.profilePicture,
+          token: response.data.token
+        };
+  
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("currentUser", JSON.stringify(userData));
+        
+        console.log('Custom event dispatched with:', userData); 
+        
+        window.dispatchEvent(new CustomEvent('userDataUpdated', { 
+          detail: userData 
+        }));
+  
         navigate("/");
       } else if (response.status === 403 && response.data["2fa_required"]) {
-        // 2FA required
+        
         setIs2FA(true);
       } else {
         throw new Error("Unexpected response");
@@ -48,14 +62,22 @@ const Login = () => {
       });
 
       if (response.status === 200) {
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("currentUser", JSON.stringify({
+        const userData = {
           id: response.data.id,
           fullName: response.data.fullName,
           email: response.data.email,
           accountType: response.data.accountType,
-          profilePicture: response.data.profilePicture
+          profilePicture: response.data.profilePicture,
+          token: response.data.token
+        };
+  
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("currentUser", JSON.stringify(userData));
+        
+        window.dispatchEvent(new CustomEvent('userDataUpdated', { 
+          detail: userData 
         }));
+
         navigate("/");
       } else {
         throw new Error("Invalid MFA code");

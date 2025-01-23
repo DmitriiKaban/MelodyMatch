@@ -11,8 +11,7 @@ const ReviewModal = ({ gigId, isOpen, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // POST request to the backend
-      const response = await axios.post(
+      const response = await newRequest.post(
         `/rating-reviews/add-review/${gigId}`,
         { rating, comment },
         { withCredentials: true }
