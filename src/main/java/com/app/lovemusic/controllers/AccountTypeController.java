@@ -1,12 +1,16 @@
 package com.app.lovemusic.controllers;
 
 import com.app.lovemusic.controllers.response.LoginResponse;
+import com.app.lovemusic.dtos.mappers.UserMapper;
 import com.app.lovemusic.entity.AuthenticationProviders;
 import com.app.lovemusic.entity.User;
 import com.app.lovemusic.services.JwtService;
 import com.app.lovemusic.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,15 +20,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.io.IOException;
 
 @Controller
+@RequiredArgsConstructor
 public class AccountTypeController {
 
     private final UserService userService;
     private final JwtService jwtService;
-
-    public AccountTypeController(UserService userService, JwtService jwtService) {
-        this.userService = userService;
-        this.jwtService = jwtService;
-    }
+    private final UserMapper userMapper;
 
     @GetMapping("/account")
     public String selectAccountType(Model model, @RequestParam String email, @RequestParam String name, @RequestParam String provider) {
@@ -53,10 +54,15 @@ public class AccountTypeController {
 
 //        System.out.println("New user: " + user);
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        User currentUser = (User) authentication.getPrincipal();
+
         String jwtToken = jwtService.generateToken(user);
         LoginResponse loginResponse = new LoginResponse()
                 .setToken(jwtToken)
-                .setExpiresIn(jwtService.getExpirationTime());
+                .setExpiresIn(jwtService.getExpirationTime())
+                .setUserDetails(userMapper.toDto(currentUser));
 
         // Return the token in the response
         response.setContentType("application/json");
