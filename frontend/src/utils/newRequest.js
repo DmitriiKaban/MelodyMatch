@@ -2,7 +2,7 @@ import axios from "axios";
 
 const newRequest = axios.create({
   baseURL: "/auth",
-  withCredentials: true,
+  // withCredentials: true,
 });
 
 newRequest.interceptors.request.use((config) => {

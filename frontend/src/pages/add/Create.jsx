@@ -12,7 +12,7 @@ const Create = () => {
 
   useEffect(() => {
     const userData = localStorage.getItem("currentUser");
-    
+
     if (userData) {
       const user = JSON.parse(userData);
       setCurrentUser({
@@ -22,7 +22,7 @@ const Create = () => {
         isMusician: user.accountType === "MUSICIAN",
         profilePicture: user.profilePicture
       });
-      
+
     } else {
       navigate("/auth/login");
     }
@@ -45,14 +45,10 @@ const Create = () => {
     if (!checked) {
       try {
         console.log("Username being sent:", encodeURIComponent(currentUser.username));
-        console.log("Token saved to localStorage:", localStorage.getItem("token"));
         const response = await newRequest.get(`/qr/generate?username=${currentUser.username}`, {
           responseType: 'blob',
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`, 
-          },
+          headers: {}
         });
-        
 
         if (response.status === 200) {
           const imageUrl = URL.createObjectURL(response.data);
@@ -73,6 +69,7 @@ const Create = () => {
       setQrCode(null);
     }
   };
+
 
   return (
     <>

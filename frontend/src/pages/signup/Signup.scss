@@ -100,6 +100,23 @@
           }
         }
 
+        .social-logins button{
+          width: 52%;
+          align-items: center;
+          margin-left: 80px;
+        }
+        
+        .fb-login-button {
+          width: 52%;
+          display: block;
+          margin-left: 80px;
+        }
+        
+        .google-login-container {
+          display: block;
+          margin-left: 80px;
+        }
+        
         .dropdown-options {
           position: absolute;
           background-color: transparent;
@@ -178,7 +195,7 @@
       }
     }
 
-    .nsm7Bb-HzV7m-LgbsSe {
+    .nsm7Bb-HzV7m-LgbsSe{
       width: 380px;
       padding: 20px;
     }

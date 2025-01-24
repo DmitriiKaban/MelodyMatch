@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Signup.scss";
 import logo from "../../assets/Logo.png";
 import { useNavigate, Link } from "react-router-dom";
@@ -39,12 +39,12 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (user.password !== user.repeatPassword) {
       setError("Passwords do not match.");
       return;
     }
-  
+
     try {
       const response = await newRequest.post("/signup", {
         email: user.email,
@@ -52,62 +52,106 @@ const Register = () => {
         fullName: user.username,
         accountType: user.isMusician ? "musician" : "organizer",
       });
-  
+
       if (response.status === 200) {
         localStorage.setItem("token", response.data.token);
-      
+
         const userData = {
           id: response.data.id,
           fullName: response.data.fullName,
           email: response.data.email,
           accountType: response.data.accountType,
           profilePicture: response.data.profilePicture,
-          token: response.data.token
+          token: response.data.token,
         };
 
         localStorage.setItem("currentUser", JSON.stringify(userData));
-        
-        console.log('Custom event dispatched with:', userData); 
-        
-        window.dispatchEvent(new CustomEvent('userDataUpdated', { 
-          detail: userData 
-        }));
+
+        window.dispatchEvent(
+          new CustomEvent("userDataUpdated", {
+            detail: userData,
+          })
+        );
         navigate("/");
       }
-      
     } catch (err) {
       console.error("Registration error:", err);
-      
-      if (err.response?.status === 409) {
-        setError("An account with this email already exists. Please use a different email or try logging in.");
-      } else if (err.response?.data?.message) {
-        setError(err.response.data.message);
-      } else {
-        setError("Registration failed. Please try again.");
-      }
+      setError("Registration failed. Please try again.");
     }
   };
 
-  const handleGoogleSuccess = async (response) => {
+  const handleOAuthSuccess = async (provider, profile) => {
     try {
-      // Send the Google ID token to the backend for verification and user creation
-      const googleResponse = await newRequest.post("/auth/google-login", {
-        email: response.profileObj.email, // Email obtained from Google's response
-        password: null, // Google users typically won't have a password
-        fullName: response.profileObj.name, // Full name from Google's response
-        accountType: user.isMusician ? "musician" : "organizer",
-      });
+      const { email, name } = profile;
 
-      if (googleResponse.status === 200) {
-        const registeredUser = googleResponse.data;
-        localStorage.setItem("currentUser", JSON.stringify(registeredUser));
-        navigate("/verify-email");
-      }
+      const redirectUrl = `/select-account-type?email=${encodeURIComponent(
+        email
+      )}&name=${encodeURIComponent(name)}&provider=${encodeURIComponent(
+        provider
+      )}`;
+
+      // Redirect to backend endpoint for account type selection
+      window.location.href = redirectUrl;
     } catch (error) {
       console.error(error);
-      setError("Google login failed. Please try again.");
+      setError(`${provider} login failed. Please try again.`);
     }
   };
+
+  const handleGoogleSuccess = (response) => {
+    const profile = {
+      email: response.profileObj.email,
+      name: response.profileObj.name,
+    };
+    handleOAuthSuccess("GOOGLE", profile);
+  };
+
+  const handleGitHubLogin = () => {
+    // Redirect to GitHub OAuth authorization endpoint
+    const githubOAuthUrl = "https://github.com/login/oauth/authorize";
+    const clientId = "YOUR_GITHUB_CLIENT_ID"; // Replace with your GitHub Client ID
+    const redirectUri = `${window.location.origin}/auth/github/callback`; // Replace with your redirect URI
+
+    window.location.href = `${githubOAuthUrl}?client_id=${clientId}&redirect_uri=${redirectUri}`;
+  };
+
+  const handleFacebookLogin = () => {
+    window.FB.login((response) => {
+      if (response.authResponse) {
+        window.FB.api('/me', { fields: 'email,name' }, (profile) => {
+          handleOAuthSuccess('FACEBOOK', {
+            email: profile.email,
+            name: profile.name
+          });
+        });
+      } else {
+        setError('Facebook login failed');
+      }
+    }, { scope: 'email,public_profile' });
+  };
+
+  useEffect(() => {
+    const loadFacebookSDK = () => {
+      if (!document.getElementById('facebook-jssdk')) {
+        const script = document.createElement('script');
+        script.id = 'facebook-jssdk';
+        script.src = 'https://connect.facebook.net/ro_RO/sdk.js';
+        script.async = true;
+        script.defer = true;
+        script.onload = () => {
+          window.FB.init({
+            appId: 'YOUR_FACEBOOK_APP_ID',
+            cookie: true,
+            xfbml: true,
+            version: 'v22.0'
+          });
+        };
+        document.body.appendChild(script);
+      }
+    };
+
+    loadFacebookSDK();
+  }, []);
 
   return (
     <div className="register">
@@ -157,7 +201,7 @@ const Register = () => {
             <input
               name="email"
               type="email"
-              placeholder="email"
+              placeholder="johndoe@gmail.com"
               onChange={handleChange}
             />
           </div>
@@ -170,10 +214,28 @@ const Register = () => {
               type="password"
               onChange={handleChange}
             />
-            <GoogleLogin
-              onSuccess={handleGoogleSuccess}
-              onError={() => setError("Google login failed")}
-            />
+            <div className="google-login-container">
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={() => setError("Google login failed")}
+              />
+            </div>
+            <div className="social-logins">
+              <button type="button" onClick={handleGitHubLogin}>
+                Login with GitHub
+              </button>
+            </div>
+
+            <div className="fb-login-button"
+              data-width="250"
+              data-size=""
+              data-button-type=""
+              data-layout=""
+              data-auto-logout-link="false"
+              data-use-continue-as="false"
+              onClick={handleFacebookLogin}>
+            </div>
+
           </div>
         </div>
         <button type="submit" className="button-85">
