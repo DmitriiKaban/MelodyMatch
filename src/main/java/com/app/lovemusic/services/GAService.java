@@ -10,6 +10,8 @@ import com.warrenstrange.googleauth.GoogleAuthenticator;
 import com.warrenstrange.googleauth.GoogleAuthenticatorConfig;
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 import com.warrenstrange.googleauth.GoogleAuthenticatorQRGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.awt.image.BufferedImage;
@@ -19,12 +21,13 @@ import java.util.Map;
 @Service
 public class GAService {
     private static final String ISSUER = "TUnify";
+    private static final Logger logger = LoggerFactory.getLogger(GAService.class);
 
     // Generate a new TOTP key
     public String generateKey() {
         GoogleAuthenticator gAuth = new GoogleAuthenticator();
         final GoogleAuthenticatorKey key = gAuth.createCredentials();
-        System.out.println(key.getKey());
+        logger.info("Generated new TOTP key: " + key.getKey());
         return key.getKey();
     }
 
@@ -38,14 +41,12 @@ public class GAService {
 
     // Generate a QR code URL for Google Authenticator
     public BufferedImage generateQRImage(String secret, String username) {
-
-        System.out.println("Generating QR code for " + username + " , secret: " + secret);
+        logger.info("Generating QR code for user: " + username);
 
         String url = GoogleAuthenticatorQRGenerator.getOtpAuthTotpURL(
                 ISSUER,
                 username,
                 new GoogleAuthenticatorKey.Builder(secret).build());
-        System.out.println(url);
         return generateQRImage(url);
     }
 
@@ -60,7 +61,7 @@ public class GAService {
             return MatrixToImageWriter.toBufferedImage(bitMatrix);
 
         } catch (WriterException e) {
-            e.printStackTrace();
+            logger.error("Error generating QR code: " + e.getMessage());
             return null;
         }
     }

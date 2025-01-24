@@ -23,6 +23,7 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +32,7 @@ public class UserService implements UserRepository {
     private final JdbcTemplate jdbcTemplate;
     private final MusicianRepository musicianRepository;
     private final OrganizerRepository organizerRepository;
+    private final Logger logger = Logger.getLogger(UserService.class.getName());
 
     @Transactional(readOnly = true)
     public List<User> allUsers() {
@@ -83,8 +85,10 @@ public class UserService implements UserRepository {
                 organizer.setSecret(null);
                 return saveOrganizer(organizer);
 
-            default:
+            default: {
+                logger.severe("Invalid account type");
                 throw new IllegalArgumentException("Invalid account type");
+            }
         }
     }
 
@@ -126,6 +130,7 @@ public class UserService implements UserRepository {
             currentUser.setProfilePicture(base64EncodedImage);
             save(currentUser);
         } catch (IOException e) {
+            logger.severe("Failed to upload profile picture");
             throw new RuntimeException("Failed to upload profile picture", e);
         }
     }
@@ -196,7 +201,11 @@ public class UserService implements UserRepository {
     }
 
     public String getUserMfaSecret(String username) {
-        User user = findByEmail(username).get(); // ADD VERIFICATION
-        return user.getSecret();
+        Optional<User> userOptional = findByEmail(username);
+        if (userOptional.isEmpty()) {
+            logger.severe("User not found");
+            throw new IllegalArgumentException("User not found");
+        }
+        return userOptional.get().getSecret();
     }
 }

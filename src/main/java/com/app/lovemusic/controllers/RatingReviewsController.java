@@ -4,10 +4,13 @@ import com.app.lovemusic.dtos.RatingReviewDto;
 import com.app.lovemusic.dtos.mappers.RatingReviewMapper;
 import com.app.lovemusic.entity.RatingReview;
 import com.app.lovemusic.entity.User;
+import com.app.lovemusic.services.EventService;
 import com.app.lovemusic.services.RatingReviewService;
 import com.app.lovemusic.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +26,7 @@ public class RatingReviewsController {
     private final UserService userService;
     private final RatingReviewService ratingReviewService;
     private final RatingReviewMapper ratingReviewMapper;
+    private static final Logger logger = LoggerFactory.getLogger(RatingReviewsController.class);
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/get-reviews/received/{userId}")

@@ -12,6 +12,8 @@ import com.app.lovemusic.services.JwtService;
 import com.app.lovemusic.services.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -36,11 +38,13 @@ public class AuthenticationController {
     private final UserMapper userMapper;
     private final UserService userService;
     private final GAService gaService;
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
     @PostMapping("/signup")
     public ResponseEntity<UserDto> register(@Valid @RequestBody RegisterUserDto registerUserDto) {
 
         User registeredUser = authenticationService.signup(registerUserDto);
+        logger.info("User registered: " + registeredUser.getEmail());
 
         return ResponseEntity.ok(userMapper.toDto(registeredUser));
     }
@@ -51,12 +55,14 @@ public class AuthenticationController {
         User authenticatedUser = authenticationService.authenticate(loginUserDto);
 
         if (authenticatedUser.isUsing2FA()) {
+            logger.info("User requires 2FA: {}", authenticatedUser.getEmail());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"username\": \"" + authenticatedUser.getEmail() + "\", \"2fa_required\": true}");
         }
 
         String jwtToken = jwtService.generateToken(authenticatedUser);
 
         LoginResponse loginResponse = new LoginResponse().setToken(jwtToken).setExpiresIn(jwtService.getExpirationTime());
+        logger.info("User logged in: {}", authenticatedUser.getEmail());
 
         return ResponseEntity.ok(loginResponse);
     }
@@ -70,10 +76,15 @@ public class AuthenticationController {
         String secret = userService.getUserMfaSecret(username);
         String jwtToken = jwtService.generateToken(user);
 
+
         if (gaService.isValid(secret, code)) {
             LoginResponse loginResponse = new LoginResponse().setToken(jwtToken).setExpiresIn(jwtService.getExpirationTime());
-            return ResponseEntity.ok(loginResponse); // isValid
+
+            logger.info("User logged in: {}", user.getEmail());
+
+            return ResponseEntity.ok(loginResponse);
         } else {
+            logger.info("Invalid 2FA code for user: {}", user.getEmail());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(false);
         }
     }
@@ -97,9 +108,12 @@ public class AuthenticationController {
                 ImageIO.write(qrImage, "png", outputStream);
                 outputStream.flush();
                 outputStream.close();
+
+                logger.info("QR code generated for user: {}", username);
+
                 return;
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Error generating QR code", e);
             }
         }
         response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
