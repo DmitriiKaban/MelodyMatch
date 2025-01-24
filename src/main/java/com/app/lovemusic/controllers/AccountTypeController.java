@@ -1,6 +1,7 @@
 package com.app.lovemusic.controllers;
 
 import com.app.lovemusic.controllers.response.LoginResponse;
+import com.app.lovemusic.dtos.UserDto;
 import com.app.lovemusic.dtos.mappers.UserMapper;
 import com.app.lovemusic.entity.AuthenticationProviders;
 import com.app.lovemusic.entity.User;
@@ -9,6 +10,8 @@ import com.app.lovemusic.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -54,15 +57,11 @@ public class AccountTypeController {
 
 //        System.out.println("New user: " + user);
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        User currentUser = (User) authentication.getPrincipal();
-
         String jwtToken = jwtService.generateToken(user);
         LoginResponse loginResponse = new LoginResponse()
                 .setToken(jwtToken)
-                .setExpiresIn(jwtService.getExpirationTime())
-                .setUserDetails(userMapper.toDto(currentUser));
+                .setExpiresIn(jwtService.getExpirationTime());
+//                .setUserDetails(userMapper.toDto(currentUser));
 
         // Return the token in the response
         response.setContentType("application/json");

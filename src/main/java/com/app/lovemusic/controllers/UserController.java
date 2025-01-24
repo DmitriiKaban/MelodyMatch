@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,7 +20,6 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
-@RequestMapping("/account")
 @RestController
 @RequiredArgsConstructor
 public class UserController {
@@ -28,7 +28,7 @@ public class UserController {
     private final UserMapper userMapper;
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/me")
+    @GetMapping("/account/me")
     public ResponseEntity<UserDto> authenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -38,7 +38,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @PostMapping("/upload-pfp")
+    @PostMapping("/account/upload-pfp")
     public ResponseEntity<UserDto> uploadProfilePicture(@RequestParam("profilePicture") MultipartFile profilePicture) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -50,7 +50,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @PostMapping("/update-name")
+    @PostMapping("/account/update-name")
     public ResponseEntity<UserDto> updateName(@RequestBody String name) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -62,7 +62,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @PostMapping("/update-payment-info")
+    @PostMapping("/account/update-payment-info")
     public ResponseEntity<UserDto> updatePaymentInformation(@Valid @RequestBody PaymentInfoDto paymentInfoDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -74,7 +74,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/get-resume/{userId}")
+    @GetMapping("/account/get-resume/{userId}")
     public ResponseEntity<String> getUserResume(@PathVariable Long userId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -98,7 +98,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/get-work-experience/{userId}")
+    @GetMapping("/account/get-work-experience/{userId}")
     public ResponseEntity<String> getUserWorkExperience(@PathVariable Long userId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -122,7 +122,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/user/{userId}")
+    @GetMapping("/account/user/{userId}")
     public ResponseEntity<UserDto> getUser(@PathVariable Long userId) {
         Optional<User> user = userService.findById(userId);
 
@@ -134,7 +134,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/all-users")
+    @GetMapping("/account/all-users")
     public ResponseEntity<List<UserDto>> allUsers() {
         List<User> users = userService.allUsers();
 
