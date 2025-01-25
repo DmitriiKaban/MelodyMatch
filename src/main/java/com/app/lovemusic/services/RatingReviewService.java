@@ -5,17 +5,13 @@ import com.app.lovemusic.dtos.mappers.RatingReviewMapper;
 import com.app.lovemusic.entity.RatingReview;
 import com.app.lovemusic.entity.User;
 import com.app.lovemusic.repositories.RatingReviewRepository;
-import com.app.lovemusic.util.RatingReviewDBMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +20,6 @@ public class RatingReviewService {
     private final RatingReviewRepository ratingReviewRepository;
     private final UserService userService;
     private final RatingReviewMapper ratingReviewMapper;
-    private final JdbcTemplate jdbcTemplate;
     private static final Logger logger = LoggerFactory.getLogger(RatingReviewService.class);
 
     @Transactional
@@ -45,16 +40,6 @@ public class RatingReviewService {
         logger.info("Review added by user: {} for user: {}", currentUser.getId(), reviewedUser.getId());
 
         return reviewDto;
-    }
-
-    public List<RatingReview> getReviewsByAuthor(User user) {
-        String sql = "SELECT * FROM reviews WHERE author_id = ?";
-        return jdbcTemplate.query(sql, new Object[]{user.getId()}, new RatingReviewDBMapper(userService));
-    }
-
-    public List<RatingReview> getReviewsByTarget(User user) {
-        String sql = "SELECT * FROM reviews WHERE target_id = ?";
-        return jdbcTemplate.query(sql, new Object[]{user.getId()}, new RatingReviewDBMapper(userService));
     }
 
 }

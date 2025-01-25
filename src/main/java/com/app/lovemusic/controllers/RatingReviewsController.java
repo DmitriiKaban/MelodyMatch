@@ -39,7 +39,7 @@ public class RatingReviewsController {
             throw new IllegalArgumentException("User not found");
         }
 
-        List<RatingReview> reviews = ratingReviewService.getReviewsByTarget(user);
+        List<RatingReview> reviews = user.getReviewsReceived();
 
         if (reviews == null) {
             logger.error("No reviews found for user with id: {}", userId);
@@ -59,7 +59,7 @@ public class RatingReviewsController {
             throw new IllegalArgumentException("User not found");
         }
 
-        List<RatingReview> reviews = ratingReviewService.getReviewsByAuthor(user);
+        List<RatingReview> reviews = user.getReviewsAuthored();
 
         if (reviews == null) {
             logger.error("No reviews found for user with id: {}", userId);
