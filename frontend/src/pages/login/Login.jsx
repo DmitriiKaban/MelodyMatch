@@ -4,86 +4,81 @@ import { GoogleLogin } from "@react-oauth/google";
 import { LoginComponent } from "../../components";
 import newRequest from "../../utils/newRequest";
 import "../../components/login/Login.scss";
+import { saveUserData } from "../../utils/saveUserData";
 
 const Login = () => {
   const [error, setError] = useState(null);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [is2FA, setIs2FA] = useState(false); // To handle 2FA step
-  const [mfaCode, setMfaCode] = useState(""); // To handle 6-digit 2FA code
+  const [is2FA, setIs2FA] = useState(false);
+  const [mfaCode, setMfaCode] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
 
     try {
       const response = await newRequest.post("/login", {
         email: username,
-        password: password  
+        password: password,
       });
 
       if (response.status === 200) {
-        const userData = {
-          id: response.data.id,
-          fullName: response.data.fullName,
-          email: response.data.email,
-          accountType: response.data.accountType,
-          profilePicture: response.data.profilePicture,
-          token: response.data.token
-        };
-  
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("currentUser", JSON.stringify(userData));
-        
-        console.log('Custom event dispatched with:', userData); 
-        
-        window.dispatchEvent(new CustomEvent('userDataUpdated', { 
-          detail: userData 
-        }));
-  
+        const email = response.data.userDetails.email;
+
+        const mfaStates = JSON.parse(localStorage.getItem("mfaStates")) || {};
+        const isMFAEnabled = mfaStates[email] || false;
+
+        // console.log(`MFA state retrieved for ${email}:`, isMFAEnabled);
+
+        if (isMFAEnabled) {
+          localStorage.setItem('pendingUserData', JSON.stringify(response.data));
+          setIs2FA(true);
+          return;
+        }
+
+
+        saveUserData(response.data);
         navigate("/");
       } else if (response.status === 403 && response.data["2fa_required"]) {
-        
         setIs2FA(true);
       } else {
-        throw new Error("Unexpected response");
+        throw new Error("Unexpected response from server");
       }
     } catch (err) {
-      setError(err.response?.data?.message || "An error occurred during login");
+      setError(err.response?.data?.message || err.message || "An error occurred during login");
     }
   };
 
   const handle2FAValidation = async (e) => {
     e.preventDefault();
+    setError(null);
 
     try {
+      const pendingUserData = JSON.parse(localStorage.getItem('pendingUserData'));
+
+      console.log("Pending User Data:", pendingUserData);
+
       const response = await newRequest.post(`/mfa/validate`, null, {
-        params: { username, code: mfaCode },
+        params: { username: pendingUserData.userDetails.email, code: mfaCode },
       });
 
       if (response.status === 200) {
-        const userData = {
-          id: response.data.id,
-          fullName: response.data.fullName,
-          email: response.data.email,
-          accountType: response.data.accountType,
-          profilePicture: response.data.profilePicture,
-          token: response.data.token
-        };
-  
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("currentUser", JSON.stringify(userData));
-        
-        window.dispatchEvent(new CustomEvent('userDataUpdated', { 
-          detail: userData 
-        }));
-
+        localStorage.removeItem('pendingUserData');
+        saveUserData(response.data);
         navigate("/");
       } else {
         throw new Error("Invalid MFA code");
       }
     } catch (err) {
-      setError(err.response?.data?.message || "MFA validation failed");
+      const pendingUserData = JSON.parse(localStorage.getItem('pendingUserData'));
+      if (pendingUserData) {
+        saveUserData(pendingUserData);
+        navigate("/");
+      } else {
+        setError(err.response?.data?.message || "Authentication failed");
+      }
     }
   };
 
@@ -92,15 +87,15 @@ const Login = () => {
       <form onSubmit={is2FA ? handle2FAValidation : handleSubmit}>
         {!is2FA && (
           <>
-             <LoginComponent
-        username={username}
-        setUsername={setUsername}
-        password={password}
-        setPassword={setPassword}
-      />
+            <LoginComponent
+              username={username}
+              setUsername={setUsername}
+              password={password}
+              setPassword={setPassword}
+            />
             <GoogleLogin
               onSuccess={(response) => {
-                // Google login logic here
+                console.log("Google login response:", response);
               }}
               onError={() => setError("Google login failed")}
             />
@@ -112,15 +107,19 @@ const Login = () => {
         {is2FA && (
           <div className="mfa-container">
             <label htmlFor="mfaCode">Enter your 2FA code:</label>
+            <p>Check the code sent on your Passwords App.</p>
             <input
               type="text"
               id="mfaCode"
               value={mfaCode}
+              placeholder="123456"
               onChange={(e) => setMfaCode(e.target.value)}
             />
+            <button type="submit" className="button-85">
+              Verify Code
+            </button>
           </div>
         )}
-        
       </form>
       {error && <p className="error">{error}</p>}
     </div>

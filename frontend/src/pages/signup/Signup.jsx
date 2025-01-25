@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import "./Signup.scss";
 import logo from "../../assets/Logo.png";
 import { useNavigate, Link } from "react-router-dom";
-import { GoogleLogin } from "@react-oauth/google";
 import newRequest from "../../utils/newRequest";
 
 const Register = () => {
@@ -80,70 +79,26 @@ const Register = () => {
     }
   };
 
-  const handleOAuthSuccess = async (provider, profile) => {
-    try {
-      const { email, name } = profile;
-
-      const redirectUrl = `/select-account-type?email=${encodeURIComponent(
-        email
-      )}&name=${encodeURIComponent(name)}&provider=${encodeURIComponent(
-        provider
-      )}`;
-
-      // Redirect to backend endpoint for account type selection
-      window.location.href = redirectUrl;
-    } catch (error) {
-      console.error(error);
-      setError(`${provider} login failed. Please try again.`);
-    }
-  };
-
-  const handleGoogleSuccess = (response) => {
-    const profile = {
-      email: response.profileObj.email,
-      name: response.profileObj.name,
-    };
-    handleOAuthSuccess("GOOGLE", profile);
-  };
-
-  const handleGitHubLogin = () => {
-    // Redirect to GitHub OAuth authorization endpoint
-    const githubOAuthUrl = "https://github.com/login/oauth/authorize";
-    const clientId = "YOUR_GITHUB_CLIENT_ID"; // Replace with your GitHub Client ID
-    const redirectUri = `${window.location.origin}/auth/github/callback`; // Replace with your redirect URI
-
-    window.location.href = `${githubOAuthUrl}?client_id=${clientId}&redirect_uri=${redirectUri}`;
-  };
-
-  const handleFacebookLogin = () => {
-    window.FB.login((response) => {
-      if (response.authResponse) {
-        window.FB.api('/me', { fields: 'email,name' }, (profile) => {
-          handleOAuthSuccess('FACEBOOK', {
-            email: profile.email,
-            name: profile.name
-          });
-        });
-      } else {
-        setError('Facebook login failed');
-      }
-    }, { scope: 'email,public_profile' });
+  const handleOAuthLogin = (provider) => {
+    // Dynamically redirect to backend's OAuth2 endpoint
+    const baseUrl = "http://localhost:8081/oauth2/authorization"; // Replace with your backend base URL
+    window.location.href = `${baseUrl}/${provider}`;
   };
 
   useEffect(() => {
     const loadFacebookSDK = () => {
-      if (!document.getElementById('facebook-jssdk')) {
-        const script = document.createElement('script');
-        script.id = 'facebook-jssdk';
-        script.src = 'https://connect.facebook.net/ro_RO/sdk.js';
+      if (!document.getElementById("facebook-jssdk")) {
+        const script = document.createElement("script");
+        script.id = "facebook-jssdk";
+        script.src = "https://connect.facebook.net/ro_RO/sdk.js";
         script.async = true;
         script.defer = true;
         script.onload = () => {
           window.FB.init({
-            appId: 'YOUR_FACEBOOK_APP_ID',
+            appId: "3366032167024711", // Facebook App ID from your config
             cookie: true,
             xfbml: true,
-            version: 'v22.0'
+            version: "v22.0",
           });
         };
         document.body.appendChild(script);
@@ -163,6 +118,14 @@ const Register = () => {
       <form onSubmit={handleSubmit}>
         <div className="columns">
           <div className="left">
+            <label>Name</label>
+            <input
+              name="username"
+              type="text"
+              placeholder="John Doe"
+              onChange={handleChange}
+            />
+
             <label>Are you an organization or musician?</label>
             <div className="dropdown">
               <input
@@ -190,13 +153,31 @@ const Register = () => {
                 </div>
               )}
             </div>
-            <label>Name</label>
-            <input
-              name="username"
-              type="text"
-              placeholder="John Doe"
-              onChange={handleChange}
-            />
+            <div className="oauth-buttons">
+              <button
+                type="button"
+                onClick={() => handleOAuthLogin("google")}
+                className="oauth-button google"
+              >
+                Login with Google
+              </button>
+              <button
+                type="button"
+                onClick={() => handleOAuthLogin("github")}
+                className="oauth-button github"
+              >
+                Login with GitHub
+              </button>
+              <button
+                type="button"
+                onClick={() => handleOAuthLogin("facebook")}
+                className="oauth-button facebook"
+              >
+                Login with Facebook
+              </button>
+            </div>
+          </div>
+          <div className="right">
             <label>Email</label>
             <input
               name="email"
@@ -204,8 +185,6 @@ const Register = () => {
               placeholder="johndoe@gmail.com"
               onChange={handleChange}
             />
-          </div>
-          <div className="right">
             <label>Password</label>
             <input name="password" type="password" onChange={handleChange} />
             <label>Repeat Password</label>
@@ -214,29 +193,10 @@ const Register = () => {
               type="password"
               onChange={handleChange}
             />
-            <div className="google-login-container">
-              <GoogleLogin
-                onSuccess={handleGoogleSuccess}
-                onError={() => setError("Google login failed")}
-              />
-            </div>
-            <div className="social-logins">
-              <button type="button" onClick={handleGitHubLogin}>
-                Login with GitHub
-              </button>
-            </div>
 
-            <div className="fb-login-button"
-              data-width="250"
-              data-size=""
-              data-button-type=""
-              data-layout=""
-              data-auto-logout-link="false"
-              data-use-continue-as="false"
-              onClick={handleFacebookLogin}>
-            </div>
 
           </div>
+
         </div>
         <button type="submit" className="button-85">
           Register

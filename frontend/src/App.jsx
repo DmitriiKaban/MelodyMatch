@@ -86,19 +86,6 @@ function App() {
           path: "/account/user/:id",
           element: <Account />,
         },
-        // {
-        //   path: "/pay/:id",
-        //   element: <Pay />,
-        // },
-        // {
-        //   path: "/success",
-        //   element: <Success />,
-        // },
-        //
-        // other used paths:
-        //
-        // "/gigs?genre="
-        // "/gigs?search="
       ],
     },
   ]);

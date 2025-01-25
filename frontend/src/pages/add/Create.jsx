@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Add.scss";
 import { Banner } from "../../components";
 import { sanitizeInput } from "../../utils/sanitize";
-import newRequest from "../../utils/newRequest";
 
 const Create = () => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -41,35 +40,47 @@ const Create = () => {
   };
 
   const handleCheckboxChange = async () => {
-    setChecked(!checked);
-    if (!checked) {
-      try {
-        console.log("Username being sent:", encodeURIComponent(currentUser.username));
-        const response = await newRequest.get(`/qr/generate?username=${currentUser.username}`, {
-          responseType: 'blob',
-          headers: {}
-        });
+    const updatedChecked = !checked;
+    setChecked(updatedChecked);
 
-        if (response.status === 200) {
-          const imageUrl = URL.createObjectURL(response.data);
+    if (updatedChecked) {
+      try {
+        const response = await fetch(
+          `http://localhost:8081/auth/qr/generate?username=${encodeURIComponent(currentUser.username)}`,
+          {
+            method: "GET",
+            headers: {
+              Accept: "image/png",
+            },
+          }
+        );
+
+        if (response.ok) {
+          const qrCodeBlob = await response.blob();
+          const imageUrl = URL.createObjectURL(qrCodeBlob);
           setQrCode(imageUrl);
+
+          // Save MFA state for the specific user
+          const mfaStates = JSON.parse(localStorage.getItem("mfaStates")) || {};
+          mfaStates[currentUser.email] = true; // Save the MFA state for the current user
+          localStorage.setItem("mfaStates", JSON.stringify(mfaStates));
+          console.log(`MFA state saved for ${currentUser.email}: true`);
         } else {
-          console.error("Failed to generate QR code");
+          console.error("Failed to generate QR code. Status:", response.status);
         }
       } catch (error) {
-        if (error.response && error.response.data) {
-          const reader = new FileReader();
-          reader.onload = () => {
-            console.error("Detailed Error:", reader.result);
-          };
-          reader.readAsText(error.response.data);
-        }
+        console.error("Error generating QR code:", error);
       }
     } else {
       setQrCode(null);
+
+      // Update MFA state for the specific user
+      const mfaStates = JSON.parse(localStorage.getItem("mfaStates")) || {};
+      mfaStates[currentUser.email] = false; // Update the MFA state for the current user
+      localStorage.setItem("mfaStates", JSON.stringify(mfaStates));
+      console.log(`MFA state saved for ${currentUser.email}: false`);
     }
   };
-
 
   return (
     <>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "./Navbar.scss";
 import logo from "../../assets/Logo.png";
-import defaultAvatar from "../../assets/user.png"; 
+import defaultAvatar from "../../assets/user.png";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
@@ -23,11 +23,11 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleUserDataUpdate = (event) => {
-      const userData = event.detail; 
+      const userData = event.detail;
       if (userData) {
         setCurrentUser({
           id: userData.id,
-          username: userData.fullName, 
+          username: userData.fullName,
           email: userData.email,
           isMusician: userData.accountType === "MUSICIAN",
           profilePicture: userData.profilePicture
@@ -35,16 +35,14 @@ const Navbar = () => {
       }
     };
 
-    // Listen for the custom event
     window.addEventListener('userDataUpdated', handleUserDataUpdate);
 
-    // Initial load
     const storedUserData = localStorage.getItem("currentUser");
     if (storedUserData) {
       const user = JSON.parse(storedUserData);
       setCurrentUser({
         id: user.id,
-        username: user.fullName, 
+        username: user.fullName,
         email: user.email,
         isMusician: user.accountType === "MUSICIAN",
         profilePicture: user.profilePicture
@@ -68,8 +66,8 @@ const Navbar = () => {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token"); 
-    localStorage.removeItem("currentUser"); 
+    localStorage.removeItem("token");
+    localStorage.removeItem("currentUser");
     setShowLogoutModal(false);
     setCurrentUser(null);
     navigate("/auth/login");
@@ -105,9 +103,9 @@ const Navbar = () => {
                 <span>{currentUser.isMusician ? "Gigs" : "Events"}</span>
               </Link>
               <div className="user" onClick={() => setOpen(!open)}>
-                <img 
-                  src={getProfilePicture()} 
-                  alt="Profile" 
+                <img
+                  src={getProfilePicture()}
+                  alt="Profile"
                   className="profile-picture"
                 />
                 <span>{currentUser.username}</span>
