@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserService {
 
     private final UserRepository userRepository;
@@ -47,7 +48,6 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    @Transactional
     public User createNewUserAfterOAuthLoginSuccess(String accountType, String email, String name, AuthenticationProviders provider) {
         switch (accountType.toLowerCase()) {
             case "musician":
@@ -154,6 +154,7 @@ public class UserService {
         update(user);
     }
 
+    @Transactional(readOnly = true)
     public String getUserMfaSecret(String username) {
         Optional<User> userOptional = findByEmail(username);
         if (userOptional.isEmpty()) {
