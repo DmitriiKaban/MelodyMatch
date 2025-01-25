@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class RatingReviewService {
 
     private final RatingReviewRepository ratingReviewRepository;
@@ -22,7 +23,6 @@ public class RatingReviewService {
     private final RatingReviewMapper ratingReviewMapper;
     private static final Logger logger = LoggerFactory.getLogger(RatingReviewService.class);
 
-    @Transactional
     public RatingReviewDto addReview(Long userId, RatingReviewDto reviewDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
