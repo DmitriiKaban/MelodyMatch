@@ -6,8 +6,10 @@ import com.app.lovemusic.entity.RatingReview;
 import com.app.lovemusic.entity.User;
 import com.app.lovemusic.services.RatingReviewService;
 import com.app.lovemusic.services.UserService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +33,7 @@ public class RatingReviewsController {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/get-reviews/received/{userId}")
+    @Transactional
     public ResponseEntity<List<RatingReviewDto>> getUserReceivedReviews(@PathVariable Long userId) {
         User user = userService.findById(userId).orElse(null);
 
@@ -51,6 +54,7 @@ public class RatingReviewsController {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/get-reviews/authored/{userId}")
+    @Transactional
     public ResponseEntity<List<RatingReviewDto>> getUserAuthoredReviews(@PathVariable Long userId) {
         User user = userService.findById(userId).orElse(null);
 
