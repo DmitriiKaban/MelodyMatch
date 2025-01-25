@@ -11,6 +11,10 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
+      '/account': {
+        target: 'http://localhost:8081', // Your backend server
+        changeOrigin: true, // Ensures the origin of the host header matches the target URL
+      },
     },
 
     headers: {

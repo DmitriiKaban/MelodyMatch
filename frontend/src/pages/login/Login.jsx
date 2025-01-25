@@ -3,8 +3,9 @@ import { useNavigate, Link } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import { LoginComponent } from "../../components";
 import newRequest from "../../utils/newRequest";
+import accRequest from "../../utils/generalRequest"
 import "../../components/login/Login.scss";
-import { saveUserData } from "../../utils/saveUserData";
+import axios from "axios";
 
 const Login = () => {
   const [error, setError] = useState(null);
@@ -13,6 +14,43 @@ const Login = () => {
   const [is2FA, setIs2FA] = useState(false);
   const [mfaCode, setMfaCode] = useState("");
   const navigate = useNavigate();
+
+  const fetchAndSaveCurrentUser = async (token) => {
+    try {
+      console.log("Attempting to fetch user with token:", token);
+
+      const response = await accRequest.get("/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+      });
+
+      const userData = response.data;
+      console.log("Full response data:", response);
+      console.log("Fetched user data:", userData);
+
+      // Ensure stringify works
+      try {
+        const serializedUserData = JSON.stringify(userData);
+        localStorage.setItem("currentUser", serializedUserData);
+        console.log("Successfully saved to localStorage:", serializedUserData);
+      } catch (stringifyError) {
+        console.error("Error stringifying user data:", stringifyError);
+      }
+
+      // Dispatch event
+      const event = new CustomEvent('userDataUpdated', { detail: userData });
+      window.dispatchEvent(event);
+
+      return userData;
+    } catch (err) {
+      console.error("COMPLETE fetch error:", err);
+      console.error("Error response:", err.response);
+      console.error("Error message:", err.message);
+      throw err;
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,29 +63,33 @@ const Login = () => {
       });
 
       if (response.status === 200) {
-        const email = response.data.userDetails.email;
+        const { token } = response.data;
+        localStorage.setItem("authToken", token);
 
         const mfaStates = JSON.parse(localStorage.getItem("mfaStates")) || {};
-        const isMFAEnabled = mfaStates[email] || false;
-
-        // console.log(`MFA state retrieved for ${email}:`, isMFAEnabled);
+        const isMFAEnabled = mfaStates[username] || false;
 
         if (isMFAEnabled) {
-          localStorage.setItem('pendingUserData', JSON.stringify(response.data));
           setIs2FA(true);
           return;
         }
 
+        const userData = await fetchAndSaveCurrentUser(token);
+        console.log("User data retrieved:", userData);
 
-        saveUserData(response.data);
         navigate("/");
-      } else if (response.status === 403 && response.data["2fa_required"]) {
-        setIs2FA(true);
-      } else {
-        throw new Error("Unexpected response from server");
       }
     } catch (err) {
-      setError(err.response?.data?.message || err.message || "An error occurred during login");
+      if (err.response?.status === 403 || err.response?.data?.["2fa_required"]) {
+        console.log("2FA required, switching to 2FA form...");
+        setIs2FA(true);
+      } else {
+        setError(
+          err.response?.data?.message ||
+          err.message ||
+          "An error occurred during login"
+        );
+      }
     }
   };
 
@@ -56,29 +98,30 @@ const Login = () => {
     setError(null);
 
     try {
-      const pendingUserData = JSON.parse(localStorage.getItem('pendingUserData'));
-
-      console.log("Pending User Data:", pendingUserData);
-
-      const response = await newRequest.post(`/mfa/validate`, null, {
-        params: { username: pendingUserData.userDetails.email, code: mfaCode },
+      const response = await newRequest.post("/mfa/validate", null, {
+        params: {
+          username: username,
+          code: mfaCode,
+        },
       });
 
+      console.log("Full 2FA Response:", response);
+      console.log("Response Status:", response.status);
+      console.log("Response Data:", response.data);
+
       if (response.status === 200) {
-        localStorage.removeItem('pendingUserData');
-        saveUserData(response.data);
+        const { token } = response.data;
+        localStorage.setItem("authToken", token);
+
+        const userData = await fetchAndSaveCurrentUser(token);
+        console.log("User data retrieved after good MFA:", userData);
+
         navigate("/");
       } else {
         throw new Error("Invalid MFA code");
       }
     } catch (err) {
-      const pendingUserData = JSON.parse(localStorage.getItem('pendingUserData'));
-      if (pendingUserData) {
-        saveUserData(pendingUserData);
-        navigate("/");
-      } else {
-        setError(err.response?.data?.message || "Authentication failed");
-      }
+      setError(err.response?.data?.message || "Authentication failed");
     }
   };
 

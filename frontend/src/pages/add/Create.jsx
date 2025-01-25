@@ -46,7 +46,7 @@ const Create = () => {
     if (updatedChecked) {
       try {
         const response = await fetch(
-          `http://localhost:8081/auth/qr/generate?username=${encodeURIComponent(currentUser.username)}`,
+          `http://localhost:8081/auth/qr/generate?username=${encodeURIComponent(currentUser.email)}`,
           {
             method: "GET",
             headers: {

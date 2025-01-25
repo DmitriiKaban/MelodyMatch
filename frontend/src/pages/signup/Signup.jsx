@@ -80,8 +80,7 @@ const Register = () => {
   };
 
   const handleOAuthLogin = (provider) => {
-    // Dynamically redirect to backend's OAuth2 endpoint
-    const baseUrl = "http://localhost:8081/oauth2/authorization"; // Replace with your backend base URL
+    const baseUrl = "http://localhost:8081/oauth2/authorization";
     window.location.href = `${baseUrl}/${provider}`;
   };
 
@@ -193,10 +192,7 @@ const Register = () => {
               type="password"
               onChange={handleChange}
             />
-
-
           </div>
-
         </div>
         <button type="submit" className="button-85">
           Register

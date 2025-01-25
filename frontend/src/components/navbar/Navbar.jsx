@@ -24,9 +24,10 @@ const Navbar = () => {
   useEffect(() => {
     const handleUserDataUpdate = (event) => {
       const userData = event.detail;
+      console.log("User data received from event:", userData);
       if (userData) {
         setCurrentUser({
-          id: userData.id,
+          id: userData.id || null,
           username: userData.fullName,
           email: userData.email,
           isMusician: userData.accountType === "MUSICIAN",
@@ -35,19 +36,27 @@ const Navbar = () => {
       }
     };
 
-    window.addEventListener('userDataUpdated', handleUserDataUpdate);
-
+    // Log stored user data on component mount
     const storedUserData = localStorage.getItem("currentUser");
+    console.log("Stored user data:", storedUserData);
+
     if (storedUserData) {
-      const user = JSON.parse(storedUserData);
-      setCurrentUser({
-        id: user.id,
-        username: user.fullName,
-        email: user.email,
-        isMusician: user.accountType === "MUSICIAN",
-        profilePicture: user.profilePicture
-      });
+      try {
+        const user = JSON.parse(storedUserData);
+        console.log("Parsed user data:", user);
+        setCurrentUser({
+          id: user.id || null,
+          username: user.fullName,
+          email: user.email,
+          isMusician: user.accountType === "MUSICIAN",
+          profilePicture: user.profilePicture
+        });
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+      }
     }
+
+    window.addEventListener('userDataUpdated', handleUserDataUpdate);
 
     return () => {
       window.removeEventListener('userDataUpdated', handleUserDataUpdate);
@@ -112,7 +121,7 @@ const Navbar = () => {
 
                 {open && (
                   <div className="options">
-                    <Link to="/account" className="link">Edit Account</Link>
+                    <Link to="/account/me" className="link">Edit Account</Link>
                     <Link to="/messages" className="link">Messages</Link>
                     <Link to="/payments" className="link">Payments</Link>
                     <span
