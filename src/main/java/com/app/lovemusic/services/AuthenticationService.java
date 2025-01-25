@@ -1,5 +1,6 @@
 package com.app.lovemusic.services;
 
+import com.app.lovemusic.controllers.UserController;
 import com.app.lovemusic.dtos.LoginUserDto;
 import com.app.lovemusic.dtos.RegisterUserDto;
 import com.app.lovemusic.entity.AuthenticationProviders;
@@ -9,6 +10,8 @@ import com.app.lovemusic.entity.accountTypes.Musician;
 import com.app.lovemusic.entity.accountTypes.Organizer;
 import com.app.lovemusic.exceptions.UserAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,6 +27,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
 
     public User signup(RegisterUserDto input) {
 
@@ -48,11 +52,12 @@ public class AuthenticationService {
 
         user.setAccountType(input.getAccountType().toUpperCase());
 
+        logger.info("Creating new user: {}", user.getEmail());
+
         return userService.save(user);
     }
 
     public User authenticate(LoginUserDto input) {
-        System.out.println("Authenticating user: " + input.getEmail() + " " + input.getPassword());
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         input.getEmail(),
@@ -60,10 +65,11 @@ public class AuthenticationService {
                 )
         );
 
-        System.out.println("Authenticating user: " + input.getEmail());
+        logger.info("User authenticated: {}", input.getEmail());
         Optional<User> user = userService.findByEmail(input.getEmail());
 
         if (user.isEmpty()) {
+            logger.error("User with email {} not found", input.getEmail());
             throw new UsernameNotFoundException("User with email " + input.getEmail() + " not found");
         }
         return user.get();

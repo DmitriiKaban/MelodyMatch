@@ -12,7 +12,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -29,7 +28,6 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     private final UserService userService;
     private final JwtService jwtService;
     private final GitHubEmailService gitHubEmailService;
-    private final UserMapper userMapper;
 
     @Value("${github.access-token}")
     private String accessToken;
@@ -76,8 +74,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
             LoginResponse loginResponse = new LoginResponse()
                     .setToken(jwtToken)
-                    .setExpiresIn(jwtService.getExpirationTime())
-                    .setUserDetails(userMapper.toDto(user.get()));
+                    .setExpiresIn(jwtService.getExpirationTime());
 
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");

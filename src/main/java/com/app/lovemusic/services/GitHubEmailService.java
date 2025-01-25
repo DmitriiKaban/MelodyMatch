@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -13,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 public class GitHubEmailService {
 
     private static final String GITHUB_EMAILS_URL = "https://api.github.com/user/emails";
+    private static final Logger logger = LoggerFactory.getLogger(GitHubEmailService.class);
 
     private final RestTemplate restTemplate;
 
@@ -44,7 +47,7 @@ public class GitHubEmailService {
             }
 
         } else {
-            System.out.println("Failed to fetch emails from GitHub");
+            logger.error("Error while getting email from GitHub: " + responseGit.getStatusCode());
         }
 
         return email;

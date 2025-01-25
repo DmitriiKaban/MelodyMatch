@@ -8,10 +8,13 @@ import com.app.lovemusic.entity.accountTypes.Musician;
 import com.app.lovemusic.entity.accountTypes.Organizer;
 import com.app.lovemusic.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,16 +22,16 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
-@RequestMapping("/account")
 @RestController
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
     private final UserMapper userMapper;
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/me")
+    @GetMapping("/account/me")
     public ResponseEntity<UserDto> authenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -38,7 +41,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @PostMapping("/upload-pfp")
+    @PostMapping("/account/upload-pfp")
     public ResponseEntity<UserDto> uploadProfilePicture(@RequestParam("profilePicture") MultipartFile profilePicture) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -50,7 +53,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @PostMapping("/update-name")
+    @PostMapping("/account/update-name")
     public ResponseEntity<UserDto> updateName(@RequestBody String name) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -58,11 +61,13 @@ public class UserController {
 
         userService.updateFullName(currentUser, name);
 
+        logger.info("User " + currentUser.getEmail() + " updated their name to " + name);
+
         return ResponseEntity.ok(userMapper.toDto(currentUser));
     }
 
     @PreAuthorize("hasRole('USER')")
-    @PostMapping("/update-payment-info")
+    @PostMapping("/account/update-payment-info")
     public ResponseEntity<UserDto> updatePaymentInformation(@Valid @RequestBody PaymentInfoDto paymentInfoDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -70,11 +75,13 @@ public class UserController {
 
         userService.updatePaymentInformation(currentUser, paymentInfoDto);
 
+        logger.info("User " + currentUser.getEmail() + " updated their payment information");
+
         return ResponseEntity.ok(userMapper.toDto(currentUser));
     }
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/get-resume/{userId}")
+    @GetMapping("/account/get-resume/{userId}")
     public ResponseEntity<String> getUserResume(@PathVariable Long userId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -83,14 +90,17 @@ public class UserController {
         Optional<User> user = userService.findById(userId);
 
         if (user.isEmpty()) {
+            logger.error("User " + requestedUser.getEmail() + " tried to access resume of non-existing user");
             throw new IllegalArgumentException("User not found");
         }
 
         if(!(requestedUser instanceof Organizer)) {
+            logger.error("User " + requestedUser.getEmail() + " tried to access resume of user " + user.get().getEmail());
             throw new IllegalArgumentException("You are not an organizer");
         }
 
         if(!(user.get() instanceof Musician musician)) {
+            logger.error("User " + requestedUser.getEmail() + " tried to access resume of non-musician user " + user.get().getEmail());
             throw new IllegalArgumentException("User is not a musician");
         }
 
@@ -98,7 +108,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/get-work-experience/{userId}")
+    @GetMapping("/account/get-work-experience/{userId}")
     public ResponseEntity<String> getUserWorkExperience(@PathVariable Long userId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -107,14 +117,17 @@ public class UserController {
         Optional<User> user = userService.findById(userId);
 
         if(user.isEmpty()) {
+            logger.error("User " + requestedUser.getEmail() + " tried to access work experience of non-existing user");
             throw new IllegalArgumentException("User not found");
         }
 
         if(!(requestedUser instanceof Organizer)) {
+            logger.error("User " + requestedUser.getEmail() + " tried to access work experience of user " + user.get().getEmail());
             throw new IllegalArgumentException("You are not an organizer");
         }
 
         if(!(user.get() instanceof Musician musician)) {
+            logger.error("User " + requestedUser.getEmail() + " tried to access work experience of non-musician user " + user.get().getEmail());
             throw new IllegalArgumentException("User is not a musician");
         }
 
@@ -122,11 +135,12 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/user/{userId}")
+    @GetMapping("/account/user/{userId}")
     public ResponseEntity<UserDto> getUser(@PathVariable Long userId) {
         Optional<User> user = userService.findById(userId);
 
         if(user.isEmpty()) {
+            logger.error("User " + userId + " not found");
             throw new IllegalArgumentException("User not found");
         }
 
@@ -134,7 +148,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/all-users")
+    @GetMapping("/account/all-users")
     public ResponseEntity<List<UserDto>> allUsers() {
         List<User> users = userService.allUsers();
 
