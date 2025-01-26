@@ -4,7 +4,7 @@ import logo from "../../assets/Logo.png";
 
 const LoginComponent = ({ username, setUsername, password, setPassword }) => {
   return (
-    <> 
+    <>
       <div className="top">
         <img src={logo} alt="" />
         <h1>Welcome back!</h1>
@@ -14,7 +14,7 @@ const LoginComponent = ({ username, setUsername, password, setPassword }) => {
       <input
         name="username"
         type="text"
-        value={username} 
+        value={username}
         placeholder="john.doe@gmail.com"
         onChange={(e) => setUsername(e.target.value)}
       />
@@ -23,16 +23,13 @@ const LoginComponent = ({ username, setUsername, password, setPassword }) => {
       <input
         name="password"
         type="password"
-        value={password} 
+        value={password}
         placeholder="Your password"
         onChange={(e) => setPassword(e.target.value)}
       />
       <button type="submit" className="signin button-85">
         Sign In
       </button>
-      <Link to="/auth/signup" className="link account">
-        <button type="submit">Don't have an account?</button>
-      </Link>
     </>
   );
 };

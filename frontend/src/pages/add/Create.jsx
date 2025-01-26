@@ -4,13 +4,23 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Add.scss";
 import { Banner } from "../../components";
 import { sanitizeInput } from "../../utils/sanitize";
+import accRequest from "../../utils/generalRequest"
+import imageCompression from "browser-image-compression";
 
 const Create = () => {
   const [currentUser, setCurrentUser] = useState(null);
+  const [name, setName] = useState("");
+  const [profilePicture, setProfilePicture] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const userData = localStorage.getItem("currentUser");
+
+
+    console.log("All localStorage items:", {
+      token: localStorage.getItem("token"),
+      currentUser: localStorage.getItem("currentUser")
+    });
 
     if (userData) {
       const user = JSON.parse(userData);
@@ -31,6 +41,98 @@ const Create = () => {
   const [qrCode, setQrCode] = useState(null);
   const formRef = useRef(null);
 
+  const handleNameChange = (e) => {
+    setName(e.target.value);
+  };
+
+  const handleProfilePictureChange = (e) => {
+    setProfilePicture(e.target.files[0]);
+  };
+
+  const updateName = async () => {
+    try {
+      const response = await accRequest.post(
+        "/update-name",
+        { name }, // Or `name` if raw string is needed
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      // Assuming the response indicates success
+      if (response.status !== 200) {
+        throw new Error("Failed to update name.");
+      }
+
+      const sanitizedName = name.replace(/^"|"$/g, ""); // Remove extra quotes
+      const updatedUser = {
+        ...currentUser,
+        fullName: sanitizedName, // Updated name
+        isMusician: currentUser?.isMusician, // Ensure isMusician is preserved
+      };
+      localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+      setCurrentUser(updatedUser);
+
+      // Dispatch the custom event
+      const event = new CustomEvent('userDataUpdated', {
+        detail: updatedUser, // Pass updated user data in event
+      });
+      window.dispatchEvent(event);
+
+      alert("Name updated successfully!");
+    } catch (error) {
+      console.error("Full Error Details:", {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+        headers: error.response?.headers,
+      });
+      alert("Failed to update name.");
+    }
+  };
+
+  const uploadProfilePicture = async () => {
+    if (!profilePicture) {
+      alert("Please select a profile picture to upload.");
+      return;
+    }
+
+    try {
+      const options = {
+        maxSizeMB: 0.1,
+        maxWidthOrHeight: 100,
+        useWebWorker: true
+      };
+
+      const compressedFile = await imageCompression(profilePicture, options);
+      const formData = new FormData();
+      formData.append("profilePicture", compressedFile);
+
+      const response = await accRequest.post("/upload-pfp", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      const updatedUser = { ...currentUser, profilePicture: compressedFile };
+      localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+      setCurrentUser(updatedUser);
+      alert("Profile picture uploaded successfully!");
+    } catch (error) {
+      console.error("Full upload error:", {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
+      alert(`Upload failed: ${error.message}`);
+    }
+  };
+
+
   const userIsMusician = currentUser?.isMusician;
 
   const scrollToForm = () => {
@@ -38,6 +140,7 @@ const Create = () => {
       formRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
+
 
   const handleCheckboxChange = async () => {
     const updatedChecked = !checked;
@@ -74,9 +177,8 @@ const Create = () => {
     } else {
       setQrCode(null);
 
-      // Update MFA state for the specific user
       const mfaStates = JSON.parse(localStorage.getItem("mfaStates")) || {};
-      mfaStates[currentUser.email] = false; // Update the MFA state for the current user
+      mfaStates[currentUser.email] = false;
       localStorage.setItem("mfaStates", JSON.stringify(mfaStates));
       console.log(`MFA state saved for ${currentUser.email}: false`);
     }
@@ -96,20 +198,27 @@ const Create = () => {
       </div>
       <div className="add" ref={formRef}>
         <div className="container">
-          <h1>{sanitizeInput("Create Account")}</h1>
+          <h1>{sanitizeInput("Edit Account")}</h1>
           <div className="sections">
             <div className="info">
               <div className="item">
                 <label htmlFor="">
                   {sanitizeInput(userIsMusician ? "Name" : "Organization Name")}
                 </label>
-                <img src="/img/icons/Edit.png" alt="" />
+                <button type="button" onClick={updateName} style={{
+                  all: "unset",
+                  cursor: "pointer",
+                }}
+                > <img src="/img/icons/Edit.png" alt="" />  </button>
               </div>
               <hr />
               <input
                 type="text"
+                id="name"
+                value={name}
+                onChange={handleNameChange}
                 placeholder={sanitizeInput(
-                  userIsMusician ? "Enter your name" : "Enter organization name"
+                  currentUser?.isMusician ? "Enter your name" : "Enter organization name"
                 )}
               />
 
@@ -120,15 +229,20 @@ const Create = () => {
               <hr />
               <input
                 type="email"
-                placeholder={sanitizeInput("Enter your email")}
+                placeholder={"Enter new email"}
               />
 
               <div className="item">
                 <label htmlFor="">{sanitizeInput("Profile Picture")}</label>
-                <img src="/img/icons/Edit.png" alt="" />
+                <button type="button" onClick={uploadProfilePicture} style={{
+                  all: "unset",
+                  cursor: "pointer",
+                }}
+                > <img src="/img/icons/Edit.png" alt="" /> </button>
               </div>
               <hr />
-              <input type="file" />
+              <input type="file" id="profilePicture" onChange={handleProfilePictureChange} />
+
 
               {userIsMusician && (
                 <>

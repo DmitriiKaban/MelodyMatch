@@ -5,8 +5,8 @@ services:
     image: mysql:5.7
     container_name: db
     environment:
-      - MYSQL_ROOT_PASSWORD=W3@k{@psw0rd!7
-      - MYSQL_DATABASE=love_music
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
     volumes:
       - ./db-scripts:/docker-entrypoint-initdb.d
       - mysql-data:/var/lib/mysql
@@ -17,9 +17,9 @@ services:
     image: tunify
     container_name: tunify
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/love_music?createDatabaseIfNotExist=true&useSSL=true
-      - SPRING_DATASOURCE_PASSWORD=Mz8@Q#2hG5&X7u!p
-      - SPRING_DATASOURCE_USERNAME=app_user
+      SPRING_DATASOURCE_URL: ${MYSQL_URL}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_USER_PASSWORD}
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USERNAME}
     ports:
       - "8081:8081"
     depends_on:

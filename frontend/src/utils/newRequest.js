@@ -7,7 +7,13 @@ const newRequest = axios.create({
 
 
 newRequest.interceptors.request.use((config) => {
-  const token = localStorage.getItem("authToken");
+  const token = localStorage.getItem("token");
+
+  console.log("Intercepting request...");
+  console.log("Request URL:", config.url);
+  console.log("Request Method:", config.method);
+  console.log("Request Headers:", config.headers);
+  console.log("Request Data:", config.data);
 
   if (token) {
 
@@ -15,7 +21,7 @@ newRequest.interceptors.request.use((config) => {
       config.headers.Authorization = `Bearer ${token}`;
     } else {
       console.error("Invalid token format:", token);
-      localStorage.removeItem("authToken"); 
+      localStorage.removeItem("token"); 
     }
   }
 

@@ -80,7 +80,7 @@ const Register = () => {
   };
 
   const handleOAuthLogin = (provider) => {
-    const baseUrl = "http://localhost:8081/oauth2/authorization";
+    const baseUrl = import.meta.env.BASE_URL;
     window.location.href = `${baseUrl}/${provider}`;
   };
 
@@ -94,7 +94,7 @@ const Register = () => {
         script.defer = true;
         script.onload = () => {
           window.FB.init({
-            appId: "3366032167024711", // Facebook App ID from your config
+            appId: import.meta.env.FACEBOOK_ID,
             cookie: true,
             xfbml: true,
             version: "v22.0",

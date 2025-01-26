@@ -1,8 +1,7 @@
 export const events = [
-  {
+  { 
     id: 1,
     img: "/img/account2.png", // this is the cover img for gigCard
-    otherMedia: "", // here go other videos/imgs when the user opens the gig
     pp: "/img/pp3.png",
     title: "Looking for an opera singer",
     desc: "",
