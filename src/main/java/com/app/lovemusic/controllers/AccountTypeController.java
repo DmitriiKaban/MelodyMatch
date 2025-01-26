@@ -32,14 +32,25 @@ public class AccountTypeController {
     private final JwtService jwtService;
     private static final Logger logger = LoggerFactory.getLogger(AccountTypeController.class);
 
-    @GetMapping("/account")
+//    @GetMapping("/account")
+//    public String selectAccountType(Model model, @RequestParam String email, @RequestParam String name, @RequestParam String provider) {
+//        model.addAttribute("email", email);
+//        model.addAttribute("name", name);
+//        model.addAttribute("provider", provider);
+//
+//        System.out.println("==================================");
+//
+//        return "accountTypeForm";
+//    }
+
+    @GetMapping("/select-account-type")
     public String selectAccountType(Model model, @RequestParam String email, @RequestParam String name, @RequestParam String provider) {
         model.addAttribute("email", email);
         model.addAttribute("name", name);
         model.addAttribute("provider", provider);
-
         return "accountTypeForm";
     }
+
 
     @PostMapping("/save-account-type")
     public void saveAccountType(
