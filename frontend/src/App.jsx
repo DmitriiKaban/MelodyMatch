@@ -13,6 +13,7 @@ import {
   Messages,
   Account,
   VerifyEmail,
+  SelectAccountType
 } from "./pages";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import "./app.scss";
@@ -51,6 +52,10 @@ function App() {
           element: <VerifyEmail />,
         },
         {
+          path: "/select-account-type",
+          element: <SelectAccountType />,
+        },
+        {
           path: "/gigs",
           element: <Gigs />,
         },
@@ -71,7 +76,7 @@ function App() {
           element: <Add />,
         },
         {
-          path: "/account",
+          path: "/account/me",
           element: <Create />,
         },
         {
@@ -86,19 +91,6 @@ function App() {
           path: "/account/user/:id",
           element: <Account />,
         },
-        // {
-        //   path: "/pay/:id",
-        //   element: <Pay />,
-        // },
-        // {
-        //   path: "/success",
-        //   element: <Success />,
-        // },
-        //
-        // other used paths:
-        //
-        // "/gigs?genre="
-        // "/gigs?search="
       ],
     },
   ]);

@@ -2,6 +2,7 @@ import "./Gig.scss";
 import { Slider } from "infinite-react-carousel";
 import { Link } from "react-router-dom";
 import { Review } from "../../components";
+import userMusician from "../../assets/Musician.png";
 
 const Gig = () => {
   return (
@@ -11,8 +12,8 @@ const Gig = () => {
           <span className="breadCrumbs">TUNIFY {">"} CLASSICAL</span>
           <h2>Open for Events</h2>
           <div className="user">
-            <img src="/img/pp3.png" alt="" />
-            <span>Jace Smith</span>
+            <img src={userMusician} className="picUser" alt="" />
+            <span>Matei Basarab</span>
             <div className="stars">
               <img src="/img/icons/star.png" alt="" />
               <img src="/img/icons/star.png" alt="" />
@@ -40,9 +41,9 @@ const Gig = () => {
 
           <div className="seller">
             <div className="user">
-              <img src="/img/pp3.png" alt="" />
+              <img src={userMusician} alt="" />
               <div className="info">
-                <span>Jace Smith</span>
+                <span>Matei Basarab</span>
                 <div className="stars">
                   <img src="/img/icons/star.png" alt="" />
                   <img src="/img/icons/star.png" alt="" />
@@ -83,8 +84,8 @@ const Gig = () => {
             <div className="reviews">
               <div className="top">
                 <h2>Reviews</h2>
-                <Link to="/gig/:id/reviews" className="link">
-                  <h3> Add your review </h3>
+                <Link to="/account/user/:id" className="link">
+                  <h3> See more </h3>
                 </Link>
               </div>
               <Review />

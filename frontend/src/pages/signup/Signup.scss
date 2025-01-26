@@ -47,6 +47,62 @@
       justify-content: space-between;
       gap: 100px;
 
+.left{
+  .oauth-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Space between buttons */
+  width: 100%;
+
+  .oauth-button {
+    width: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    margin-left: 70px;
+
+    &.google {
+      background-color: #db4437; /* Google Red */
+      color: white;
+
+      &:hover {
+        background-color: #c23321;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      }
+    }
+
+    &.github {
+      background-color: #333; /* GitHub Black */
+      color: white;
+
+      &:hover {
+        background-color: #24292e;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      }
+    }
+
+    &.facebook {
+      background-color: #1877f2; /* Facebook Blue */
+      color: white;
+
+      &:hover {
+        background-color: #145dbf;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      }
+
+    }
+  }
+}
+
+}
+
       .left,
       .right {
         width: 48%;
@@ -178,7 +234,7 @@
       }
     }
 
-    .nsm7Bb-HzV7m-LgbsSe {
+    .nsm7Bb-HzV7m-LgbsSe{
       width: 380px;
       padding: 20px;
     }

@@ -11,3 +11,5 @@ export { default as Create } from "./add/Create";
 export { default as Message } from "./message/Message";
 export { default as Messages } from "./messages/Messages";
 export { default as VerifyEmail } from "./verification/VerifyEmail";
+export {default as SelectAccountType} from "./verification/SelectAccountType"
+

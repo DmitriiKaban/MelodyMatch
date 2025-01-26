@@ -3,7 +3,7 @@ export const reviews = [
     id: 1,
     user: {
       username: "Marcela Popovici",
-      pp: "/img/pp2.png", // profile picture
+      pp: "/img/pp2.png", 
       location: "Romania",
     },
     star: 5,

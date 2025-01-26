@@ -1,18 +1,14 @@
 import { useState, useEffect } from "react";
 import "./Navbar.scss";
 import logo from "../../assets/Logo.png";
-import userMusician from "../../assets/Musician.png";
+import defaultAvatar from "../../assets/user.png";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [active, setActive] = useState(false);
   const [open, setOpen] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
-  const [currentUser, setCurrentUser] = useState({
-    id: 1,
-    username: "Matei Basarab",
-    isMusician: true,
-  });
+  const [currentUser, setCurrentUser] = useState(null);
 
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -25,22 +21,69 @@ const Navbar = () => {
     "/auth/login",
   ].includes(pathname);
 
+  useEffect(() => {
+    const handleUserDataUpdate = (event) => {
+      const userData = event.detail;
+      console.log("User data received from event:", userData);
+      if (userData) {
+        setCurrentUser({
+          id: userData.id || null,
+          username: userData.fullName,
+          email: userData.email,
+          isMusician: userData.accountType === "MUSICIAN",
+          profilePicture: userData.profilePicture
+        });
+      }
+    };
+
+    // Log stored user data on component mount
+    const storedUserData = localStorage.getItem("currentUser");
+    console.log("Stored user data:", storedUserData);
+
+    if (storedUserData) {
+      try {
+        const user = JSON.parse(storedUserData);
+        console.log("Parsed user data:", user);
+        setCurrentUser({
+          id: user.id || null,
+          username: user.fullName,
+          email: user.email,
+          isMusician: user.accountType === "MUSICIAN",
+          profilePicture: user.profilePicture
+        });
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+      }
+    }
+
+    window.addEventListener('userDataUpdated', handleUserDataUpdate);
+
+    return () => {
+      window.removeEventListener('userDataUpdated', handleUserDataUpdate);
+    };
+  }, []);
+
   const isActive = () => {
-    window.scrollY > 0 ? setActive(true) : setActive(false);
+    setActive(window.scrollY > 0);
   };
 
   useEffect(() => {
     window.addEventListener("scroll", isActive);
-
     return () => {
       window.removeEventListener("scroll", isActive);
     };
   }, []);
 
   const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("currentUser");
     setShowLogoutModal(false);
-    navigate("/auth/login");
     setCurrentUser(null);
+    navigate("/auth/login");
+  };
+
+  const getProfilePicture = () => {
+    return currentUser?.profilePicture || defaultAvatar;
   };
 
   return (
@@ -63,50 +106,42 @@ const Navbar = () => {
             </Link>
           )}
           {currentUser && (
-            <Link to="/orders" className="link">
-              Orders
-            </Link>
+            <>
+              <Link to="/orders" className="link">Orders</Link>
+              <Link to="/myGigs" className="link">
+                <span>{currentUser.isMusician ? "Gigs" : "Events"}</span>
+              </Link>
+              <div className="user" onClick={() => setOpen(!open)}>
+                <img
+                  src={getProfilePicture()}
+                  alt="Profile"
+                  className="profile-picture"
+                />
+                <span>{currentUser.username}</span>
+
+                {open && (
+                  <div className="options">
+                    <Link to="/account/me" className="link">Edit Account</Link>
+                    <Link to="/messages" className="link">Messages</Link>
+                    <Link to="/payments" className="link">Payments</Link>
+                    <span
+                      className="link logout-text"
+                      onClick={() => setShowLogoutModal(true)}
+                    >
+                      Log out
+                    </span>
+                  </div>
+                )}
+              </div>
+            </>
           )}
           {!currentUser && (
             <>
-              <Link to="/auth/login" className="link">
-                Sign In
-              </Link>
+              <Link to="/auth/login" className="link">Sign In</Link>
               <Link to="/auth/signup" className="link">
                 <button>Join Us</button>
               </Link>
             </>
-          )}
-          {currentUser && (
-            <Link to="/myGigs" className="link">
-              <span>{currentUser.isMusician ? "Gigs" : "Events"}</span>
-            </Link>
-          )}
-          {currentUser && (
-            <div className="user" onClick={() => setOpen(!open)}>
-              <img src={userMusician} alt="" />
-              <span>{currentUser.username}</span>
-
-              {open && (
-                <div className="options">
-                  <Link to="/account" className="link">
-                    Edit Account
-                  </Link>
-                  <Link to="/messages" className="link">
-                    Messages
-                  </Link>
-                  <Link to="/payments" className="link">
-                    Payments
-                  </Link>
-                  <span
-                    className="link logout-text"
-                    onClick={() => setShowLogoutModal(true)}
-                  >
-                    Log out
-                  </span>
-                </div>
-              )}
-            </div>
           )}
         </div>
       </div>

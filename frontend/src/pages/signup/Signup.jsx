@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Signup.scss";
 import logo from "../../assets/Logo.png";
 import { useNavigate, Link } from "react-router-dom";
-import { GoogleLogin } from "@react-oauth/google";
 import newRequest from "../../utils/newRequest";
 
 const Register = () => {
@@ -16,7 +15,6 @@ const Register = () => {
   });
 
   const [open, setOpen] = useState(false);
-
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -41,42 +39,73 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if passwords match
     if (user.password !== user.repeatPassword) {
       setError("Passwords do not match.");
       return;
     }
 
     try {
-      const response = await newRequest.post("/auth/signup", {
-        username: user.username,
+      const response = await newRequest.post("/signup", {
         email: user.email,
         password: user.password,
-        isMusician: user.isMusician,
+        fullName: user.username,
+        accountType: user.isMusician ? "musician" : "organizer",
       });
 
-      // If successful, navigate to verify email
       if (response.status === 200) {
-        const registeredUser = response.data;
-        localStorage.setItem("currentUser", JSON.stringify(registeredUser));
-        // navigate("/verify-email");
+        localStorage.setItem("token", response.data.token);
+
+        const userData = {
+          id: response.data.id,
+          fullName: response.data.fullName,
+          email: response.data.email,
+          accountType: response.data.accountType,
+          profilePicture: response.data.profilePicture,
+          token: response.data.token,
+        };
+
+        localStorage.setItem("currentUser", JSON.stringify(userData));
+
+        window.dispatchEvent(
+          new CustomEvent("userDataUpdated", {
+            detail: userData,
+          })
+        );
+        navigate("/");
       }
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error("Registration error:", err);
       setError("Registration failed. Please try again.");
     }
   };
 
-  const handleGoogleSuccess = (response) => {
-    const mockGoogleUser = {
-      id: Date.now(),
-      username: "googleUser",
-      email: "googleuser@example.com",
-      token: "mockGoogleToken",
-    };
-    localStorage.setItem("currentUser", JSON.stringify(mockGoogleUser));
-    navigate("/verify-email");
+  const handleOAuthLogin = (provider) => {
+    const baseUrl = import.meta.env.BASE_URL;
+    window.location.href = `${baseUrl}/${provider}`;
   };
+
+  useEffect(() => {
+    const loadFacebookSDK = () => {
+      if (!document.getElementById("facebook-jssdk")) {
+        const script = document.createElement("script");
+        script.id = "facebook-jssdk";
+        script.src = "https://connect.facebook.net/ro_RO/sdk.js";
+        script.async = true;
+        script.defer = true;
+        script.onload = () => {
+          window.FB.init({
+            appId: import.meta.env.FACEBOOK_ID,
+            cookie: true,
+            xfbml: true,
+            version: "v22.0",
+          });
+        };
+        document.body.appendChild(script);
+      }
+    };
+
+    loadFacebookSDK();
+  }, []);
 
   return (
     <div className="register">
@@ -88,6 +117,14 @@ const Register = () => {
       <form onSubmit={handleSubmit}>
         <div className="columns">
           <div className="left">
+            <label>Name</label>
+            <input
+              name="username"
+              type="text"
+              placeholder="John Doe"
+              onChange={handleChange}
+            />
+
             <label>Are you an organization or musician?</label>
             <div className="dropdown">
               <input
@@ -115,22 +152,38 @@ const Register = () => {
                 </div>
               )}
             </div>
-            <label>Name</label>
-            <input
-              name="username"
-              type="text"
-              placeholder="John Doe"
-              onChange={handleChange}
-            />
+            <div className="oauth-buttons">
+              <button
+                type="button"
+                onClick={() => handleOAuthLogin("google")}
+                className="oauth-button google"
+              >
+                Login with Google
+              </button>
+              <button
+                type="button"
+                onClick={() => handleOAuthLogin("github")}
+                className="oauth-button github"
+              >
+                Login with GitHub
+              </button>
+              <button
+                type="button"
+                onClick={() => handleOAuthLogin("facebook")}
+                className="oauth-button facebook"
+              >
+                Login with Facebook
+              </button>
+            </div>
+          </div>
+          <div className="right">
             <label>Email</label>
             <input
               name="email"
               type="email"
-              placeholder="email"
+              placeholder="johndoe@gmail.com"
               onChange={handleChange}
             />
-          </div>
-          <div className="right">
             <label>Password</label>
             <input name="password" type="password" onChange={handleChange} />
             <label>Repeat Password</label>
@@ -138,10 +191,6 @@ const Register = () => {
               name="repeatPassword"
               type="password"
               onChange={handleChange}
-            />
-            <GoogleLogin
-              onSuccess={handleGoogleSuccess}
-              onError={() => setError("Google login failed")}
             />
           </div>
         </div>
