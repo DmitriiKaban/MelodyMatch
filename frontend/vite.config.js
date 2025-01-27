@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:8081",
+        target: "http://back.tunify.md:8081",
         changeOrigin: true,
         secure: false,
       },
@@ -20,7 +20,7 @@ export default defineConfig({
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; " + // Allow styles from Google OAuth
         "font-src 'self' https://fonts.gstatic.com; " +
         "img-src 'self' data: blob: https://images.pexels.com; " +
-        "connect-src 'self' http://localhost:8081; " +
+        "connect-src 'self' http://back.tunify.md:8081; " +
         "frame-src 'self' https://accounts.google.com;",
     },
   },
