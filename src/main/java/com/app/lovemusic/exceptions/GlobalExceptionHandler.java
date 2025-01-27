@@ -51,6 +51,26 @@ public class GlobalExceptionHandler {
             errorDetail.setProperty("description", "The JWT token has expired");
         }
 
+        if (exception instanceof UserNotFoundException) {
+            errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(409), exception.getMessage());
+            errorDetail.setProperty("description", "User not found");
+        }
+
+        if (exception instanceof YouAreNotAMusicianException) {
+            errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(409), exception.getMessage());
+            errorDetail.setProperty("description", "You are not a musician");
+        }
+
+        if (exception instanceof YouAreNotAnOrganizerException) {
+            errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(409), exception.getMessage());
+            errorDetail.setProperty("description", "You are not an organizer");
+        }
+
+        if (exception instanceof ActionCanNotBePerformedOnYourself) {
+            errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(409), exception.getMessage());
+            errorDetail.setProperty("description", "You can not perform this action on yourself");
+        }
+
         if (errorDetail == null) {
             errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(500), exception.getMessage());
             errorDetail.setProperty("description", "Unknown internal server error.");

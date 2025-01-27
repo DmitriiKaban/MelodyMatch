@@ -6,6 +6,9 @@ import com.app.lovemusic.dtos.mappers.UserMapper;
 import com.app.lovemusic.entity.User;
 import com.app.lovemusic.entity.accountTypes.Musician;
 import com.app.lovemusic.entity.accountTypes.Organizer;
+import com.app.lovemusic.exceptions.UserNotFoundException;
+import com.app.lovemusic.exceptions.YouAreNotAMusicianException;
+import com.app.lovemusic.exceptions.YouAreNotAnOrganizerException;
 import com.app.lovemusic.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -14,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -91,17 +93,17 @@ public class UserController {
 
         if (user.isEmpty()) {
             logger.error("User " + requestedUser.getEmail() + " tried to access resume of non-existing user");
-            throw new IllegalArgumentException("User not found");
+            throw new UserNotFoundException("User not found");
         }
 
         if(!(requestedUser instanceof Organizer)) {
             logger.error("User " + requestedUser.getEmail() + " tried to access resume of user " + user.get().getEmail());
-            throw new IllegalArgumentException("You are not an organizer");
+            throw new YouAreNotAnOrganizerException("You are not an organizer");
         }
 
         if(!(user.get() instanceof Musician musician)) {
             logger.error("User " + requestedUser.getEmail() + " tried to access resume of non-musician user " + user.get().getEmail());
-            throw new IllegalArgumentException("User is not a musician");
+            throw new YouAreNotAMusicianException("User is not a musician");
         }
 
         return ResponseEntity.ok(musician.getResume());
@@ -118,17 +120,17 @@ public class UserController {
 
         if(user.isEmpty()) {
             logger.error("User " + requestedUser.getEmail() + " tried to access work experience of non-existing user");
-            throw new IllegalArgumentException("User not found");
+            throw new UserNotFoundException("User not found");
         }
 
         if(!(requestedUser instanceof Organizer)) {
             logger.error("User " + requestedUser.getEmail() + " tried to access work experience of user " + user.get().getEmail());
-            throw new IllegalArgumentException("You are not an organizer");
+            throw new YouAreNotAnOrganizerException("You are not an organizer");
         }
 
         if(!(user.get() instanceof Musician musician)) {
             logger.error("User " + requestedUser.getEmail() + " tried to access work experience of non-musician user " + user.get().getEmail());
-            throw new IllegalArgumentException("User is not a musician");
+            throw new YouAreNotAMusicianException("User is not a musician");
         }
 
         return ResponseEntity.ok(musician.getWorkExperience());
@@ -141,7 +143,7 @@ public class UserController {
 
         if(user.isEmpty()) {
             logger.error("User " + userId + " not found");
-            throw new IllegalArgumentException("User not found");
+            throw new UserNotFoundException("User not found");
         }
 
         return ResponseEntity.ok(userMapper.toDto(user.get()));

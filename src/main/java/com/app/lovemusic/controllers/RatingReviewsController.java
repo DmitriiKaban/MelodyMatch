@@ -4,6 +4,8 @@ import com.app.lovemusic.dtos.RatingReviewDto;
 import com.app.lovemusic.dtos.mappers.RatingReviewMapper;
 import com.app.lovemusic.entity.RatingReview;
 import com.app.lovemusic.entity.User;
+import com.app.lovemusic.exceptions.ActionCanNotBePerformedOnYourself;
+import com.app.lovemusic.exceptions.UserNotFoundException;
 import com.app.lovemusic.services.RatingReviewService;
 import com.app.lovemusic.services.UserService;
 import jakarta.transaction.Transactional;
@@ -38,7 +40,7 @@ public class RatingReviewsController {
 
         if (user == null) {
             logger.error("User not found with id: {}", userId);
-            throw new IllegalArgumentException("User not found");
+            throw new UserNotFoundException("User not found");
         }
 
         List<RatingReview> reviews = user.getReviewsReceived();
@@ -59,7 +61,7 @@ public class RatingReviewsController {
 
         if (user == null) {
             logger.error("User not found with id: {}", userId);
-            throw new IllegalArgumentException("User not found");
+            throw new UserNotFoundException("User not found");
         }
 
         List<RatingReview> reviews = user.getReviewsAuthored();
@@ -82,8 +84,8 @@ public class RatingReviewsController {
         User currentUser = (User) authentication.getPrincipal();
 
         if (currentUser.getId().equals(userId)) {
-            logger.error("User cannot review yourself");
-            throw new IllegalArgumentException("User cannot review yourself");
+            logger.error("User cannot review himself");
+            throw new ActionCanNotBePerformedOnYourself("You cannot review yourself");
         }
 
         return ResponseEntity.ok(savedReviewDto);
