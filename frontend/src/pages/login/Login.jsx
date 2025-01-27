@@ -81,11 +81,11 @@ const Login = () => {
 
       // OAuth Provider URLs
       if (provider === "google") {
-        redirectUri = `https://accounts.google.com/o/oauth2/auth?client_id=${clientId.google}&redirect_uri=http://localhost:8081/login/oauth2/code/google&response_type=code&scope=email%20profile`;
+        redirectUri = `https://accounts.google.com/o/oauth2/auth?client_id=${clientId.google}&redirect_uri=https://tunify-back.ajdsgkljadkgjg.xyz//login/oauth2/code/google&response_type=code&scope=email%20profile`;
       } else if (provider === "github") {
-        redirectUri = `https://github.com/login/oauth/authorize?client_id=${clientId.github}&redirect_uri=http://localhost:8081/login/oauth2/code/github&scope=read:user`;
+        redirectUri = `https://github.com/login/oauth/authorize?client_id=${clientId.github}&redirect_uri=https://tunify-back.ajdsgkljadkgjg.xyz//login/oauth2/code/github&scope=read:user`;
       } else if (provider === "facebook") {
-        redirectUri = `https://www.facebook.com/v11.0/dialog/oauth?client_id=${clientId.facebook}&redirect_uri=http://localhost:8081/login/oauth2/code/facebook&scope=email,public_profile`;
+        redirectUri = `https://www.facebook.com/v11.0/dialog/oauth?client_id=${clientId.facebook}&redirect_uri=https://tunify-back.ajdsgkljadkgjg.xyz/login/oauth2/code/facebook&scope=email,public_profile`;
       }
 
       // Redirect user to the OAuth provider's login page

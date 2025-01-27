@@ -27,8 +27,6 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-//                .headers(headers -> headers
-//                        .contentSecurityPolicy(csp -> csp.policyDirectives("default-src 'self'; img-src 'self' https:; script-src 'self'; style-src 'self' 'unsafe-inline';")))
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
