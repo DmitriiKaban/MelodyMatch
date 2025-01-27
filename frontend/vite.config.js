@@ -7,12 +7,12 @@ export default defineConfig({
   server: {
     proxy: {
       "/auth": {
-        target: "http://localhost:8081",
+        target: "https://tunify-back.ajdsgkljadkgjg.xyz/",
         changeOrigin: true,
         secure: false,
       },
       '/account': {
-        target: 'http://localhost:8081', // Your backend server
+        target: 'https://tunify-back.ajdsgkljadkgjg.xyz/', // Your backend server
         changeOrigin: true, // Ensures the origin of the host header matches the target URL
       },
     },
@@ -24,7 +24,7 @@ export default defineConfig({
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; " + 
         "font-src 'self' https://fonts.gstatic.com; " +
         "img-src 'self' data: blob: https://images.pexels.com; " +
-        "connect-src 'self' http://localhost:8081 https://www.facebook.com https://graph.facebook.com; " +
+        "connect-src 'self' https://tunify-back.ajdsgkljadkgjg.xyz/ https://www.facebook.com https://graph.facebook.com; " +
         "frame-src 'self' https://accounts.google.com;",
       
       "Cross-Origin-Opener-Policy": "unsafe-none",
